@@ -1,0 +1,6 @@
+pip install spacy
+python -m space download en_vectors_glove_md
+
+If there is any error: conda install libgcc
+
+change MAX_SENTENCE_LENGTH accordingly

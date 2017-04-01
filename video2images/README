@@ -1,0 +1,7 @@
+pip install sk-video
+put 1 of the scripts in the same folder as the video files (.mp4) and run
+
+fast_big_mem: faster, consumes more memory
+slow_small_mem: slower, consumes less memory
+
+change EXTRACT_FRAME_COUNT accordingly
