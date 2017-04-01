@@ -11,7 +11,7 @@
 
 import tensorflow
 from .utils import xavier_var
-from .attention import img_attend, txt_attend
+from . import attention
 
 class CoreNet(object):
 	
@@ -40,8 +40,8 @@ class CoreNet(object):
 
 		self._vk, self._uk, self._mk = [v0], [u0], [m0]
 
-	_img_attend = img_attend
-	_txt_attend = txt_attend
+	_img_attend = attention.img_attend
+	_txt_attend = attention.txt_attend
 
 	def _build_step(self, memory, step):
 		v_step = self._img_attend(memory, step)
