@@ -36,6 +36,7 @@ class BatchYielder(object):
                 y_batch = list()
 
                 for j in range(b*self.batch_size, b*self.batch_size + batch_size):
+                    if j >= self.data_size: continue
                     x_instance_text = self.get_vector_for_text_at_index(self.shuffle_idx[j])
                     if x_instance_text is None: continue
                     x_instance_video = self.get_vector_for_video_at_index(self.shuffle_idx[j])
