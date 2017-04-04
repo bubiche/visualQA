@@ -1,31 +1,38 @@
 import numpy as np
-import math
+import h5py
 
 class BatchYielder(object):
 
     def __init__(self, batch_size, epoch, text_path, video_path):
         self.batch_size = batch_size
         self.epoch = epoch
-        self.text_path = text_path
-        self.video_path = video_path
+        self.text_file = h5py.File(text_path, 'r')
+        self.video_file = h5py.File(video_path, 'r')
+        self.txt_vec = self.text_file['txt_vec']
+        self.txt_info = self.text_file['txt_info']
+        self.vid_vec = self.video_file['vid_vec']
         self.data_size = self.get_data_size()
         if self.batch_size > self.data_size: self.batch_size = self.data_size
         self.batch_per_epoch = np.ceil(self.data_size/self.batch_size)
 
+    def __del__(self):
+        self.text_file.close()
+        self.video_file.close()
+
     def get_data_size(self):
-        # TODO: get data size
+        return self.txt_vec.shape[0]
 
     def shuffle_data(self):
         self.shuffle_idx = np.random.permutation(self.data_size)
 
     def get_vector_for_text_at_index(self, idx):
-        # TODO: get feature vector of text at index idx
+        return self.txt_vec[idx]
 
     def get_vector_for_video_at_index(self, idx):
-        # TODO: get feature vector of video at index idx
+        return self.vid_vec[txt_info[0]]
         
     def get_text_len_at_index(self, idx):
-        # TODO: get text len at index idx
+        return self.txt_info[1]
 
     def get_annotation_at_index(self, idx):
         #TODO: get the annotation at index idx
