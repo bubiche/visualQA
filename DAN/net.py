@@ -11,6 +11,7 @@ def _last_dim(tensor):
 class DAN(object):
 
 	_TRAINER = dict({
+		'sgd': tf.train.GradientDescentOptimizer,
 		'rmsprop': tf.train.RMSPropOptimizer,
 		'adadelta': tf.train.AdadeltaOptimizer,
 		'adagrad': tf.train.AdagradOptimizer,
@@ -43,17 +44,19 @@ class DAN(object):
 		if not FLAGS.train: return
 		self._build_loss()
 		self._build_trainer()
+		self.batch_yielder = BatchYielder(
+			FLAGS.batch_size, FLAGS.epoch, FLAGS.txt_path, FLAGS.vid_path)
 
 	def _img_len(self):
 		return np.ones([FLAGS.batch_size]) * FLAGS.max_img_len
 
-	def train(self, batch_yielder):
+	def train(self):
 
 		def _create_mask(txt_len):
 			return np.arange(FLAG.max_txt_len) < txt_len[:, None]
 
 		loss_mva = None
-		batches = enumerate(batch_yielder.next_batch())
+		batches = enumerate(self.batch_yielder.next_batch())
 		for step, ((img_vec, txt_vec, txt_len), target) in batches:
 			loss = self.sess.run([self._train_op, self._loss], {
 				self._img_vec: img_vec,
