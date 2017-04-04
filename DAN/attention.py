@@ -16,7 +16,6 @@ def tanh_attend(inp_dim, hid_dim, # outdimlstm, mdim
 		'Wm_{}'.format(step), [hid_dim, hid_dim])
 	Wf = xavier_var(
 		'Wu_{}'.format(step), [inp_dim, hid_dim])
-
 	Wh = xavier_var(
 		'Wh_{}'.format(step), [hid_dim, hid_dim])
 	
