@@ -14,47 +14,42 @@ from .utils import xavier_var
 from . import attention
 
 class CoreNet(object):
-	
-	_IMG_NFT = 150
-	_IMG_DIM = 512
-	_HID_DIM = 512
+	def __init__(self, imglstm, txtlstm, FLAGS):
+		self._ut = txtlstm.out
+		self._vt = imglstm.out
+		self._txt_len = tf.cast(txtlstm.len, tf.float32)
 
-	def __init__(self, bilstm, nstep):
-		self.ut = bilstm.out
-		self._len = bilstm.len
-		self._len = tf.cast(self._len, tf.float32)
-		self._TXT_DIM = bilstm.out_dim
-
-		self.vn = tf.placeholder(tf.float32, 
-			[None, self._IMG_NFT, self._IMG_DIM])
-
-		self._build_net(nstep)
+		self._mask = tf.placeholder(
+			tf.float32, [None, FLAGS.max_txt_len])
+		self._build_net(FLAGS)
 
 	def _build_step0(self):
-		self._P0 = xavier_var(
-			'P_0', [self._IMG_DIM, self._TXT_DIM])
-		v0 = tf.tanh(tf.matmul(
-			tf.reduce_mean(self.vn, 1), self._P0))
-		u0 = tf.reduce_sum(self._ut, 1) / self._len
+		v0 = tf.reduce_mean(self._vt, 1) # batch x 150 x img_out_dim
+		u0 = tf.reduce_sum(self._ut, 1) / self._txt_len
 		m0 = tf.multiply(v0, m0)
-
 		self._vk, self._uk, self._mk = [v0], [u0], [m0]
 
-	_img_attend = attention.img_attend
-	_txt_attend = attention.txt_attend
 
-	def _build_step(self, memory, step):
-		v_step = self._img_attend(memory, step)
-		u_step = self._txt_attend(memory, step)
+	def _build_step(self, step, FLAGS):
+		memory = self._mk[-1]
+		
+		v_step = attention.tanh_attend(
+			FLAGS.img_out_dim, FLAGS.hid_dim, 
+			self._vk[-1], memory, step)
+		
+		u_step = attention.tanh_attend(
+			FLAGS.txt_out_dim, FLAGS.hid_dim, 
+			self._uk[-1], memory, step, mask)
+		
 		self._vk.append(v_step)
 		self._uk.append(u_step)
 
 		return tf.multiply(v_step, u_step)
 
-	def _build_net(self, nstep):
+	def _build_net(self, FLAGS):
 		self._build_step0()
-		for step in range(nstep):
-			m_next = self._build_step(self._mk[-1], step) 
+		for step in range(FLAGS.nstep):
+			m_next = self._build_step(step, FLAGS) 
 			self._mk.append(m_next)
 		self._out = self._mk[-1]
 

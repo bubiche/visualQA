@@ -1,41 +1,36 @@
 import tensorflow as tf
 from .utils import xavier_var
 
-def img_attend(self, memory, step):
-	Wvm = xavier_var(
-		'Wvm_{}'.format(step), [self._TXT_DIM, self._HID_DIM])
-	Wv = xavier_var(
-		'Wv_{}'.format(step), [self._IMG_DIM, self._HID_DIM])
-	Wvh = xavier_var(
-		'Wvh_{}'.format(step), [self._HID_DIM, self._HID_DIM])
-	P = xavier_var(
-		'P_{}'.format(step), [self._IMG_DIM, self._TXT_DIM])
+EPS = 1e-3
 
-	transformed_v = tf.einsum('aij,jk->aik', self.vn, Wv)
-	transformed_m = tf.matmul(memory, Wvm)
+def _softmax(x, mask):
+	x = x - tf.reduce_min(x, -1) + EPS
+	x = tf.multiply(x, mask)
+	x = tf.exp(x) - 1.
+	x = x / tf.reduce_sum(x, -1)
+	return x
+
+def tanh_attend(inp_dim, hid_dim, # outdimlstm, mdim
+				vecs, memory, step, mask = None): # vt/ut, m(k-1)
+	Wm = xavier_var(
+		'Wm_{}'.format(step), [hid_dim, hid_dim])
+	Wf = xavier_var(
+		'Wu_{}'.format(step), [inp_dim, hid_dim])
+
+	Wh = xavier_var(
+		'Wh_{}'.format(step), [hid_dim, hid_dim])
+	
+	transformed_f = tf.einsum('aij,jk->aik', vecs, Wf)
+	transformed_m = tf.matmul(memory, Wm)
 	
 	crossed = tf.einsum('aik,ak->ai',
-		transformed_v, transformed_m)
-	transcross = tf.matmul(crossed, Wvh)
-	attention = tf.nn.softmax(transcrosse)
-	combined = tf.einsum('aij,ai->aj', self.vn, attention)
+		transformed_f, transformed_m)
 
-	return tf.tanh(tf.matmul(combined, P))
-
-def txt_attend(self, memory, step):
-	Wum = xavier_var(
-		'Wum_{}'.format(step), [self._TXT_DIM, self._HID_DIM])
-	Wu = xavier_var(
-		'Wu_{}'.format(step), [self._TXT_DIM, self._HID_DIM])
-	Wuh = xavier_var(
-		'Wuh_{}'.format(step), [self._HID_DIM, self._HID_DIM])
+	normalizer = tf.nn.softmax
+	args = [crossed]
+	if mask is not None:
+		normalizer = _softmax
+		args.append(mask)
+	attention = normalizer(*args)
 	
-	transformed_u = tf.einsum('aij,jk->aik', self.ut, Wu)
-	transformed_m = tf.matmul(memory, Wum)
-	
-	crossed = tf.einsum('aik,ak->ai',
-		transformed_u, transformed_m)
-	transcross = tf.matmul(crossed, Wuh)
-	attention = tf.nn.softmax(transcrosse)
-	
-	return tf.einsum('aij,ai->aj', self.ut, attention)
+	return tf.einsum('aij,ai->aj', vecs, attention)
