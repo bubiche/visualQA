@@ -29,7 +29,7 @@ def txt_to_vec(sentence):
 
 def extract_images(cap, n, directory, step, skip, verbose = True):
     count_save = 0
-    i = skips
+    i = skip
 
     while i < n:
         skvideo.io.vwrite("%s/frame%d.bmp" % (directory, count_save), cap[i])
