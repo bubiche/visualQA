@@ -29,17 +29,21 @@ def txt_to_vec(sentence):
     return (txt_encoder.encode([sentence]))[0]
 
 def extract_images(cap, n, directory, step, skip, verbose = True):
+    count = 0
     count_save = 0
-    i = skip
-
-    while i < n:
-        skvideo.io.vwrite("%s/frame%d.bmp" % (directory, count_save), cap[i])
-        count_save += 1    
+    for frame in cap:
+        if skip > 0:
+            skip -= 1
+            continue
+            
+        if count % step == 0:
+            skvideo.io.vwrite("%s/frame%d.bmp" % (directory, count_save), frame)
+            count_save += 1
             
         if count_save == EXTRACT_FRAME_COUNT:
             return
         
-        i += step
+        count += 1
 
 def vid_vec_from_dir(directory):
     img_list = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.bmp')]
@@ -49,7 +53,7 @@ def vid_vec_from_dir(directory):
     return vec
         
 def vid_to_vec(filename):
-    cap = skvideo.io.vread(filename)
+    cap = skvideo.io.vreader(filename)
     metadata = skvideo.io.ffprobe(filename)
     frame_count = int(metadata['video']['@nb_frames'])
         
@@ -66,6 +70,7 @@ def vid_to_vec(filename):
         os.makedirs(directory)
 
     extract_images(cap, frame_count, directory, step, skip, True)
+    cap.close()
     return vid_vec_from_dir(directory)
 
 # create hdf5 files
