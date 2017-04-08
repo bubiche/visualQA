@@ -3,6 +3,7 @@ import skvideo.io
 import os
 import h5py
 import shutil
+import datetime
 from image2vec import yolo
 import skipthoughts
 
@@ -43,7 +44,6 @@ def extract_images(cap, n, directory, step, skip, verbose = True):
 def vid_vec_from_dir(directory):
     img_list = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.bmp')]
     print('Frame count: %d' % (len(img_list)))
-    print(img_list)
     vec = yolo_net.forward(img_list)
     shutil.rmtree(directory, ignore_errors=True)
     return vec
@@ -86,6 +86,7 @@ i = 0
 for vid in video_list:
     filename = get_vid_path_from_vid_id(vid['video_id'])
     print('Working on %s' % (filename))
+    print(datetime.datetime.now())
     vid_vec = vid_to_vec(str(filename))
     #txt_vec = txt_to_vec(vid['title'])
     vid_dset[i] = vid_vec
