@@ -16,9 +16,9 @@ yolo_net = yolo.YOLO(
     'image2vec/yolo-small.weights',
     up_to = 29)
 
-print('Load Skipthoughts...')
-txt_model = skipthoughts.load_model()
-txt_encoder = skipthoughts.Encoder(txt_model)
+#print('Load Skipthoughts...')
+#txt_model = skipthoughts.load_model()
+#txt_encoder = skipthoughts.Encoder(txt_model)
 
 def get_vid_path_from_vid_id(vid_id):
     path_list = [BASE_VID_PATH, vid_id, '.mp4']
@@ -48,7 +48,6 @@ def vid_vec_from_dir(directory):
     return vec
         
 def vid_to_vec(filename):
-    print(filename)
     cap = skvideo.io.vread(filename)
     metadata = skvideo.io.ffprobe(filename)
     frame_count = int(metadata['video']['@nb_frames'])
@@ -70,7 +69,7 @@ def vid_to_vec(filename):
 
 # create hdf5 files
 vid_vec_file = h5py.File('vid_vec.hdf5', 'w')
-txt_vec_file = h5py.File('txt_vec.hdf5', 'w')
+#txt_vec_file = h5py.File('txt_vec.hdf5', 'w')
 
 with open('train_meta_v2.json') as data_file:    
     data = json.load(data_file)
@@ -79,7 +78,7 @@ with open('train_meta_v2.json') as data_file:
 video_list = data['meta']
 data_size = len(video_list)
 vid_dset = vid_vec_file.create_dataset('vid_vec', (data_size, 150, 512), dtype='f')
-txt_dset = txt_vec_file.create_dataset('txt_vec', (data_size, 4800), dtype='f')
+#txt_dset = txt_vec_file.create_dataset('txt_vec', (data_size, 4800), dtype='f')
 
 # parse meta data
 i = 0
@@ -87,10 +86,10 @@ for vid in video_list:
     filename = get_vid_path_from_vid_id(vid['video_id'])
     print('Working on %s' % (filename))
     vid_vec = vid_to_vec(str(filename))
-    txt_vec = txt_to_vec(vid['title'])
+    #txt_vec = txt_to_vec(vid['title'])
     vid_dset[i] = vid_vec
-    txt_dset[i] = txt_vec
+    #txt_dset[i] = txt_vec
     i += 1
     
 vid_vec_file.close()
-txt_vec_file.close()
+#txt_vec_file.close()
