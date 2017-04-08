@@ -48,9 +48,9 @@ def vid_vec_from_dir(directory):
     return vec
         
 def vid_to_vec(filename):
+    print(filename)
     cap = skvideo.io.vread(filename)
     metadata = skvideo.io.ffprobe(filename)
-    print(metadata)
     frame_count = int(metadata['video']['@nb_frames'])
         
     step = 0
@@ -86,7 +86,7 @@ i = 0
 for vid in video_list:
     filename = get_vid_path_from_vid_id(vid['video_id'])
     print('Working on %s' % (filename))
-    vid_vec = vid_to_vec(filename)
+    vid_vec = vid_to_vec(str(filename))
     txt_vec = txt_to_vec(vid['title'])
     vid_dset[i] = vid_vec
     txt_dset[i] = txt_vec
