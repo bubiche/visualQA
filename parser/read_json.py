@@ -83,8 +83,9 @@ txt_dset = txt_vec_file.create_dataset('txt_vec', (data_size, 4800), dtype='f')
 # parse meta data
 i = 0
 for vid in video_list:
-    print('Working on %s' % (vid['video_id']))
-    vid_vec = vid_to_vec(get_vid_path_from_vid_id(vid['video_id']))
+    filename = get_vid_path_from_vid_id(vid['video_id'])
+    print('Working on %s' % (filename))
+    vid_vec = vid_to_vec(filename)
     txt_vec = txt_to_vec(vid['title'])
     vid_dset[i] = vid_vec
     txt_dset[i] = txt_vec
