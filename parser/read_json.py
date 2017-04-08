@@ -43,6 +43,7 @@ def extract_images(cap, n, directory, step, skip, verbose = True):
 def vid_vec_from_dir(directory):
     img_list = [f for f in os.listdir(directory) if f.endswith('.bmp')]
     print('Frame count: %d' % (len(img_list)))
+    print(img_list)
     vec = yolo_net.forward(img_list)
     shutil.rmtree(directory, ignore_errors=True)
     return vec

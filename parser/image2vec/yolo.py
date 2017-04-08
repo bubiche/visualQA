@@ -40,7 +40,7 @@ class YOLO(object):
 			imsz = imsz / 255.
 			imsz = imsz[:,:,::-1]
 			return imsz
-
+		print(img_list)
 		preprocessed = list()
 		for img_path in img_list:
 			img_tensor = _preprocess(img_path)
