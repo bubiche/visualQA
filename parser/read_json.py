@@ -50,6 +50,7 @@ def vid_vec_from_dir(directory):
 def vid_to_vec(filename):
     cap = skvideo.io.vread(filename)
     metadata = skvideo.io.ffprobe(filename)
+    print(metadata)
     frame_count = int(metadata['video']['@nb_frames'])
         
     step = 0
