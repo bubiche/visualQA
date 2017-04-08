@@ -7,21 +7,25 @@ from image2vec import yolo
 import skipthoughts
 
 EXTRACT_FRAME_COUNT = 150
+BASE_VID_PATH = '/home/npnguyen/ugvideo/train_videos/'
 
 # load models
+print('Load YOLO...')
 yolo_net = yolo.YOLO(
     'image2vec/yolo-small.cfg', 
     'image2vec/yolo-small.weights',
     up_to = 29)
-    
+
+print('Load Skipthoughts...')
 txt_model = skipthoughts.load_model()
 txt_encoder = skipthoughts.Encoder(txt_model)
 
 def get_vid_path_from_vid_id(vid_id):
-    # TODO
+    path_list = [BASE_VID_PATH, vid_id, '.mp4']
+    return ''.join(path_list)
 
 def txt_to_vec(sentence):
-    return txt_encoder.encode([sentence])[0]
+    return (txt_encoder.encode([sentence]))[0]
 
 def extract_images(cap, n, directory, step, skip, verbose = True):
     count_save = 0
@@ -38,6 +42,7 @@ def extract_images(cap, n, directory, step, skip, verbose = True):
 
 def vid_vec_from_dir(directory):
     img_list = [f for f in os.listdir(directory) if x.endswith('.bmp')]
+    print('Frame count: %d' % (len(img_list)))
     vec = yolo_net.forward(img_list)
     shutil.rmtree(directory, ignore_errors=True)
     return vec
