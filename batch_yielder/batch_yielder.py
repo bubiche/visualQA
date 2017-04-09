@@ -49,7 +49,7 @@ class BatchYielder(object):
                 for j in range(b*self.batch_size, b*self.batch_size + self.batch_size):
                     if j >= self.data_size: continue
                     x_instance = self.get_x_at_index(self.shuffle_idx[j])
-                    if x_instance_text is None: continue
+                    if x_instance is None: continue
                     y_instance = self.get_annotation_at_index(self.shuffle_idx[j])
 
                     x_batch.append(x_instance)
