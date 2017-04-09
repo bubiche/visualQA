@@ -49,7 +49,6 @@ class HorseNet(object):
 		focused = self._volume * attention
 
 		conved = conv_pool_leak(focused, 1024, 2048)
-		print(conved.get_shape())
 		feat = tf.reduce_sum(conved, [1, 2])
 
 		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))

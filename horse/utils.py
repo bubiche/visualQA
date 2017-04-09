@@ -3,7 +3,7 @@ from tensorflow.contrib.layers import xavier_initializer as xavier
 from tensorflow.contrib.layers import xavier_initializer_conv2d as xavier_conv
 
 def cosine_sim(mem, ref):
-	mem_norm = tf.norm(mem, axis = -1)
+	mem_norm = tf.norm(mem, axis = -1, keep_dims = True)
 	ref_norm = tf.norm(ref)
 	dot_prod = tf.matmul(mem, tf.transpose(ref))
 	cosine_sim = dot_prod / (mem_norm * ref_norm)
