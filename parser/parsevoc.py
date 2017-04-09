@@ -12,7 +12,7 @@ print('create hdf5 file')
 img_vec_file = h5py.File('voc_vec.hdf5', 'w')
 count_file = h5py.File('voc_count.hdf5', 'w')
 img_dset = img_vec_file.create_dataset('vec', (2198, 14, 14, 512), dtype='f')
-count_dset = count_file.create_dataset('count', (2198), dtype='i')
+count_dset = count_file.create_dataset('count', (2198,), dtype='i')
 
 print('Load YOLO...')
 net = yolo.YOLO(

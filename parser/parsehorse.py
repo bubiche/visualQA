@@ -31,7 +31,7 @@ for img in img_list:
     else:
         count_list.append(file_len(file_name))
 
-count_dset = count_file.create_dataset('count', data=count_list)
+count_dset = count_file.create_dataset('count', data=count_list, dtype='i')
 print('Count shape')
 print(count_dset.shape)
 
