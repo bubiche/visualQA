@@ -1,2 +1,4 @@
 *.weights
 *.pyc
+*.jpg
+*.groundtruth
