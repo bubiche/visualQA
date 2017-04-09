@@ -1,6 +1,6 @@
 import tensorflow as tf
-import tensorflow.contrib.layers.xavier_initializer as xavier
-import tensorflow.contrib.layers.xavier_initializer_conv2d as xavier_conv
+from tensorflow.contrib.layers import xavier_initializer as xavier
+from tensorflow.contrib.layers import xavier_initializer_conv2d as xavier_conv
 
 def cosine_sim(mem, ref):
 	mem_norm = tf.norm(mem, axis = -1)
