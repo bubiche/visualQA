@@ -39,9 +39,9 @@ print('Load YOLO...')
 net = yolo.YOLO(
     'image2vec/yolo-full.cfg', 
     'image2vec/yolo-full.weights',
-    up_to = 23)
+    up_to = 28)
 
-img_dset = img_vec_file.create_dataset('vec', (340, 14, 14, 512), dtype='f')
+img_dset = img_vec_file.create_dataset('vec', (340, 7, 7, 1024), dtype='f')
 i = 0
 for img in img_list:
     vec = net.forward([img])

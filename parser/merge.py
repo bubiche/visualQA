@@ -11,7 +11,7 @@ def merge_dat(f1, f2, dset_name, out_file):
     total_size = dset1.shape[0] + dset2.shape[0]
     
     if dset_name == 'vec':
-        out_dset = output_file.create_dataset(dset_name, (total_size, 14, 14, 512), dtype='f')
+        out_dset = output_file.create_dataset(dset_name, (total_size, 7, 7, 1024), dtype='f')
     elif dset_name == 'count':
         out_dset = output_file.create_dataset(dset_name, (total_size,), dtype='i')
     else:
