@@ -42,7 +42,7 @@ class HorseNet(object):
 		reference = tf.reshape(self._yolo.out, [1, 1024])
 
 		similar = cosine_sim(volume_flat, reference)
-		similar = tf.reshape(simiar, [-1, 49])
+		similar = tf.reshape(similar, [-1, 49])
 
 		sharped = sharpen(similar)
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
