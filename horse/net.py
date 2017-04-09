@@ -39,7 +39,7 @@ class HorseNet(object):
 
 	def _build_net(self):
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
-		reference = tf.reshape(self._yolo.out, [1024])
+		reference = tf.reshape(self._yolo.out, [1, 1024])
 
 		similar = cosine_sim(volume_flat, reference)
 		similar = tf.reshape(simiar, [-1, 49])
