@@ -26,7 +26,6 @@ for img in img_list:
     file_name_pre = os.path.splitext(img)[0]
     name_list = [file_name_pre, '_entires.groundtruth']
     file_name = ''.join(name_list)
-    print(file_name)
     if os.path.isfile(file_name):
         count_list.append(0)
     else:
@@ -41,9 +40,15 @@ net = yolo.YOLO(
     'image2vec/yolo-small.cfg', 
     'image2vec/yolo-small.weights',
     up_to = 29)
-vec = net.forward(img_list)  
- 
-img_dset = img_vec_file.create_dataset('vec', data=vec)
+
+img_dset = img_vec_file.create_dataset('vec', (340, 512), dtype='f')
+i = 0
+for img in img_list:
+    print(i)
+    vec = net.forward([img])
+    i += 1
+    img_dset[i] = vec[0]
+
  
 img_vec_file.close()
 count_file.close()
