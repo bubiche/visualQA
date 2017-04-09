@@ -74,17 +74,17 @@ class HorseNet(object):
 	def train(self):
 		loss_mva = None
 		batches = enumerate(self.batch_yielder.next_batch())
-		fetches = [self._train_op, self._out, self._loss]
+		fetches = [self._train_op, self._loss]
 		for step, (feature, target) in batches:
-			_, out, loss = self._sess.run(fetches, {
+			_, loss = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target
 			})
 
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
-			_log('step = {}, out = {}, loss = {}, loss_mva = {}'.format(
-				step, out, loss, loss_mva))
+			_log('step = {}, loss = {}, loss_mva = {}'.format(
+				step, loss, loss_mva))
 
 	def predict(self, img_list):
 		def _preprocess(img_path):
