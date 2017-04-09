@@ -29,7 +29,7 @@ for (key, value) in sorted_data:
     i += 1
     if i % 100 == 0:
         print(i)
-    if i = 2198:
+    if i == 2198:
         break
         
 img_vec_file.close()
