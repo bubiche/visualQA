@@ -48,7 +48,7 @@ class HorseNet(object):
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
-		conved = conv_pool_leak(self._focused, 1024, 2048)
+		conved = conv_pool_leak(focused, 1024, 2048)
 		feat = tf.reduce_sum(conved, [0, 1, 2])
 
 		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
