@@ -1,8 +1,8 @@
 from image2vec import yolo
 
 net = yolo.YOLO(
-	'image2vec/yolo-small.cfg', 
-	'image2vec/yolo-small.weights',
+	'image2vec/yolo-full.cfg', 
+	'image2vec/yolo-full.weights',
 	up_to = 29)
 
 img_list = [
