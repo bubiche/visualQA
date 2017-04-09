@@ -80,7 +80,7 @@ class HorseNet(object):
 				self._target: target
 			})
 
-			loss_mva = loss if loss_mva is None else:
+			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
 			_log('step = {}, loss = {}, loss_mva = {}'.format(
 				step, loss, loss_mva))
