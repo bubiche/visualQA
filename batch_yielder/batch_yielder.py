@@ -46,7 +46,7 @@ class BatchYielder(object):
                 x_batch = list()
                 y_batch = list()
 
-                for j in range(b*self.batch_size, b*self.batch_size + batch_size):
+                for j in range(b*self.batch_size, b*self.batch_size + self.batch_size):
                     if j >= self.data_size: continue
                     x_instance = self.get_x_at_index(self.shuffle_idx[j])
                     if x_instance_text is None: continue
