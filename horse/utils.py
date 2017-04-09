@@ -37,7 +37,7 @@ def conv_pool_leak(x, feat_in, feat_out):
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(
 		temp, xavier_var_conv('convw', [3, 3, feat_in, feat_out]), 
-		padding = 'VALID', strides =  [1, 1, 1, 1]
+		padding = 'VALID', strides = [1, 1, 1, 1])
 	conved = tf.nn.bias_add(temp, xavier_var('convb', [channel_out]))
 
 	# pool
