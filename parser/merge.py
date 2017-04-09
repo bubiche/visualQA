@@ -29,3 +29,6 @@ def merge_dat(f1, f2, dset_name, out_file):
     output_file.close()
     input_file_1.close()
     input_file_2.close()
+
+merge_dat('horses_vec.hdf5', 'voc_vec.hdf5', 'vec', 'full_vec.hdf5')
+merge_dat('horses_count.hdf5', 'voc_count.hdf5', 'count', 'full_count.hdf5')

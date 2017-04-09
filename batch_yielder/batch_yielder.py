@@ -3,7 +3,11 @@ import h5py
 
 class BatchYielder(object):
 
-    def __init__(self, batch_size, epoch, vec_path, count_path):
+    def __init__(self, batch_size, epoch, vec_path, count_path, n_use):
+        '''
+        n_use = 1439 will have all horse images + 170 no horse
+        n_use =2538 will have yes == no
+        '''
         self.batch_size = batch_size
         self.epoch = epoch
         self.vec_file = h5py.File(vec_path, 'r')
@@ -11,6 +15,9 @@ class BatchYielder(object):
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file['count']
         self.data_size = self.get_data_size()
+        self.n_use = n_use
+        if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
+        self.data_size = self.n_use
         if self.batch_size > self.data_size: self.batch_size = self.data_size
         self.batch_per_epoch = np.ceil(self.data_size/self.batch_size)
 
