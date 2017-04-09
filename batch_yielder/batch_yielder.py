@@ -32,10 +32,10 @@ class BatchYielder(object):
         self.shuffle_idx = np.random.permutation(self.data_size)
 
     def get_x_at_index(self, idx):
-        return vec_dset[idx]
+        return self.vec_dset[idx]
 
     def get_annotation_at_index(self, idx):
-        return count_dset[idx]
+        return self.count_dset[idx]
 
     def next_batch(self):
         for i in range(self.epoch):
