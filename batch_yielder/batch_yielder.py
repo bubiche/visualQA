@@ -3,39 +3,32 @@ import h5py
 
 class BatchYielder(object):
 
-    def __init__(self, batch_size, epoch, text_path, video_path):
+    def __init__(self, batch_size, epoch, vec_path, count_path):
         self.batch_size = batch_size
         self.epoch = epoch
-        self.text_file = h5py.File(text_path, 'r')
-        self.video_file = h5py.File(video_path, 'r')
-        self.txt_vec = self.text_file['txt_vec']
-        self.txt_info = self.text_file['txt_info']
-        self.vid_vec = self.video_file['vid_vec']
+        self.vec_file = h5py.File(vec_path, 'r')
+        self.count_file = h5py.File(count_path, 'r')
+        self.vec_dset = self.vec_file['vec']
+        self.count_dset = self.count_file['count']
         self.data_size = self.get_data_size()
         if self.batch_size > self.data_size: self.batch_size = self.data_size
         self.batch_per_epoch = np.ceil(self.data_size/self.batch_size)
 
     def __del__(self):
-        self.text_file.close()
-        self.video_file.close()
+        self.vec_file.close()
+        self.count_file.close()
 
     def get_data_size(self):
-        return self.txt_vec.shape[0]
+        return self.vec_dset.shape[0]
 
     def shuffle_data(self):
         self.shuffle_idx = np.random.permutation(self.data_size)
 
-    def get_vector_for_text_at_index(self, idx):
-        return self.txt_vec[idx]
-
-    def get_vector_for_video_at_index(self, idx):
-        return self.vid_vec[txt_info[0]]
-        
-    def get_text_len_at_index(self, idx):
-        return self.txt_info[1]
+    def get_x_at_index(self, idx):
+        return vec_dset[idx]
 
     def get_annotation_at_index(self, idx):
-        #TODO: get the annotation at index idx
+        return count_dset[idx]
 
     def next_batch(self):
         for i in range(self.epoch):
@@ -43,21 +36,16 @@ class BatchYielder(object):
             self.shuffle_data()
             for b in range(self.batch_per_epoch):
                 # yield these
-                x_batch = [[] for tmp in range(3)]
+                x_batch = list()
                 y_batch = list()
 
                 for j in range(b*self.batch_size, b*self.batch_size + batch_size):
                     if j >= self.data_size: continue
-                    x_instance_text = self.get_vector_for_text_at_index(self.shuffle_idx[j])
+                    x_instance = self.get_x_at_index(self.shuffle_idx[j])
                     if x_instance_text is None: continue
-                    x_instance_text_len = self.get_text_len_at_index(self.shuffle_idx[j])
-                    x_instance_video = self.get_vector_for_video_at_index(self.shuffle_idx[j])
                     y_instance = self.get_annotation_at_index(self.shuffle_idx[j])
 
-                    x_batch[0].append(x_instance_video)
-                    x_batch[1].append(x_instance_text)
-                    x_batch[2].append(x_instance_text_len)
-
+                    x_batch.append(x_instance)
                     y_batch.append(y_instance)
 
                 yield x_batch, y_batch
