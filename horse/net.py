@@ -51,8 +51,8 @@ class HorseNet(object):
 		conved = conv_pool_leak(self._focused, 1024, 2048)
 		feat = tf.reduce_sum(conved, [0, 1, 2])
 
-		out = tf.matmul(feat, xavier_var([2048, 1]))
-		out += xavier_var([1,])
+		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
+		out += xavier_var('fcb', [1,])
 		self._out = tf.nn.relu(out)
 
 		if self._flags.train:

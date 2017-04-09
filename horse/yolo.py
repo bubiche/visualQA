@@ -16,7 +16,7 @@ class YOLO(object):
 			if i == 0:
 				self._meta = layer_cfg
 				inp_shape = self._meta['inp_size']
-				self._inp = xavier_var([1, 64, 64, 3])
+				self._inp = xavier_var('inp', [1, 64, 64, 3])
 				current = self._inp
 				continue
 

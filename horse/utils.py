@@ -12,18 +12,18 @@ def cosine_sim(mem, ref):
 def _last_dim(tensor):
 	return tensor.get_shape().as_list()[-1]
 
-def xavier_var(shape):
-	return tf.get_variable(
-		'w', shape = shape,	initializer = xavier())
+def xavier_var(shape, name):
+	return tf.get_variable(name = name, 
+		shape = shape, initializer = xavier())
 
-def xavier_var_conv(shape):
-	return tf.get_variable(
-		'w', shape = shape, initializer = xavier_conv())
+def xavier_var_conv(name, shape):
+	return tf.get_variable(name = name,
+		shape = shape, initializer = xavier_conv())
 
 def _sharp_gate(x):
 	last_dim = _last_dim(x)
-	linear = x * xavier_var((last_dim, 1))
-	linear += xavier_var((1,)) 
+	linear = x * xavier_var('gatew', (last_dim, 1))
+	linear += xavier_var('gateb', (1,)) 
 	return tf.nn.softplus(features)
 
 def sharpen(x):
@@ -36,9 +36,9 @@ def conv_pool_leak(x, feat_in, feat_out):
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(
-		temp, xavier_var_conv([3, 3, feat_in, feat_out]), 
+		temp, xavier_var_conv('convw', [3, 3, feat_in, feat_out]), 
 		padding = 'VALID', strides = [1] + [stride] * 2 + [1])
-	conved = tf.nn.bias_add(temp, xavier_var([channel_out]))
+	conved = tf.nn.bias_add(temp, xavier_var('convb', [channel_out]))
 
 	# pool
 	pooled = tf.nn.max_pool(
