@@ -46,8 +46,8 @@ i = 0
 for img in img_list:
     print(i)
     vec = net.forward([img])
-    i += 1
     img_dset[i] = vec[0]
+    i += 1
 
  
 img_vec_file.close()
