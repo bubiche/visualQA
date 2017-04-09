@@ -11,8 +11,8 @@ flags.DEFINE_boolean("train", True, "train the whole net")
 flags.DEFINE_float("lr", 1e-5, "learning rate")
 flags.DEFINE_string("trainer", "rmsprop", "training algorithm")
 flags.DEFINE_boolean("savepb", False, "save net and weight to a .pb file")
-flags.DEFINE_string("cfg", "horses/yolo-full.cfg", "path to YOLO cfg file")
-flags.DEFINE_string("weight", "horses/yolo-full.weights", "path to YOLO weight file")
+flags.DEFINE_string("cfg", "horse/yolo-full.cfg", "path to YOLO cfg file")
+flags.DEFINE_string("weight", "horse/yolo-full.weights", "path to YOLO weight file")
 FLAGS = flags.FLAGS
 
 horse_net = HorseNet(FLAGS)
