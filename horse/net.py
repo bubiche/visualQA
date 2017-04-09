@@ -1,5 +1,5 @@
 import tensorflow as tf
-from yolo import YOLO
+from .yolo import YOLO
 from batch_yielder.batch_yielder import BatchYielder
 import cv2
 from .utils import cosine_sim, sharpen
