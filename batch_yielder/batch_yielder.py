@@ -19,7 +19,7 @@ class BatchYielder(object):
         if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
         self.data_size = self.n_use
         if self.batch_size > self.data_size: self.batch_size = self.data_size
-        self.batch_per_epoch = np.ceil(self.data_size/self.batch_size)
+        self.batch_per_epoch = int(np.ceil(self.data_size/self.batch_size))
 
     def __del__(self):
         self.vec_file.close()
