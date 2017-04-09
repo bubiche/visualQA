@@ -15,7 +15,7 @@ class YOLO(object):
 		for i, layer_cfg in enumerate(cfg_yielder(cfg_path)):
 			if i == 0:
 				self._meta = layer_cfg
-				inp_shape = self._meta['inp_size']
+				inp_shape = self._meta['inp_shape']
 				self._inp = xavier_var([1] + inp_shape)
 				current = self._inp
 				continue
