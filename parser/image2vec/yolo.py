@@ -26,7 +26,7 @@ class YOLO(object):
 			layer.build(self._weight_yielder, *layer_cfg[2:])
 			self.layers.append(layer)
 			current = layer.out
-			print(index, layer_type, current.get_shape().as_list())
+			#print(index, layer_type, current.get_shape().as_list())
 
 		self.out = current
 		self.sess = tf.Session()
