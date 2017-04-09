@@ -4,10 +4,13 @@ import os
 import os.path
 
 def file_len(fname):
-    with open(fname) as f:
-        for i, l in enumerate(f):
-            pass
-    return i + 1
+    try:
+        with open(fname) as f:
+            for i, l in enumerate(f):
+                pass
+        return i + 1
+    except OSError:
+        return 0
     
 
 
@@ -23,6 +26,7 @@ for img in img_list:
     file_name_pre = os.path.splitext(img)[0]
     name_list = [file_name_pre, '_entires.groundtruth']
     file_name = ''.join(name_list)
+    print(file_name)
     if os.path.isfile(file_name):
         count_list.append(0)
     else:
