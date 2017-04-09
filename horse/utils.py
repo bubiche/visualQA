@@ -22,7 +22,7 @@ def xavier_var_conv(name, shape):
 
 def _sharp_gate(x):
 	last_dim = _last_dim(x)
-	linear = x * xavier_var('gatew', (last_dim, 1))
+	linear = tf.matmul(x, xavier_var('gatew', (last_dim, 1)))
 	linear += xavier_var('gateb', (1,)) 
 	return tf.nn.softplus(linear)
 
