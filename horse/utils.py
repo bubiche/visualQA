@@ -12,7 +12,7 @@ def cosine_sim(mem, ref):
 def _last_dim(tensor):
 	return tensor.get_shape().as_list()[-1]
 
-def xavier_var(shape, name):
+def xavier_var(name, shape):
 	return tf.get_variable(name = name, 
 		shape = shape, initializer = xavier())
 
