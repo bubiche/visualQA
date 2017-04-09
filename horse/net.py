@@ -50,7 +50,7 @@ class HorseNet(object):
 
 		conved = conv_pool_leak(focused, 1024, 2048)
 		print(conved.get_shape())
-		feat = tf.reduce_sum(conved, [0, 1, 2], keep_dims = True)
+		feat = tf.reduce_sum(conved, [1, 2], keep_dims = True)
 
 		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
 		out += xavier_var('fcb', [1,])
