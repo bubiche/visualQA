@@ -1,5 +1,6 @@
 import tensorflow as tf
 from yolo import YOLO
+import cv2
 from .utils import cosine_sim, sharpen
 from .utils import conv_pool_leak, xavier_var
 from .ops import op_dict
@@ -25,11 +26,11 @@ class HorseNet(object):
 		self._flags = FLAGS
 		self._yolo = YOLO(FLAGS.cfg, FLAGS.weight, 28)
 		self.batch_yielder = BatchYielder(
-			FLAGS.batch_size, FLAGS.epoch, FLAGS.txt_path, FLAGS.vid_path)
+			FLAGS.batch_size, FLAGS.epoch,
+			FLAGS.vec_path, FLAGS.count_path, FLAGS.n_use)
 
 		self._build_placeholder()
 		self._build_net()
-		self._build_loss()
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
