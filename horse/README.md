@@ -12,5 +12,5 @@ feature_vectors * cosine_similarity(ref_vector, feature_vectors)
 -> focused_vectors
 
 focused_vectors -> conv() -> [3x3x2048]
--> reduce_sum() -> [2048] -> FC() -> 1 
+-> reduce_sum() -> [2048] -> ReLU(FC()) -> 1 
 ```
