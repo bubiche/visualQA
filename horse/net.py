@@ -75,7 +75,6 @@ class HorseNet(object):
 		correct = tf.cast(correct, tf.float32)
 		self._accuracy = tf.reduce_mean(correct)
 
-
 	def _build_trainer(self):
 		optimizer = self._TRAINER[self._flags.trainer](self._flags.lr)
 		gradients = optimizer.compute_gradients(self._loss)
@@ -97,22 +96,24 @@ class HorseNet(object):
 			
 			_, loss, accuracy = self._sess.run(fetches, {
 				self._volume: feature,
-				self._target: target
-			})
+				self._target: target})
+			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
-			message = '{}. loss {} mva {} acc {} '.format(
+			message = '{}. loss {} mva {} acc {}% '.format(
 				step, loss, loss_mva, accuracy)
 
 			if _mult(step, self._flags.valid_every):
 				valid_accuracy = self._accuracy_data(
 					self._batch_yielder.validation_set())
-				message += 'valid acc {} '.format(valid_accuracy)
+				valid_accuracy = int(valid_accuracy * 100)
+				message += 'valid acc {}% '.format(valid_accuracy)
 
 			if _mult(step, self._flags.test_every):
 				test_accuracy = self._accuracy_data(
 					self._batch_yielder.test_set())
-				message += 'test acc {} '.format(test_accuracy)
+				test_accuracy = int(test_accuracy * 100)
+				message += 'test acc {}%'.format(test_accuracy)
 
 			_log(message)
 			
