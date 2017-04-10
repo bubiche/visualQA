@@ -22,8 +22,8 @@ class a(object):
         self.val_count = h5py.File('val_count.hdf5', 'w')
         self.test_vec = h5py.File('test_vec.hdf5', 'w')
         self.test_count = h5py.File('test_count.hdf5', 'w')
-        self.tran_vec = h5py.File('train_vec.hdf5', 'w')
-        self.tran_count = h5py.File('train_count.hdf5', 'w')
+        self.train_vec = h5py.File('train_vec.hdf5', 'w')
+        self.train_count = h5py.File('train_count.hdf5', 'w')
         
         self.val_vec_dset = self.val_vec.create_dataset('vec', (self.n_val, 7, 7, 1024), dtype='f')
         self.val_count_dset = self.val_vec.create_dataset('count', (self.n_val,), dtype='i')
@@ -57,8 +57,8 @@ class a(object):
         self.val_count.close()
         self.test_vec.close()
         self.test_count.close()
-        self.tran_vec.close()
-        self.tran_count.close()
+        self.train_vec.close()
+        self.train_count.close()
         
     def get_data_size(self):
         return self.vec_dset.shape[0]
