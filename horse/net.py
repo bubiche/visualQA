@@ -3,7 +3,7 @@ from .yolo import YOLO
 from batch_yielder.batch_yielder import BatchYielder
 import cv2
 import os
-from .utils import cosine_sim, sharpen
+from .utils import cosine_sim, sharpen, tanh_gate
 from .utils import conv_pool_leak, xavier_var, const_var
 from .ops import op_dict
 
@@ -43,7 +43,9 @@ class HorseNet(object):
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
 		reference = tf.reshape(self._yolo.out, [1, 1024])
 
-		similar = cosine_sim(volume_flat, reference)
+		tanh_vol = tanh_gate(volume_flat, 1024, 512)
+		tanh_ref = tanh_gate(reference, 1024, 512)
+		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
 		similar = (similar + 1.) / 2.
 
