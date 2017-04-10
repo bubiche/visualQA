@@ -28,7 +28,7 @@ i = 0
 for (key, value) in sorted_data:
     vec = net.forward([key])
     img_dset[i] = vec[0]
-    img_dset[i] = value
+    count_dset[i] = value
     i += 1
     if i % 100 == 0:
         print(i)

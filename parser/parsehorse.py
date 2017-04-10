@@ -11,8 +11,6 @@ def file_len(fname):
         return i + 1
     except OSError:
         return 0
-    
-
 
 print('create hdf5 file')
 img_vec_file = h5py.File('horses_vec.hdf5', 'w')
@@ -26,12 +24,13 @@ for img in img_list:
     file_name_pre = os.path.splitext(img)[0]
     name_list = [file_name_pre, '_entires.groundtruth']
     file_name = ''.join(name_list)
+    print(file_name)
     if os.path.isfile(file_name):
         count_list.append(0)
     else:
         count_list.append(file_len(file_name))
 
-count_dset = count_file.create_dataset('count', data=count_list, dtype='i')
+count_dset = count_file.create_dataset('count', data=count_list)
 print('Count shape')
 print(count_dset.shape)
 
