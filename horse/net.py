@@ -122,7 +122,7 @@ class HorseNet(object):
 			
 			if _mult(step, self._flags.save_every):
 				print('Saving ckpt at step {}'.format(step))
-				file_name = 'horse-{}'
+				file_name = 'horse-{}'.format(step)
 				path = os.path.join(self._flags.backup, file_name)
 				self._saver.save(self._sess, path)
 
