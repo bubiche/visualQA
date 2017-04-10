@@ -41,6 +41,11 @@ def sharpen(x):
 	summation = tf.reduce_sum(power, -1, keep_dims = True)
 	return power / summation
 
+def tanh_gate(x, feat_in, feat_out):
+	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
+	linear += xavier_var('tanhb', (feat_out,))
+	return tf.tanh(linear)
+
 def conv_pool_leak(x, feat_in, feat_out):
 	# conv
 	padding = [[1, 1]] * 2
