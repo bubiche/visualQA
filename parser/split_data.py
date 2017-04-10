@@ -36,7 +36,7 @@ class Splitter(object):
         while i < self.n_train:
             self.train_vec_dset_tmp[i] = self.get_x_at_index(self.shuffle_idx[i])
             self.train_count_dset_tmp[i] = self.get_annotation_at_index(self.shuffle_idx[i])
-            if self.train_count_dset_tmp[i] == 0: yes += 1
+            if self.train_count_dset_tmp[i] > 0: yes += 1
             i += 1
             if i % 100 == 0: print(i)
         
@@ -50,7 +50,7 @@ class Splitter(object):
         while i < self.n_val:
             self.val_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.n_train])
             self.val_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.n_train])
-            if val_count_dset[i] == 0: yes += 1
+            if self.val_count_dset[i] > 0: yes += 1
             i += 1
         
         print(self.val_vec_dset.shape)
@@ -63,7 +63,7 @@ class Splitter(object):
         while i < self.n_test:
             self.test_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.n_train + self.n_val])
             self.test_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.n_train + self.n_val])
-            if test_count_dset[i] == 0: yes += 1
+            if self.test_count_dset[i] > 0: yes += 1
             i += 1
          
         print(self.test_vec_dset.shape)
