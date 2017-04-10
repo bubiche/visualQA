@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.contrib.layers import xavier_initializer as xavier
 from tensorflow.contrib.layers import xavier_initializer_conv2d as xavier_conv
-import tensorflow.random_normal_initializer as guassian
+from tensorflow import random_normal_initializer as guassian
 
 def cosine_sim(mem, ref):
 	mem_norm = tf.norm(mem, axis = -1, keep_dims = True)
