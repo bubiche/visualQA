@@ -13,8 +13,8 @@ class BatchYielder(object):
         self.data_size = self.get_data_size()
         self.n_use = flags.n_use
         if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
-        self.n_val = int(n_use * flags.val_ratio / 100)
-        self.n_test = int(n_use * flags.test_ratio / 100)
+        self.n_val = int(self.n_use * flags.val_ratio / 100)
+        self.n_test = int(self.n_use * flags.test_ratio / 100)
         self.train_size = self.n_use - self.n_val - self.n_test
         self.shuffle_data()
         self.create_val_test_files()
