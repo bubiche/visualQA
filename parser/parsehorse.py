@@ -21,7 +21,7 @@ for img in img_list:
     file_name_pre = os.path.splitext(img)[0]
     name_list = [file_name_pre, '_entires.groundtruth']
     file_name = ''.join(name_list)
-    if os.path.isfile(file_name):
+    if not os.path.isfile(file_name):
         count_list.append(0)
     else:
         print(file_len(file_name))
