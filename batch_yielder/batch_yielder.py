@@ -1,7 +1,6 @@
 import numpy as np
 import h5py
 import random
-import ..parser.split_data as sd
 
 class BatchYielder(object):
 

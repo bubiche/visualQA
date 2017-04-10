@@ -15,7 +15,7 @@ class Splitter(object):
         self.n_train = self.data_size - self.n_val - self.n_test
         self.shuffle_data()
         
-    def save_train_val_test()
+    def save_train_val_test(self):
         self.val_vec = h5py.File('val_vec.hdf5', 'w')
         self.val_count = h5py.File('val_count.hdf5', 'w')
         self.test_vec = h5py.File('test_vec.hdf5', 'w')
