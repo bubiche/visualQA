@@ -130,7 +130,6 @@ class HorseNet(object):
 				self._target: target_feed
 			})
 
-
 	def predict_img(self):
 		def _preprocess(img_path):
 			im = cv2.imread(img_path)
@@ -149,6 +148,3 @@ class HorseNet(object):
 
 		return self._sess.run(
 			self._out, {self._volume : preprocessed})
-
-
-
