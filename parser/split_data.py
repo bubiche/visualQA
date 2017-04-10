@@ -1,3 +1,6 @@
+import numpy as np
+import h5py
+
 class a(object):
 
     def __init__(self):
