@@ -30,10 +30,7 @@ class HorseNet(object):
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
 		self._yolo = YOLO(FLAGS.cfg, FLAGS.weight, 28)
-		self._batch_yielder = BatchYielder(
-			FLAGS.batch_size, FLAGS.epoch,
-			FLAGS.vec_path, FLAGS.count_path, FLAGS.n_use)
-
+		self._batch_yielder = BatchYielder(FLAGS)
 		self._build_placeholder()
 		self._build_net()
 
