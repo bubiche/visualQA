@@ -36,7 +36,7 @@ class Splitter(object):
         while i < self.n_train:
             self.train_vec_dset_tmp[i] = self.get_x_at_index(self.shuffle_idx[i])
             self.train_count_dset_tmp[i] = self.get_annotation_at_index(self.shuffle_idx[i])
-            if train_count_dset_tmp[i] == 0: yes += 1
+            if self.train_count_dset_tmp[i] == 0: yes += 1
             i += 1
             if i % 100 == 0: print(i)
         
