@@ -11,6 +11,9 @@ def _log(*msgs):
 	for msg in list(msgs):
 		print(msg)
 
+def _mult(a, b):
+	return (a + 1) % b == 0
+
 class HorseNet(object):
 
 	_TRAINER = dict({
@@ -27,7 +30,7 @@ class HorseNet(object):
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
 		self._yolo = YOLO(FLAGS.cfg, FLAGS.weight, 28)
-		self.batch_yielder = BatchYielder(
+		self._batch_yielder = BatchYielder(
 			FLAGS.batch_size, FLAGS.epoch,
 			FLAGS.vec_path, FLAGS.count_path, FLAGS.n_use)
 
@@ -66,6 +69,12 @@ class HorseNet(object):
 	def _build_loss(self):
 		self._target = tf.placeholder(tf.float32, [None])
 		self._loss = tf.nn.l2_loss(self._target - self._out)
+		int_target = tf.cast(self._target, tf.int32)
+		int_out = tf.cast(self._out, tf.int32)
+		correct = tf.equal(int_target, int_out)
+		correct = tf.cast(correct, tf.float32)
+		self._accuracy = tf.reduce_mean(correct)
+
 
 	def _build_trainer(self):
 		optimizer = self._TRAINER[self._flags.trainer](self._flags.lr)
@@ -74,27 +83,54 @@ class HorseNet(object):
 		self._saver = tf.train.Saver(tf.global_variables(),
 			max_to_keep = self._flags.keep)
 
+	def load_from_ckpt(self):
+		load_name = 'horse-{}'.format(self._flags.load)
+		load_path = os.path.join(self._flags.backup, load_name)
+		print('Loading from {}'.format(load_path))
+		self._saver.restore(self._sess, load_path)
+
 	def train(self):
 		loss_mva = None
-		batches = enumerate(self.batch_yielder.next_batch())
-		fetches = [self._train_op, self._loss]
+		batches = enumerate(self._batch_yielder.next_batch())
+		fetches = [self._train_op, self._loss, self._accuracy]
 		for step, (feature, target) in batches:
-			_, loss = self._sess.run(fetches, {
+			
+			_, loss, accuracy = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target
 			})
-
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
-			_log('step = {}, loss = {}, loss_mva = {}'.format(
-				step, loss, loss_mva))
-			if (step + 1) % self._flags.save_every == 0:
+			message = '{}. loss {} mva {} acc {} '.format(
+				step, loss, loss_mva, accuracy)
+
+			if _mult(step, self._flags.valid_every):
+				valid_accuracy = self._accuracy_data(
+					self._batch_yielder.validation_set())
+				message += 'valid acc {} '.format(valid_accuracy)
+
+			if _mult(step, self._flags.test_every):
+				test_accuracy = self._accuracy_data(
+					self._batch_yielder.test_set())
+				message += 'test acc {} '.format(test_accuracy)
+
+			_log(message)
+			
+			if _mult(step, self._flags.save_every):
 				print('Saving ckpt at step {}'.format(step))
 				file_name = 'horse-{}'
 				path = os.path.join(self._flags.backup, file_name)
 				self._saver.save(self._sess, path)
 
-	def predict(self, img_list):
+	def _accuracy_data(self, data):
+		volume_feed, target_feed = data
+		return self._sess.run(self._accuracy, {
+				self._volume: volume_feed,
+				self._target: target_feed
+			})
+
+
+	def predict_img(self):
 		def _preprocess(img_path):
 			im = cv2.imread(img_path)
 			h, w, c = self.meta['inp_size']
@@ -104,7 +140,9 @@ class HorseNet(object):
 			return imsz
 
 		preprocessed = list()
-		for img_path in img_list:
+		for img_path in os.listdir(self._flags.test_imgs):
+			if not os.path.isfile(img_path):
+				continue
 			img_tensor = _preprocess(img_path)
 			preprocessed.append(img_tensor)
 
