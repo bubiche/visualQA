@@ -37,12 +37,14 @@ class BatchYielder(object):
             self.val_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.train_size])
             self.val_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.train_size])
             i += 1
+            print('val: %d' % (i))
             
         i = 0
         while i < self.n_test:
             self.test_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.train_size + self.n_val])
             self.test_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.train_size + self.n_val])
             i += 1
+            print('test: %d' % (i))
             
         self.val_vec.close()
         self.val_count.close()
