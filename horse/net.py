@@ -61,9 +61,9 @@ class HorseNet(object):
 		conved = conv_pool_leak(focused, 1024, 1)
 		feat = tf.reduce_sum(conved, [1, 2])
 
-		# out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
-		# out += const_var('fcb', 0.0, [1,])
-		self._out = tf.nn.softplus(out)
+		# feat = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
+		# feat += const_var('fcb', 0.0, [1,])
+		self._out = tf.nn.softplus(feat)
 
 		if self._flags.train:
 			self._build_loss()
