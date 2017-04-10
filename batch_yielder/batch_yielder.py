@@ -23,18 +23,16 @@ class BatchYielder(object):
         self.test_vec_dset = self.vec_test['vec']
         self.test_count_dset = self.count_test['count']
         
+        self.yes_train_dset = self.count_file['horse']
+        print('Train set has %d images with horses' % (self.yes_train_dset[0]))
+               
         self.n_val = self.val_count_dset.shape[0]
         self.n_test = self.test_count_dset.shape[0]
-        self.data_size = self.get_data_size()
-        self.n_use = flags.n_use
-        if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
-        self.train_size = self.n_use
+        self.train_size = self.yes_train_dset[0] * 2
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
         
-        self.yes_train_dset = self.count_file['horse']
-        print('Train set has %d images with horses' % (self.yes_train_dset[0]))
-        
+
     def get_data_size(self):
         return self.vec_dset.shape[0]
 
