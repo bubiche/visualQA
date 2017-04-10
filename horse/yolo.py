@@ -15,8 +15,11 @@ class YOLO(object):
 		for i, layer_cfg in enumerate(cfg_yielder(cfg_path)):
 			if i == 0:
 				self._meta = layer_cfg
-				inp_shape = self._meta['inp_size']
-				self._inp = gaussian_var('inp', 0.5, 0.1, [1, 64, 64, 3])
+				im = cv2.imread('horse.jpg')
+				im = cv2.resize(im, (64, 64))
+				im = im / 255.
+				im = im[:, :, ::-1]
+				self._inp = tf.Variable(im)
 				current = self._inp
 				continue
 
