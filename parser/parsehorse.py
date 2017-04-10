@@ -10,8 +10,8 @@ def file_len(fname):
     return count
 
 print('create hdf5 file')
-img_vec_file = h5py.File('horses_vec.hdf5', 'w')
-count_file = h5py.File('horses_count.hdf5', 'w')
+img_vec_file = h5py.File('horses_vec_23.hdf5', 'w')
+count_file = h5py.File('horses_count_23.hdf5', 'w')
 
 img_list = [f for f in os.listdir('.') if f.endswith('.jpg')]
 
@@ -35,9 +35,9 @@ print('Load YOLO...')
 net = yolo.YOLO(
     'image2vec/yolo-full.cfg', 
     'image2vec/yolo-full.weights',
-    up_to = 28)
+    up_to = 23)
 
-img_dset = img_vec_file.create_dataset('vec', (340, 7, 7, 1024), dtype='f')
+img_dset = img_vec_file.create_dataset('vec', (340, 14, 14, 512), dtype='f')
 i = 0
 for img in img_list:
     vec = net.forward([img])
