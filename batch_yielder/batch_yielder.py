@@ -22,6 +22,8 @@ class BatchYielder(object):
         self.test_vec_dset = self.vec_test['vec']
         self.test_count_dset = self.count_test['count']
         
+        self.n_val = val_count_dset.shape[0]
+        self.n_test = test_count_dset.shape[0]
         self.data_size = self.get_data_size()
         self.n_use = flags.n_use
         if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
@@ -65,7 +67,7 @@ class BatchYielder(object):
         ret_x = np.zeros((self.n_val, 7, 7, 1024))
         ret_y = np.zeros((self.n_val, 1024))
         
-        for i in range(n_val):
+        for i in range(self.n_val):
             ret_x[i] = self.val_vec_dset[i]
             ret_y[i] = self.val_count_dset[i]
             
@@ -75,7 +77,7 @@ class BatchYielder(object):
         ret_x = np.zeros((self.n_test, 7, 7, 1024))
         ret_y = np.zeros((self.n_test, 1024))
         
-        for i in range(n_test):
+        for i in range(self.n_test):
             ret_x[i] = self.test_vec_dset[i]
             ret_y[i] = self.test_count_dset[i]
             
