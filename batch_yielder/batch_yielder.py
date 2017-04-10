@@ -4,17 +4,17 @@ import h5py
 class BatchYielder(object):
 
     def __init__(self, batch_size, epoch, vec_path, count_path, n_use, val_ratio, test_ratio):
-        self.batch_size = batch_size
-        self.epoch = epoch
-        self.vec_file = h5py.File(vec_path, 'r')
-        self.count_file = h5py.File(count_path, 'r')
+        self.batch_size = flags.batch_size
+        self.epoch = flags.epoch
+        self.vec_file = h5py.File(flags.vec_path, 'r')
+        self.count_file = h5py.File(flags.count_path, 'r')
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file['count']
         self.data_size = self.get_data_size()
-        self.n_use = n_use
+        self.n_use = flags.n_use
         if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
-        self.n_val = int(n_use * val_ratio / 100)
-        self.n_test = int(n_use * test_ratio / 100)
+        self.n_val = int(n_use * flags.val_ratio / 100)
+        self.n_test = int(n_use * flags.test_ratio / 100)
         self.train_size = self.n_use - self.n_val - self.n_test
         self.shuffle_data()
         self.create_val_test_files()
