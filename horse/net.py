@@ -48,7 +48,7 @@ class HorseNet(object):
 		similar = (similar + 1.) / 2.
 
 		sharped = sharpen(similar)
-		self._fetches += [self._yolo._inp]
+		#self._fetches += [self._yolo._inp]
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
