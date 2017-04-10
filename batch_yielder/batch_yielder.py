@@ -3,7 +3,7 @@ import h5py
 
 class BatchYielder(object):
 
-    def __init__(self, batch_size, epoch, vec_path, count_path, n_use, val_ratio, test_ratio):
+    def __init__(self, flags):
         self.batch_size = flags.batch_size
         self.epoch = flags.epoch
         self.vec_file = h5py.File(flags.vec_path, 'r')
