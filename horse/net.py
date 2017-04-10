@@ -91,7 +91,7 @@ class HorseNet(object):
 		loss_mva = None
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss, self._accuracy]
-		fetches = fetches += self._fetches
+		fetches = fetches + self._fetches
 		for step, (feature, target) in batches:
 			
 			fetched = self._sess.run(fetches, {
