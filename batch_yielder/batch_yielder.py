@@ -29,8 +29,8 @@ class BatchYielder(object):
         
         self.val_vec_dset = self.val_vec.create_dataset('vec', (self.n_val, 7, 7, 1024), dtype='f')
         self.val_count_dset = self.val_vec.create_dataset('count', (self.n_val,), dtype='i')
-        self.test_vec_dset = self.val_vec.create_dataset('vec', (self.n_test, 7, 7, 1024), dtype='f')
-        self.test_count_dset = self.val_vec.create_dataset('count', (self.n_test,), dtype='i')
+        self.test_vec_dset = self.test_vec.create_dataset('vec', (self.n_test, 7, 7, 1024), dtype='f')
+        self.test_count_dset = self.test_vec.create_dataset('count', (self.n_test,), dtype='i')
         
         i = 0
         while i < n_val:
@@ -55,8 +55,8 @@ class BatchYielder(object):
         
         self.val_vec_dset = self.val_vec['vec']
         self.val_count_dset = self.val_vec['count']
-        self.test_vec_dset = self.val_vec['vec']
-        self.test_count_dset = self.val_vec['count']
+        self.test_vec_dset = self.test_vec['vec']
+        self.test_count_dset = self.test_vec['count']
         
     def get_data_size(self):
         return self.vec_dset.shape[0]
