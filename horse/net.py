@@ -48,7 +48,7 @@ class HorseNet(object):
 		similar = (similar + 1.) / 2.
 
 		sharped = sharpen(similar)
-		#self._fetches += [sharped]
+		self._fetches += [self._yolo._inp]
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
@@ -100,7 +100,11 @@ class HorseNet(object):
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss, self._accuracy]
 		fetches = fetches + self._fetches
+
+		once = (None, None)
 		for step, (feature, target) in batches:
+			if step > 0:
+				feature, target = save
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
@@ -111,6 +115,11 @@ class HorseNet(object):
 				loss_mva * .9 + loss * .1
 			message = '{}. loss {} mva {} acc {}% '.format(
 				step, loss, loss_mva, accuracy)
+
+			if step == 0:
+				save = (feature, target)
+				continue
+			continue
 
 			if _mult(step, self._flags.valid_every):
 				valid_accuracy = self._accuracy_data(
