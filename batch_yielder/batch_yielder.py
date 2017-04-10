@@ -33,14 +33,14 @@ class BatchYielder(object):
         self.test_count_dset = self.test_vec.create_dataset('count', (self.n_test,), dtype='i')
         
         i = 0
-        while i < n_val:
-            val_vec_dset[i] = self.get_x_at_index(i + train_size)
-            val_count_dset[i] = self.get_annotation_at_index(i + train_size)
+        while i <self.n_val:
+            val_vec_dset[i] = self.get_x_at_index(i + self.train_size)
+            val_count_dset[i] = self.get_annotation_at_index(i + self.train_size)
             i += 1
             
-        while i < n_test:
-            test_vec_dset[i] = self.get_x_at_index(i + train_size)
-            test_count_dset[i] = self.get_annotation_at_index(i + train_size)
+        while i < self.n_test:
+            test_vec_dset[i] = self.get_x_at_index(i + self.train_size)
+            test_count_dset[i] = self.get_annotation_at_index(i + self.train_size)
             i += 1
             
         self.val_vec.close()
