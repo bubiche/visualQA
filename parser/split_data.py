@@ -32,13 +32,17 @@ class Splitter(object):
         
         print('Dump train')
         i = 0
+        yes = 0
         while i < self.n_train:
             self.train_vec_dset_tmp[i] = self.get_x_at_index(self.shuffle_idx[i])
             self.train_count_dset_tmp[i] = self.get_annotation_at_index(self.shuffle_idx[i])
+            if train_count_dset_tmp[i] == 0: yes += 1
             i += 1
+            if i % 100 == 0: print(i)
         
         print(self.train_vec_dset_tmp.shape)
         print(self.train_count_dset_tmp.shape)
+        print('yes : %d' % (yes))
         
         print('Dump val')
         i = 0
