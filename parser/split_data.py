@@ -16,14 +16,13 @@ class Splitter(object):
         tmp_vec[0:1439] = np.array(self.vec_dset)[0:1439]
         tmp_count[0:1439] = np.array(self.count_dset)[0:1439]
         
-        print('Get random')
+        print('Get random part with no horse')
         i = 1439
         while i < COUNT:
             random_idx = np.random.choice(list(range(1439, 27428)))
             tmp_vec[i] = self.vec_dset[random_idx]
             tmp_count[i] = self.count_dset[random_idx]
             i += 1
-            print(i)
             
         self.vec_dset = tmp_vec
         self.count_dset = tmp_count
