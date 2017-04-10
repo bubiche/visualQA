@@ -21,10 +21,6 @@ class BatchYielder(object):
         if self.batch_size > self.data_size: self.batch_size = self.data_size
         self.batch_per_epoch = int(np.ceil(self.data_size/self.batch_size))
 
-    def __del__(self):
-        self.vec_file.close()
-        self.count_file.close()
-
     def get_data_size(self):
         return self.vec_dset.shape[0]
 

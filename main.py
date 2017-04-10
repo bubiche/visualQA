@@ -13,6 +13,9 @@ flags.DEFINE_string("trainer", "rmsprop", "training algorithm")
 flags.DEFINE_boolean("savepb", False, "save net and weight to a .pb file")
 flags.DEFINE_string("cfg", "horse/yolo-full.cfg", "path to YOLO cfg file")
 flags.DEFINE_string("weight", "horse/yolo-full.weights", "path to YOLO weight file")
+flags.DEFINE_string("backup", "backup", "path to ckpt folder")
+flags.DEFINE_integer("save_every", 100, "ckpt every x step")
+flags.DEFINE_integer("keep", 20, "maximum ckpt to keep")
 FLAGS = flags.FLAGS
 
 horse_net = HorseNet(FLAGS)

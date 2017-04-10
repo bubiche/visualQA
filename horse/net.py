@@ -2,6 +2,7 @@ import tensorflow as tf
 from .yolo import YOLO
 from batch_yielder.batch_yielder import BatchYielder
 import cv2
+import os
 from .utils import cosine_sim, sharpen
 from .utils import conv_pool_leak, xavier_var
 from .ops import op_dict
@@ -67,9 +68,11 @@ class HorseNet(object):
 		self._loss = tf.nn.l2_loss(self._target - self._out)
 
 	def _build_trainer(self):
-	    optimizer = self._TRAINER[self._flags.trainer](self._flags.lr)
-	    gradients = optimizer.compute_gradients(self._loss)
-	    self._train_op = optimizer.apply_gradients(gradients)
+		optimizer = self._TRAINER[self._flags.trainer](self._flags.lr)
+		gradients = optimizer.compute_gradients(self._loss)
+		self._train_op = optimizer.apply_gradients(gradients)
+		self._saver = tf.train.Saver(tf.global_variables(),
+			max_to_keep = self._flags.keep)
 
 	def train(self):
 		loss_mva = None
@@ -85,6 +88,11 @@ class HorseNet(object):
 				loss_mva * .9 + loss * .1
 			_log('step = {}, loss = {}, loss_mva = {}'.format(
 				step, loss, loss_mva))
+			if (step + 1) % self._flags.save_every == 0:
+				print('Saving ckpt at step {}'.format(step))
+				file_name = 'horse-{}'
+				path = os.path.join(self._flags.backup, file_name)
+				self._saver.save(self.sess, path)
 
 	def predict(self, img_list):
 		def _preprocess(img_path):
