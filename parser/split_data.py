@@ -26,11 +26,11 @@ class a(object):
         self.train_count = h5py.File('train_count.hdf5', 'w')
         
         self.val_vec_dset = self.val_vec.create_dataset('vec', (self.n_val, 7, 7, 1024), dtype='f')
-        self.val_count_dset = self.val_vec.create_dataset('count', (self.n_val,), dtype='i')
+        self.val_count_dset = self.val_count.create_dataset('count', (self.n_val,), dtype='i')
         self.test_vec_dset = self.test_vec.create_dataset('vec', (self.n_test, 7, 7, 1024), dtype='f')
-        self.test_count_dset = self.test_vec.create_dataset('count', (self.n_test,), dtype='i')
+        self.test_count_dset = self.test_count.create_dataset('count', (self.n_test,), dtype='i')
         self.train_vec_dset = self.train_vec.create_dataset('vec', (self.train_size, 7, 7, 1024), dtype='f')
-        self.train_count_dset = self.train_vec.create_dataset('count', (self.train_size,), dtype='i')
+        self.train_count_dset = self.train_count.create_dataset('count', (self.train_size,), dtype='i')
         
         print('Dump train')
         i = 0
