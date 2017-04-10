@@ -20,8 +20,8 @@ class Splitter(object):
         i = 1439
         while i < COUNT:
             random_idx = np.random.choice(list(range(1439, 27428)))
-            tmp_vec[i] = np.array(self.vec_dset)[random_idx]
-            tmp_count[i] = np.array(self.count_dset)[random_idx]
+            tmp_vec[i] = self.vec_dset[random_idx]
+            tmp_count[i] = self.count_dset[random_idx]
             i += 1
             print(i)
             
