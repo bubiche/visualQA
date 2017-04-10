@@ -1,5 +1,6 @@
 import numpy as np
 import h5py
+import ..parser.split_data as sd
 
 class BatchYielder(object):
 
@@ -61,6 +62,7 @@ class BatchYielder(object):
                     x_batch.append(x_instance)
                     y_batch.append(y_instance)
 
+                tmp = sd.Splitter()
                 yield x_batch, y_batch
                 
     def validation_set(self):
