@@ -80,7 +80,7 @@ class Splitter(object):
             i += 1
          
         print(self.test_vec_dset.shape)
-        print(self.testcount_dset.shape)
+        print(self.test_count_dset.shape)
         
         self.val_vec.close()
         self.val_count.close()
