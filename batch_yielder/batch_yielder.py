@@ -33,14 +33,15 @@ class BatchYielder(object):
         self.test_count_dset = self.test_vec.create_dataset('count', (self.n_test,), dtype='i')
         
         i = 0
-        while i <self.n_val:
-            self.val_vec_dset[i] = self.get_x_at_index(i + self.train_size)
-            self.val_count_dset[i] = self.get_annotation_at_index(i + self.train_size)
+        while i < self.n_val:
+            self.val_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.train_size])
+            self.val_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.train_size])
             i += 1
             
+        i = 0
         while i < self.n_test:
-            self.test_vec_dset[i] = self.get_x_at_index(i + self.train_size)
-            self.test_count_dset[i] = self.get_annotation_at_index(i + self.train_size)
+            self.test_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.train_size + self.n_val])
+            self.test_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.train_size + self.n_val])
             i += 1
             
         self.val_vec.close()
@@ -74,10 +75,10 @@ class BatchYielder(object):
         return self.count_dset[idx]
 
     def get_x_train_at_index(self, idx):
-        return self.get_x_at_index(idx)
+        return self.get_x_at_index(self.shuffle_idx[idx])
         
     def get_annotation_train_at_index(self, idx):
-        return self.get_annotation_at_index(idx)
+        return self.get_annotation_at_index(self.shuffle_idx[idx])
         
     def next_batch(self):
         for i in range(self.epoch):
