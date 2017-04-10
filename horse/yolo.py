@@ -1,7 +1,7 @@
 from .cfg_parser import cfg_yielder
 from .weight_parser import weights_parser
 from .ops import op_dict
-from .utils import xavier_var
+from .utils import xavier_var, gaussian_var
 import tensorflow as tf
 import cv2
 
