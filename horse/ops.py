@@ -38,6 +38,7 @@ class conv(op):
 			padding = 'VALID', strides = [1] + [stride] * 2 + [1])
 		self.out = tf.nn.bias_add(temp, self.bias)
 
+
 class conn(op):
 	def _get_weights(self, loader, inp_size, out_size, act):
 		bias_size = out_size
@@ -55,6 +56,7 @@ class conn(op):
 		self.out = tf.nn.xw_plus_b(
 			self.inp, self.weight, self.bias)
 
+
 class maxpool(op):
 	def _build_tf(self, size, stride, pad):
 		self.out = tf.nn.max_pool(
@@ -62,17 +64,19 @@ class maxpool(op):
 			ksize = [1] + [size] * 2 + [1],
 			strides = [1] + [stride] * 2 + [1])
 
+
 class leaky(op):
 	def _build_tf(self):
 		self.out = tf.maximum(.1 * self.inp, self.inp)
 
+
 import tensorflow.contrib.slim as slim
+
 
 class flatten(op):
 	def _build_tf(self):
 		trans = tf.transpose(self.inp, [0,3,1,2])
 		self.out = slim.flatten(trans)
-
 
 
 op_dict = {
