@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.contrib.layers import xavier_initializer as xavier
 from tensorflow.contrib.layers import xavier_initializer_conv2d as xavier_conv
-from tensorflow import random_normal_initializer as guassian
+from tensorflow import random_normal_initializer as gaussian
 
 def cosine_sim(mem, ref):
 	mem_norm = tf.norm(mem, axis = -1, keep_dims = True)
@@ -19,7 +19,7 @@ def xavier_var(name, shape):
 
 def gaussian_var(name, mean, std, shape):
     return tf.get_variable(name = name,
-        shape = shape, initializer = guassian(mean, std))
+        shape = shape, initializer = gaussian(mean, std))
         
 def xavier_var_conv(name, shape):
 	return tf.get_variable(name = name,
