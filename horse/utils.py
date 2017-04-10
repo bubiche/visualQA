@@ -17,7 +17,7 @@ def xavier_var(name, shape):
 	return tf.get_variable(name = name, 
 		shape = shape, initializer = xavier())
 
-def guassian_var(name, mean, std, shape):
+def gaussian_var(name, mean, std, shape):
     return tf.get_variable(name = name,
         shape = shape, initializer = guassian(mean, std))
         
