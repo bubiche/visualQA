@@ -48,7 +48,7 @@ class HorseNet(object):
 		similar = (similar + 1.) / 2.
 
 		sharped = sharpen(similar)
-		self._fetches += [sharped]
+		#self._fetches += [sharped]
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
@@ -98,8 +98,8 @@ class HorseNet(object):
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
-			_, loss, accuracy, sharp = fetched
-			print(sharp)
+			_, loss, accuracy = fetched
+			#print(sharp)
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
