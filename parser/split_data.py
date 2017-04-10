@@ -23,6 +23,7 @@ class Splitter(object):
             tmp_vec[i] = np.array(self.vec_dset)[random_idx]
             tmp_count[i] = np.array(self.count_dset)[random_idx]
             i += 1
+            print(i)
             
         self.vec_dset = tmp_vec
         self.count_dset = tmp_count
