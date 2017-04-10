@@ -10,8 +10,8 @@ class Splitter(object):
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file['count']
         self.data_size = self.get_data_size()
-        self.n_val = int(self.n_use * 15 / 100)
-        self.n_test = int(self.n_use * 15 / 100)
+        self.n_val = int(self.data_size * 15 / 100)
+        self.n_test = int(self.data_size * 15 / 100)
         self.n_train = self.data_size - self.n_val - self.n_test
         self.shuffle_data()
         
