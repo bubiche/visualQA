@@ -11,9 +11,12 @@ class Splitter(object):
         self.count_dset = self.count_file['count']
         tmp_vec = np.zeros((COUNT, 7, 7, 1024))
         tmp_count = np.zeros((COUNT,))
+        
+        print('Get all horse images')
         tmp_vec[0:1439] = np.array(self.vec_dset)[0:1439]
         tmp_count[0:1439] = np.array(self.count_dset)[0:1439]
         
+        print('Get random')
         i = 1439
         while i < COUNT:
             random_idx = np.random.choice(list(range(1439, 27428)))
