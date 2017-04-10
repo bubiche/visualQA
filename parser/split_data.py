@@ -9,7 +9,7 @@ class Splitter(object):
         self.count_file = h5py.File('full_count.hdf5', 'r')
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file['count']
-        tmp_vec = np.zeros((COUNT, 7, 7 1024))
+        tmp_vec = np.zeros((COUNT, 7, 7, 1024))
         tmp_count = np.zeros((COUNT,))
         tmp_vec[0:1439] = np.array(self.vec_dset)[0:1439]
         tmp_count[0:1439] = np.array(self.count_dset)[0:1439]
