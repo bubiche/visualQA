@@ -88,13 +88,19 @@ class HorseNet(object):
 		print('Loading from {}'.format(load_path))
 		self._saver.restore(self._sess, load_path)
 
+	def _save_ckpt(self, step):
+		file_name = 'horse-{}'.format(step)
+		path = os.path.join(self._flags.backup, file_name)
+		if os.path.isfile(path): return
+		print('Saving ckpt at step {}'.format(step))
+		self._saver.save(self._sess, path)
+
 	def train(self):
 		loss_mva = None
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss, self._accuracy]
 		fetches = fetches + self._fetches
 		for step, (feature, target) in batches:
-			
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
@@ -121,10 +127,9 @@ class HorseNet(object):
 			_log(message)
 			
 			if _mult(step, self._flags.save_every):
-				print('Saving ckpt at step {}'.format(step))
-				file_name = 'horse-{}'.format(step)
-				path = os.path.join(self._flags.backup, file_name)
-				self._saver.save(self._sess, path)
+				self._save_ckpt(step)
+
+		self._save_ckpt(step)
 
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
