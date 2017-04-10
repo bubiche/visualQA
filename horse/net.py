@@ -119,24 +119,23 @@ class HorseNet(object):
 			if step == 0:
 				save = (feature, target)
 				continue
-			continue
 
-			if _mult(step, self._flags.valid_every):
-				valid_accuracy = self._accuracy_data(
-					self._batch_yielder.validation_set())
-				valid_accuracy = int(valid_accuracy * 100)
-				message += 'valid acc {}% '.format(valid_accuracy)
+			# if _mult(step, self._flags.valid_every):
+			# 	valid_accuracy = self._accuracy_data(
+			# 		self._batch_yielder.validation_set())
+			# 	valid_accuracy = int(valid_accuracy * 100)
+			# 	message += 'valid acc {}% '.format(valid_accuracy)
 
-			if _mult(step, self._flags.test_every):
-				test_accuracy = self._accuracy_data(
-					self._batch_yielder.test_set())
-				test_accuracy = int(test_accuracy * 100)
-				message += 'test acc {}%'.format(test_accuracy)
+			# if _mult(step, self._flags.test_every):
+			# 	test_accuracy = self._accuracy_data(
+			# 		self._batch_yielder.test_set())
+			# 	test_accuracy = int(test_accuracy * 100)
+			# 	message += 'test acc {}%'.format(test_accuracy)
 
 			_log(message)
 			
-			if _mult(step, self._flags.save_every):
-				self._save_ckpt(step)
+			# if _mult(step, self._flags.save_every):
+			# 	self._save_ckpt(step)
 
 		self._save_ckpt(step)
 
