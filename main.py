@@ -4,8 +4,12 @@ import os
 
 flags.DEFINE_integer('batch_size', 128, 'size of each batch')
 flags.DEFINE_integer('epoch', 1000, 'number of epoch')
-flags.DEFINE_string('vec_path', 'parser/full_vec.hdf5', 'path of vec file')
-flags.DEFINE_string('count_path', 'parser/full_count.hdf5', 'path of count file')
+flags.DEFINE_string('vec_path', 'parser/train_vec.hdf5', 'path of train vec file')
+flags.DEFINE_string('count_path', 'parser/train_count.hdf5', 'path of train count file')
+flags.DEFINE_string('val_vec_path', 'parser/val_vec.hdf5', 'path of val vec file')
+flags.DEFINE_string('val_count_path', 'parser/val_count.hdf5', 'path of val count file')
+flags.DEFINE_string('test_vec_path', 'parser/test_vec.hdf5', 'path of test vec file')
+flags.DEFINE_string('test_count_path', 'parser/test_count.hdf5', 'path of test count file')
 flags.DEFINE_integer('n_use', -1, 'total number of data to be used')
 flags.DEFINE_integer('val_ratio', 15, 'ratio of data to be used for validation')
 flags.DEFINE_integer('test_ratio', 15, 'ratio of data to be used for test')
@@ -20,6 +24,7 @@ flags.DEFINE_integer('test_every', 100, 'test every x step')
 flags.DEFINE_integer('valid_every', 20, 'validate every x step')
 flags.DEFINE_integer('keep', 20, 'maximum ckpt to keep')
 flags.DEFINE_integer('load', 0, 'load from ckpt x?')
+
 FLAGS = flags.FLAGS
 
 def get_dir(dirs):
