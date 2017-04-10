@@ -1,5 +1,6 @@
 import numpy as np
 import h5py
+import random
 import ..parser.split_data as sd
 
 class BatchYielder(object):
@@ -32,11 +33,16 @@ class BatchYielder(object):
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
         
+        self.yes_train_dset = self.count_dset['horse']
+        
     def get_data_size(self):
         return self.vec_dset.shape[0]
 
     def shuffle_data(self):
-        self.shuffle_idx = np.random.permutation(self.data_size)
+        self.shuffle_idx = list(range(self.yes_train_dset[0]))
+        no_horse = random.sample(range(self.yes_train_dset[0], self.train_size), self.yes_train_dset[0])
+        self.shuffle_idx.extend(no_horse)
+        np.random.shuffle(self.shuffle_idx)
 
     def get_x_at_index(self, idx):
         return self.vec_dset[idx]
