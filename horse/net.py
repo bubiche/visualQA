@@ -51,18 +51,18 @@ class HorseNet(object):
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
-		similar = (similar + 1.) / 2.
+		similar = (similar + 1.) * 5.
 
 		sharped = tf.nn.softmax(similar)
 		#self._fetches += [self._yolo._inp]
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
-		conved = conv_pool_leak(focused, 1024, 2048)
+		conved = conv_pool_leak(focused, 1024, 1)
 		feat = tf.reduce_sum(conved, [1, 2])
 
-		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
-		out += const_var('fcb', 0.0, [1,])
+		# out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
+		# out += const_var('fcb', 0.0, [1,])
 		self._out = tf.nn.softplus(out)
 
 		if self._flags.train:
@@ -109,39 +109,39 @@ class HorseNet(object):
 
 		once = (None, None)
 		for step, (feature, target) in batches:
-			if step > 0:
-				feature, target = save
+			# if step > 0:
+			# 	feature, target = save
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
 			_, loss, accuracy = fetched
-			#print(sharp)
+
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
 			message = '{}. loss {} mva {} acc {}% '.format(
 				step, loss, loss_mva, accuracy)
 
-			if step == 0:
-				save = (feature, target)
-				continue
+			# if step == 0:
+			# 	save = (feature, target)
+			# 	continue
 
-			# if _mult(step, self._flags.valid_every):
-			# 	valid_accuracy = self._accuracy_data(
-			# 		self._batch_yielder.validation_set())
-			# 	valid_accuracy = int(valid_accuracy * 100)
-			# 	message += 'valid acc {}% '.format(valid_accuracy)
+			if _mult(step, self._flags.valid_every):
+				valid_accuracy = self._accuracy_data(
+					self._batch_yielder.validation_set())
+				valid_accuracy = int(valid_accuracy * 100)
+				message += 'valid acc {}% '.format(valid_accuracy)
 
-			# if _mult(step, self._flags.test_every):
-			# 	test_accuracy = self._accuracy_data(
-			# 		self._batch_yielder.test_set())
-			# 	test_accuracy = int(test_accuracy * 100)
-			# 	message += 'test acc {}%'.format(test_accuracy)
+			if _mult(step, self._flags.test_every):
+				test_accuracy = self._accuracy_data(
+					self._batch_yielder.test_set())
+				test_accuracy = int(test_accuracy * 100)
+				message += 'test acc {}%'.format(test_accuracy)
 
 			_log(message)
 			
-			# if _mult(step, self._flags.save_every):
-			# 	self._save_ckpt(step)
+			if _mult(step, self._flags.save_every):
+				self._save_ckpt(step)
 
 		self._save_ckpt(step)
 
