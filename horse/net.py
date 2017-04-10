@@ -53,7 +53,7 @@ class HorseNet(object):
 		feat = tf.reduce_sum(conved, [1, 2])
 
 		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
-		out += const_var('fcb', 0.1, [1,])
+		out += const_var('fcb', 0.0, [1,])
 		self._out = tf.nn.softplus(out)
 
 		if self._flags.train:
