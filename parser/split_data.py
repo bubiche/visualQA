@@ -1,13 +1,28 @@
 import numpy as np
 import h5py
 
-class a(object):
+COUNT = 2538
+class Splitter(object):
 
     def __init__(self):
         self.vec_file = h5py.File('full_vec.hdf5', 'r')
         self.count_file = h5py.File('full_count.hdf5', 'r')
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file['count']
+        tmp_vec = np.zeros((COUNT, 7, 7 1024))
+        tmp_count = np.zeros((COUNT,))
+        tmp_vec[0:1439] = np.array(self.vec_dset)[0:1439]
+        tmp_count[0:1439] = np.array(self.count_dset)[0:1439]
+        
+        i = 1439
+        while i < COUNT:
+            tmp_vec[i] = np.random.choice(np.array(self.vec_dset)[1439:])
+            tmp_count[i] = np.random.choice(np.array(self.count_dset)[1439:])
+            i += 1
+            
+        self.vec_dset = tmp_vec
+        self.count_dset = tmp_count
+        
         self.data_size = self.get_data_size()
         self.n_use = -1
         if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
@@ -39,20 +54,29 @@ class a(object):
             self.train_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i])
             i += 1
         
+        print(self.train_vec_dset.shape)
+        print(self.train_count_dset.shape)
+        
         print('Dump val')
         i = 0
         while i < self.n_val:
             self.val_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.train_size])
             self.val_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.train_size])
             i += 1
-          
+        
+        print(self.val_vec_dset.shape)
+        print(self.val_count_dset.shape)
+        
         print('Dump test')
         i = 0
         while i < self.n_test:
             self.test_vec_dset[i] = self.get_x_at_index(self.shuffle_idx[i + self.train_size + self.n_val])
             self.test_count_dset[i] = self.get_annotation_at_index(self.shuffle_idx[i + self.train_size + self.n_val])
             i += 1
-            
+         
+        print(self.test_vec_dset.shape)
+        print(self.testcount_dset.shape)
+        
         self.val_vec.close()
         self.val_count.close()
         self.test_vec.close()
@@ -74,3 +98,5 @@ class a(object):
 
     def get_annotation_at_index(self, idx):
         return self.count_dset[idx]
+        
+splitter = Splitter()
