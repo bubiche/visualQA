@@ -5,8 +5,8 @@ COUNT = 2538
 class Splitter(object):
 
     def __init__(self):
-        self.vec_file = h5py.File('full_vec.hdf5', 'r')
-        self.count_file = h5py.File('full_count.hdf5', 'r')
+        self.vec_file = h5py.File('full_vec_23.hdf5', 'r')
+        self.count_file = h5py.File('full_count_23.hdf5', 'r')
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file['count']
         self.data_size = self.get_data_size()
@@ -16,12 +16,12 @@ class Splitter(object):
         self.shuffle_data()
         
     def save_train_val_test(self):
-        self.val_vec = h5py.File('val_vec.hdf5', 'w')
-        self.val_count = h5py.File('val_count.hdf5', 'w')
-        self.test_vec = h5py.File('test_vec.hdf5', 'w')
-        self.test_count = h5py.File('test_count.hdf5', 'w')
-        self.train_vec = h5py.File('train_vec_tmp.hdf5', 'w')
-        self.train_count = h5py.File('train_count_tmp.hdf5', 'w')
+        self.val_vec = h5py.File('val_vec_23.hdf5', 'w')
+        self.val_count = h5py.File('val_count_23.hdf5', 'w')
+        self.test_vec = h5py.File('test_vec_23.hdf5', 'w')
+        self.test_count = h5py.File('test_count_23.hdf5', 'w')
+        self.train_vec = h5py.File('train_vec_tmp_23.hdf5', 'w')
+        self.train_count = h5py.File('train_count_tmp_23.hdf5', 'w')
         
         self.val_vec_dset = self.val_vec.create_dataset('vec', (self.n_val, 7, 7, 1024), dtype='f')
         self.val_count_dset = self.val_count.create_dataset('count', (self.n_val,), dtype='i')
@@ -93,10 +93,10 @@ class Splitter(object):
         return self.count_dset[idx]
     
     def restructure_train(self):
-        train_vec_tmp = h5py.File('train_vec_tmp.hdf5', 'r')
-        train_count_tmp = h5py.File('train_count_tmp.hdf5', 'r')
-        train_vec = h5py.File('train_vec.hdf5', 'w')
-        train_count = h5py.File('train_count.hdf5', 'w')
+        train_vec_tmp = h5py.File('train_vec_tmp_23.hdf5', 'r')
+        train_count_tmp = h5py.File('train_count_tmp_23.hdf5', 'r')
+        train_vec = h5py.File('train_vec_23.hdf5', 'w')
+        train_count = h5py.File('train_count_23.hdf5', 'w')
         
         train_vec_dset_tmp = train_vec_tmp['vec']
         train_count_dset_tmp = train_count_tmp['count']
