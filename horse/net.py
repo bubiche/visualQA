@@ -4,7 +4,7 @@ from batch_yielder.batch_yielder import BatchYielder
 import cv2
 import os
 from .utils import cosine_sim, sharpen
-from .utils import conv_pool_leak, xavier_var
+from .utils import conv_pool_leak, xavier_var, const_var
 from .ops import op_dict
 
 def _log(*msgs):
@@ -56,8 +56,8 @@ class HorseNet(object):
 		feat = tf.reduce_sum(conved, [1, 2])
 
 		out = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
-		out += xavier_var('fcb', [1,])
-		self._out = tf.nn.relu(out)
+		out += const_var('fcb', 0.1, [1,])
+		self._out = tf.nn.softplus(out)
 
 		if self._flags.train:
 			self._build_loss()
