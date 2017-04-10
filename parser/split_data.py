@@ -13,8 +13,8 @@ class Splitter(object):
         tmp_count = np.zeros((COUNT,))
         
         print('Get all horse images')
-        tmp_vec[0:1439] = np.array(self.vec_dset)[0:1439]
-        tmp_count[0:1439] = np.array(self.count_dset)[0:1439]
+        tmp_vec[0:1439] = self.vec_dset[0:1439]
+        tmp_count[0:1439] = self.count_dset[0:1439]
         
         print('Get random part with no horse')
         i = 1439
