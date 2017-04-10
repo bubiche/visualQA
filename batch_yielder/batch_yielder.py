@@ -22,8 +22,8 @@ class BatchYielder(object):
         self.test_vec_dset = self.vec_test['vec']
         self.test_count_dset = self.count_test['count']
         
-        self.n_val = val_count_dset.shape[0]
-        self.n_test = test_count_dset.shape[0]
+        self.n_val = self.val_count_dset.shape[0]
+        self.n_test = self.test_count_dset.shape[0]
         self.data_size = self.get_data_size()
         self.n_use = flags.n_use
         if self.n_use < 1 or self.n_use > self.data_size: self.n_use = self.data_size
