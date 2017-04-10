@@ -43,8 +43,10 @@ class HorseNet(object):
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
 		reference = tf.reshape(self._yolo.out, [1, 1024])
 
-		tanh_vol = tanh_gate(volume_flat, 1024, 512)
-		tanh_ref = tanh_gate(reference, 1024, 512)
+		with tf.variable_scope('tanh_gate', reuse = True):
+			tanh_vol = tanh_gate(volume_flat, 1024, 512)
+			tanh_ref = tanh_gate(reference, 1024, 512)
+			
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
 		similar = (similar + 1.) / 2.
