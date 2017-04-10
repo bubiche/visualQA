@@ -3,6 +3,7 @@ from .weight_parser import weights_parser
 from .ops import op_dict
 from .utils import xavier_var, gaussian_var
 import tensorflow as tf
+import numpy as np
 import cv2
 
 class YOLO(object):
@@ -18,8 +19,8 @@ class YOLO(object):
 				im = cv2.imread('./horse/horse.jpg')
 				im = cv2.resize(im, (64, 64))
 				im = im / 255.
-				im = im[:, :, ::-1]
-				self._inp = tf.Variable([im])
+				im = np.array([im[:, :, ::-1]], dtype = np.float32)
+				self._inp = tf.Variable(im)
 				current = self._inp
 				continue
 
