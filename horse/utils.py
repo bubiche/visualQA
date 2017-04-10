@@ -49,7 +49,7 @@ def conv_pool_leak(x, feat_in, feat_out):
 		xavier_var_conv('convw', [3, 3, feat_in, feat_out]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
 	conved = tf.nn.bias_add(
-		temp, const_var('convb', 0.0, [feat_out]))
+		temp, const_var('convb', 0.0, (feat_out,)))
 
 	# pool
 	pooled = tf.nn.max_pool(

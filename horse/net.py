@@ -39,6 +39,7 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
+		self._fetches = list()
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
 		reference = tf.reshape(self._yolo.out, [1, 1024])
 
@@ -46,6 +47,7 @@ class HorseNet(object):
 		similar = tf.reshape(similar, [-1, 49])
 
 		sharped = sharpen(similar)
+		self._fetches += [similar, sharped]
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
@@ -89,11 +91,14 @@ class HorseNet(object):
 		loss_mva = None
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss, self._accuracy]
+		fetches = fetches += self._fetches
 		for step, (feature, target) in batches:
 			
-			_, loss, accuracy = self._sess.run(fetches, {
+			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
+			_, loss, accuracy, sim, sharp = fetched
+			print(sim, sharp)
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
