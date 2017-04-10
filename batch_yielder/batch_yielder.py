@@ -65,7 +65,7 @@ class BatchYielder(object):
                 
     def validation_set(self):
         ret_x = np.zeros((self.n_val, 7, 7, 1024))
-        ret_y = np.zeros((self.n_val, 1024))
+        ret_y = np.zeros((self.n_val,))
         
         for i in range(self.n_val):
             ret_x[i] = self.val_vec_dset[i]
@@ -75,7 +75,7 @@ class BatchYielder(object):
         
     def test_set(self):
         ret_x = np.zeros((self.n_test, 7, 7, 1024))
-        ret_y = np.zeros((self.n_test, 1024))
+        ret_y = np.zeros((self.n_test,))
         
         for i in range(self.n_test):
             ret_x[i] = self.test_vec_dset[i]
