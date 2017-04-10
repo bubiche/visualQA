@@ -92,7 +92,7 @@ class HorseNet(object):
 				print('Saving ckpt at step {}'.format(step))
 				file_name = 'horse-{}'
 				path = os.path.join(self._flags.backup, file_name)
-				self._saver.save(self.sess, path)
+				self._saver.save(self._sess, path)
 
 	def predict(self, img_list):
 		def _preprocess(img_path):

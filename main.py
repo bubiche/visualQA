@@ -18,6 +18,12 @@ flags.DEFINE_integer("save_every", 100, "ckpt every x step")
 flags.DEFINE_integer("keep", 20, "maximum ckpt to keep")
 FLAGS = flags.FLAGS
 
+def get_dir(dirs):
+    for d in dirs:
+        this = os.path.abspath(os.path.join(os.path.curdir, d))
+        if not os.path.exists(this): os.makedirs(this)
+get_dir([FLAGS.backup])
+
 horse_net = HorseNet(FLAGS)
 
 if FLAGS.train:
