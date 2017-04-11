@@ -58,8 +58,8 @@ class HorseNet(object):
 		# similar = (similar + 1.) / 2.
 
 		convx = conv_flat(self._volume, 1024, 'att')
-
-		sharped = tf.squeeze(sharpen(convx))
+		convx = tf.reshape(convx, [-1, 49])
+		sharped = sharpen(convx)
 		# sharped = tf.reshape(sharped, [-1, 49])
 		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
