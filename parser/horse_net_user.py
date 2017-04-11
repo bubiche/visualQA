@@ -64,3 +64,4 @@ class Visualizer(object):
         i = 0
         for img in self.img_list:
             self.visualize(att_vec[i], img, i)
+            i += 1
