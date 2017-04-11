@@ -59,6 +59,7 @@ class HorseNet(object):
 
 		sharped = sharpen(similar)
 		sharped = sharped * (mem_norm / ref_norm)
+		sharped = tf.reshape(sharped, [-1, 49])
 		self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
 		# attention = tf.reshape(sharped, [-1, 7, 7, 1])
