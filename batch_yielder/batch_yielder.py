@@ -28,7 +28,7 @@ class BatchYielder(object):
                
         self.n_val = self.val_count_dset.shape[0]
         self.n_test = self.test_count_dset.shape[0]
-        self.train_size = self.yes_train_dset[0] * 2
+        self.train_size = self.yes_train_dset[0] + 141
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
         
