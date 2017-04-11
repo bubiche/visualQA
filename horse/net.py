@@ -139,7 +139,7 @@ class HorseNet(object):
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
 				img_name = 'horseref/horseref-{}.jpg'.format(step)
-				img_uint = horse.astype(np.uint8)[0]
+				img_uint = (horse * 255.).astype(np.uint8)[0]
 				print(img_uint.shape)
 				cv2.imwrite(img_name, img_uint)
 
