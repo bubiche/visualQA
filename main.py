@@ -1,5 +1,6 @@
 from horse.net import HorseNet
 from tensorflow import flags
+from parser import horse_net_user as hns
 import os
 
 flags.DEFINE_integer('batch_size', 128, 'size of each batch')
@@ -24,6 +25,9 @@ flags.DEFINE_integer('test_every', 100, 'test every x step')
 flags.DEFINE_integer('valid_every', 20, 'validate every x step')
 flags.DEFINE_integer('keep', 20, 'maximum ckpt to keep')
 flags.DEFINE_integer('load', 0, 'load from ckpt x?')
+flags.DEFINE_string('see', '', 'name of the image')
+flags.DEFINE_string('full_vec_path', 'parser/full_vec.hdf5', 'path to full vec')
+flags.DEFINE_string('full_name_path', 'parser/full_name.hdf5', 'path to full name')
 
 FLAGS = flags.FLAGS
 
@@ -36,7 +40,13 @@ get_dir([FLAGS.backup, 'horseref'])
 horse_net = HorseNet(FLAGS)
 
 if FLAGS.load:
-	horse_net.load_from_ckpt()
+    horse_net.load_from_ckpt()
+    
+if FLAGS.see != '':
+    seer = hns.Visualizer()
+    vec = seer.get_vec()
+    ret_vec = horse_net.get_attention(vec)
+    seer.seek_attention(ret_vec)
 
 if FLAGS.train:
     print('Enter training ...')
