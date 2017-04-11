@@ -27,7 +27,7 @@ class Visualizer(object):
         return np.zeros((7, 7, 1024))
         
     def get_vecs(self):
-        ret = np.zeros((len(img_list), 7, 7, 1024))
+        ret = np.zeros((len(self.img_list), 7, 7, 1024))
         
         i = 0
         for img in self.img_list:
