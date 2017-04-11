@@ -51,10 +51,10 @@ class HorseNet(object):
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
-		similar = (similar + 1.)
+		similar = (similar + 1.) / 2.
 
 		sharped = sharpen(similar)
-		self._out = tf.reduce_sum(sharped)
+		self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
 		# attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		# focused = self._volume * attention
