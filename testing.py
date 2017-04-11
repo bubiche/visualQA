@@ -1,14 +1,12 @@
-from image2vec import yolo
+from horse.yolo_top import YOLOtop
+from image2vec.yolo import YOLO
 
-net = yolo.YOLO(
+net = YOLOtop(
 	'image2vec/yolo-full.cfg', 
 	'image2vec/yolo-full.weights',
-	up_to = 29)
+	from_layer = 28)
 
-img_list = [
-	'image2vec/person.jpg',
-	'image2vec/dog.jpg'
-]
-
-vec = net.forward(img_list)
-print(vec, vec.shape)
+# net = YOLO(
+# 	'image2vec/yolo-full.cfg', 
+# 	'image2vec/yolo-full.weights',
+# 	up_to = 100)
