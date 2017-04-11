@@ -51,7 +51,7 @@ class HorseNet(object):
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
-		similar = (similar + 1.) / 2.
+		similar = (similar + 2.)
 
 		sharped = sharpen(similar)
 		#self._fetches += [self._yolo._inp]
