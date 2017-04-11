@@ -14,10 +14,10 @@ class Visualizer(object):
         self.file_path = flags.see_path
         self.img_list = [[os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]]
         
-    def get_vec(self, img_path):
+    def get_vec(self, my_img_path):
         print('Searching for images')
         i = 0
-        head, tail = os.path.split(img_path)
+        head, tail = os.path.split(my_img_path)
         file_name = tail
         for i in range(int(self.name_dset.shape[0])):
             if self.name_dset[i].decode() == file_name:
