@@ -26,7 +26,7 @@ def cosine_sim(mem, ref):
 	ref_norm = tf.norm(ref)
 	dot_prod = tf.matmul(mem, tf.transpose(ref))
 	cosine_sim = dot_prod / (mem_norm * ref_norm)
-	return cosine_sim, mem_norm, ref_norm
+	return cosine_sim
 
 def _last_dim(tensor):
 	return tensor.get_shape().as_list()[-1]
@@ -67,15 +67,16 @@ def tanh_gate(x, feat_in, feat_out):
 	linear += xavier_var('tanhb', (feat_out,))
 	return tf.tanh(linear)
 
-def conv_pool_leak(x, feat_in, feat_out):
+def conv_pool_leak(x, feat_in, feat_out, name):
 	# conv
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(temp, 
-		xavier_var_conv('convw', [3, 3, feat_in, feat_out]), 
+		xavier_var_conv('{}w'.format(name), 
+			[3, 3, feat_in, feat_out]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
 	conved = tf.nn.bias_add(
-		temp, const_var('convb', 0.0, (feat_out,)))
+		temp, const_var('{}b'.format(name), 0.0, (feat_out,)))
 
 	# pool
 	pooled = tf.nn.max_pool(

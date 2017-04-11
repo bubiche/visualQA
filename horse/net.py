@@ -31,11 +31,11 @@ class HorseNet(object):
 
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
-		self._batch_yielder = BatchYielder(FLAGS)
 		self._yolo = gaussian_var(
 			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
+		self._batch_yielder = BatchYielder(FLAGS)
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
@@ -53,25 +53,29 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		cosine_info = cosine_sim(tanh_vol, tanh_ref)
-		similar, mem_norm, ref_norm = cosine_info
+		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = (similar + 1.) / 2.
 
 		sharped = sharpen(similar)
-		sharped = sharped * (mem_norm / ref_norm)
-		sharped = tf.reshape(sharped, [-1, 49])
-		self._out = tf.reduce_sum(sharped, -1)
+		# sharped = tf.reshape(sharped, [-1, 49])
+		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
-		# attention = tf.reshape(sharped, [-1, 7, 7, 1])
-		# focused = self._volume * attention
+		attention = tf.reshape(sharped, [-1, 7, 7, 1])
+		focused = self._volume * attention
 
-		# conved = conv_pool_leak(focused, 1024, 512)
-		# feat = tf.reduce_sum(conved, [1, 2])
+		conv1 = conv_pool_leak(focused, 1024, 512, 'conv1')
+		conv2 = conv_pool_leak(conv1, 512, 256, 'conv2')
+		conv3 = conv_pool_leak(conv2, 256, 128, 'conv3')
 
-		# feat = tf.matmul(feat, xavier_var('fcw', [512, 1]))
-		# feat += const_var('fcb', 0.0, [1,])
-		# rectify = tf.nn.softplus(feat)
-		# self._out = tf.squeeze(rectify)
+		feat = tf.squeeze(conv3)
+		print(conv1.get_shape())
+		print(conv2.get_shape())
+		print(conv3.get_shape())
+
+		feat = tf.matmul(feat, xavier_var('fcw', [128, 1]))
+		feat += const_var('fcb', 0.0, [1,])
+		rectify = tf.nn.softplus(feat)
+		self._out = tf.squeeze(rectify)
 
 		if self._flags.train:
 			self._build_loss()
