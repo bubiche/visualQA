@@ -40,7 +40,7 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
-		self._fetches = list(self._yolo._inp)
+		self._fetches = [self._yolo._inp]
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
 		reference = tf.reshape(self._yolo.out, [1, 1024])
 
@@ -139,7 +139,7 @@ class HorseNet(object):
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
 				cv2.imwrite(
-					'horseref-{}'.format(step),
+					'horseref/horseref-{}'.format(step),
 					horse.astype(np.uint8))
 
 		self._save_ckpt(step)
