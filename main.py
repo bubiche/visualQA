@@ -46,7 +46,7 @@ if FLAGS.load:
 if FLAGS.see != '':
     seer = Visualizer(FLAGS)
     vecs = seer.get_vecs()
-    ret_vec = horse_net.get_attention(vec)
+    ret_vec = horse_net.get_attention(vecs)
     seer.visualize_multiple(ret_vec)
     exit()
 
