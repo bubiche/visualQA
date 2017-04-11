@@ -38,8 +38,12 @@ def _sharp_gate(x):
 
 def sharpen(x):
 	power = tf.pow(x, 1. + _sharp_gate(x))
-	summation = tf.reduce_sum(power, -1, keep_dims = True)
-	return power / summation
+	power = tf.div(
+		tf.sub(power, tf.reduce_min(power, -1)),
+		tf.sub(tf.reduce_max(power, -1), 
+			   tf.reduce_min(power, -1)))
+	#summation = tf.reduce_sum(power, -1, keep_dims = True)
+	return power
 
 def tanh_gate(x, feat_in, feat_out):
 	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
