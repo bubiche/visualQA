@@ -1,6 +1,6 @@
 from horse.net import HorseNet
 from tensorflow import flags
-from parser import horse_net_user as hns
+from parser.horse_net_user import Visualizer
 import os
 
 flags.DEFINE_integer('batch_size', 128, 'size of each batch')
@@ -43,7 +43,7 @@ if FLAGS.load:
     horse_net.load_from_ckpt()
     
 if FLAGS.see != '':
-    seer = hns.Visualizer(FLAGS)
+    seer = Visualizer(FLAGS)
     vec = seer.get_vec()
     ret_vec = horse_net.get_attention(vec)
     seer.visualize(ret_vec)
