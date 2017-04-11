@@ -30,7 +30,9 @@ class Visualizer(object):
         ret = np.zeros((len(self.img_list), 7, 7, 1024))
         
         i = 0
+        print(self.img_list)
         for img in self.img_list:
+            print(img)
             ret[i] = self.get_vec(img)
             i += 1
             
