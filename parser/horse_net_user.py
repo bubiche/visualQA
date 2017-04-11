@@ -11,25 +11,36 @@ class Visualizer(object):
         self.vec_dset = self.vec_file['vec']
         self.name_dset = self.name_file['name']
         
-        self.file_path = flags.see
+        self.file_path = flags.see_path
+        self.img_list = [[os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]]
         
-    def get_vec(self):
-        print('Searching for image')
+    def get_vec(self, img_path):
+        print('Searching for images')
         i = 0
-        head, tail = os.path.split(self.file_path)
-        self.file_name = tail
+        head, tail = os.path.split(img_path)
+        file_name = tail
         for i in range(int(self.name_dset.shape[0])):
-            if self.name_dset[i].decode() == self.file_name:
+            if self.name_dset[i].decode() == file_name:
                 return self.vec_dset[i]
                 
-        print('Cannot find %s' % (self.file_name))
+        print('Cannot find %s' % (file_name))
         return np.zeros((7, 7, 1024))
         
-    def visualize(self, att_vec):
+    def get_vecs(self):
+        ret = np.zeros((len(img_list), 7, 7, 1024))
+        
+        i = 0
+        for img in self.img_list:
+            ret[i] = self.get_vec(img)
+            i += 1
+            
+        return ret
+        
+    def visualize(self, att_vec, file_path, idx):
         '''
         att_vec is (7, 7)
         '''
-        img = cv2.imread(self.file_path)
+        img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
         numrows, numcols = 7, 7
         height = int(resized_image.shape[0] / numrows)
@@ -43,5 +54,11 @@ class Visualizer(object):
                 x0 = col * width
                 x1 = x0 + width
                 res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * 2 * att_vec[row][col]
-
-        cv2.imwrite('aa.jpg', res.astype(np.uint8))
+                
+        output_file = '{}.jpg'.format(idx)
+        cv2.imwrite(output_file, res.astype(np.uint8))
+        
+    def visualize_multiple(self, att_vec):
+        i = 0
+        for img in self.img_list:
+            self.visualize(att_vec[i], img, i)

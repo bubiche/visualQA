@@ -28,6 +28,7 @@ flags.DEFINE_integer('load', 0, 'load from ckpt x?')
 flags.DEFINE_string('see', '', 'name of the image')
 flags.DEFINE_string('full_vec_path', 'parser/full_vec.hdf5', 'path to full vec')
 flags.DEFINE_string('full_name_path', 'parser/full_name.hdf5', 'path to full name')
+flags.DEFINE_string('see_path', 'seer_input/', 'path to images to get attention')
 
 FLAGS = flags.FLAGS
 
@@ -44,9 +45,9 @@ if FLAGS.load:
     
 if FLAGS.see != '':
     seer = Visualizer(FLAGS)
-    vec = seer.get_vec()
+    vecs = seer.get_vecs()
     ret_vec = horse_net.get_attention(vec)
-    seer.visualize(ret_vec)
+    seer.visualize_multiple(ret_vec)
     exit()
 
 if FLAGS.train:
