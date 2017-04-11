@@ -26,7 +26,7 @@ def cosine_sim(mem, ref):
 	ref_norm = tf.norm(ref)
 	dot_prod = tf.matmul(mem, tf.transpose(ref))
 	cosine_sim = dot_prod / (mem_norm * ref_norm)
-	return cosine_sim
+	return cosine_sim, mem_norm, ref_norm
 
 def _last_dim(tensor):
 	return tensor.get_shape().as_list()[-1]

@@ -53,23 +53,24 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = tf.reshape(similar, [-1, 49])
+		cosine_info = cosine_sim(tanh_vol, tanh_ref)
+		similar, mem_norm, ref_norm = cosine_info
 		similar = (similar + 1.) / 2.
 
 		sharped = sharpen(similar)
-		# self._out = tf.reduce_sum(sharped, -1)
+		sharped = sharped * (mem_norm / ref_norm)
+		self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
-		attention = tf.reshape(sharped, [-1, 7, 7, 1])
-		focused = self._volume * attention
+		# attention = tf.reshape(sharped, [-1, 7, 7, 1])
+		# focused = self._volume * attention
 
-		conved = conv_pool_leak(focused, 1024, 512)
-		feat = tf.reduce_sum(conved, [1, 2])
+		# conved = conv_pool_leak(focused, 1024, 512)
+		# feat = tf.reduce_sum(conved, [1, 2])
 
-		feat = tf.matmul(feat, xavier_var('fcw', [512, 1]))
-		feat += const_var('fcb', 0.0, [1,])
-		rectify = tf.nn.softplus(feat)
-		self._out = tf.squeeze(rectify)
+		# feat = tf.matmul(feat, xavier_var('fcw', [512, 1]))
+		# feat += const_var('fcb', 0.0, [1,])
+		# rectify = tf.nn.softplus(feat)
+		# self._out = tf.squeeze(rectify)
 
 		if self._flags.train:
 			self._build_loss()
