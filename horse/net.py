@@ -121,7 +121,6 @@ class HorseNet(object):
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss, self._accuracy]
 		fetches = fetches + self._fetches
-		refs = list()
 
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
@@ -152,17 +151,13 @@ class HorseNet(object):
 			
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
-				refs.append(ref)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
 				# img_uint = (horse * 255.).astype(np.uint8)[0]
 				# print(img_uint.shape)
 				# cv2.imwrite(img_name, img_uint)
 
 		self._save_ckpt(step)
-		with open('refs', 'wb') as file:
-			print('Saving refs')
-			pickle.dump(refs, file, protocol = -1)
-
+		
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
 		acc, pred = self._sess.run([self._accuracy, self._out], {
