@@ -91,13 +91,13 @@ def conv_flat(x, feat_in, name):
 	# conv
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(temp, 
-		xavier_var_conv('{}w'.format(name), 
+		xavier_var_conv('{}w1'.format(name), 
 			[3, 3, feat_in, 512]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
 
 	temp = tf.pad(temp, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(temp, 
-		xavier_var_conv('{}w'.format(name), 
+		xavier_var_conv('{}w2'.format(name), 
 			[3, 3, 512, 1]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
 	
