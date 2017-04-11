@@ -89,12 +89,18 @@ def conv_pool_leak(x, feat_in, feat_out, name):
 
 def conv_flat(x, feat_in, name):
 	# conv
-	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(temp, 
 		xavier_var_conv('{}w'.format(name), 
-			[3, 3, feat_in, 1]), 
+			[3, 3, feat_in, 512]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
+
+	temp = tf.pad(temp, [[0, 0], [1, 1], [1, 1], [0, 0]])
+	temp = tf.nn.conv2d(temp, 
+		xavier_var_conv('{}w'.format(name), 
+			[3, 3, 512, 1]), 
+		padding = 'VALID', strides = [1, 1, 1, 1])
+	
 	temp = tf.nn.bias_add(
 		temp, const_var('{}b'.format(name), 0.0, (1,)))
 	return tf.nn.sigmoid(temp)
