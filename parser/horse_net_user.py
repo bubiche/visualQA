@@ -6,7 +6,7 @@ import os
 class Visualizer(object):
     def __init__(self, flags):
         self.vec_file = h5py.File(flags.full_vec_path, 'r')
-        self.name_file = h5py.Filr(flags.full_name_path, 'r')
+        self.name_file = h5py.File(flags.full_name_path, 'r')
         
         self.vec_dset = self.vec_file['vec']
         self.name_dset = self.name_file['name']
