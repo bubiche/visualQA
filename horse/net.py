@@ -68,7 +68,8 @@ class HorseNet(object):
 
 		feat = tf.matmul(feat, xavier_var('fcw', [512, 1]))
 		feat += const_var('fcb', 0.0, [1,])
-		self._out = tf.nn.softplus(feat)
+		rectify = tf.nn.softplus(feat)
+		self._out = tf.squeeze(rectify)
 
 		if self._flags.train:
 			self._build_loss()
