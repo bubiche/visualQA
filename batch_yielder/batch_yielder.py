@@ -38,7 +38,7 @@ class BatchYielder(object):
 
     def shuffle_data(self):
         self.shuffle_idx = list(range(self.yes_train_dset[0]))
-        no_horse = random.sample(range(self.yes_train_dset[0], self.get_data_size()), self.yes_train_dset[0])
+        no_horse = random.sample(range(self.yes_train_dset[0], self.get_data_size()), 141)
         self.shuffle_idx.extend(no_horse)
         np.random.shuffle(self.shuffle_idx)
 
