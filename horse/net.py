@@ -60,8 +60,8 @@ class HorseNet(object):
 		# sharped = tf.reshape(sharped, [-1, 49])
 		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
-		attention = tf.reshape(sharped, [-1, 7, 7, 1])
-		focused = self._volume * attention
+		self._attention = tf.reshape(sharped, [-1, 7, 7, 1])
+		focused = self._volume * self._attention
 
 		conv1 = conv_pool_leak(focused, 1024, 512, 'conv1')
 		conv2 = conv_pool_leak(conv1, 512, 256, 'conv2')
@@ -170,6 +170,11 @@ class HorseNet(object):
 		target_feed = target_feed.astype(np.int32)
 		confusion_table(target_feed, pred)
 		return acc
+
+	def get_attention(self, vec):
+		return self._sess.run(self._attention, {
+			self._volume: [vec]
+			})
 
 	def predict_img(self):
 		def _preprocess(img_path):
