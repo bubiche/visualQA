@@ -43,10 +43,11 @@ if FLAGS.load:
     horse_net.load_from_ckpt()
     
 if FLAGS.see != '':
-    seer = hns.Visualizer()
+    seer = hns.Visualizer(FLAGS)
     vec = seer.get_vec()
     ret_vec = horse_net.get_attention(vec)
     seer.visualize(ret_vec)
+    exit()
 
 if FLAGS.train:
     print('Enter training ...')
