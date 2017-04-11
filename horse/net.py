@@ -163,6 +163,7 @@ class HorseNet(object):
 		pred = pred.astype(np.int32)
 		target_feed = target_feed.astype(np.int32)
 		confusion_table(target_feed, pred)
+		return acc
 
 	def predict_img(self):
 		def _preprocess(img_path):
