@@ -87,6 +87,21 @@ def conv_pool_leak(x, feat_in, feat_out, name):
 	# leaky
 	return tf.maximum(0.1 * pooled, pooled)
 
+
+def conv_act(x, feat_in, feat_out, act, name):
+	# conv
+	padding = [[1, 1]] * 2
+	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
+	temp = tf.nn.conv2d(temp, 
+		xavier_var_conv('{}w'.format(name), 
+			[3, 3, feat_in, feat_out]), 
+		padding = 'VALID', strides = [1, 1, 1, 1])
+	conved = tf.nn.bias_add(
+		temp, const_var('{}b'.format(name), 0.0, (feat_out,)))
+
+	# leaky
+	return act(conved)
+
 def conv_flat(x, feat_in, name):
 	# conv
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])

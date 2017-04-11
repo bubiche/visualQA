@@ -6,7 +6,7 @@ import numpy as np
 import os
 from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
 from .utils import conv_pool_leak, xavier_var, const_var, gaussian_var
-from .utils import conv_flat
+from .utils import conv_flat, conv_act
 from .ops import op_dict
 import pickle
 
@@ -65,19 +65,15 @@ class HorseNet(object):
 		#self._fetches += [self._yolo._inp]
 		focused = self._volume * self._attention
 
-		conv1 = conv_pool_leak(focused, 1024, 512, 'conv1')
-		conv2 = conv_pool_leak(conv1, 512, 256, 'conv2')
-		conv3 = conv_pool_leak(conv2, 256, 128, 'conv3')
+		def _leak(tensor):
+			return tf.maximum(0.1 * tensor, tensor)
 
-		feat = tf.squeeze(conv3)
-		print(conv1.get_shape())
-		print(conv2.get_shape())
-		print(conv3.get_shape())
+		conv1 = conv_act(focused, 1024, 512, _leak, 'conv1')
+		conv2 = conv_act(conv1, 512, 256, _leak, 'conv2')
+		conv3 = conv_act(conv2, 256, 128, _leak, 'conv3')
+		conv4 = conv_act(conv3, 128, 5, tf.nn.sigmoid, 'conv4')
 
-		feat = tf.matmul(feat, xavier_var('fcw', [128, 1]))
-		feat += const_var('fcb', 0.0, [1,])
-		rectify = tf.nn.softplus(feat)
-		self._out = tf.squeeze(rectify)
+		self._out = tf.reduce_sum(conv4, [1,2,3])
 
 		if self._flags.train:
 			self._build_loss()
