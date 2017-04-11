@@ -43,7 +43,7 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
-		self._fetches = [self._yolo]
+		self._fetches = []
 		# volume_flat = tf.reshape(self._volume, [-1, 1024])
 		#reference = tf.reshape(self._yolo.out, [1, 1024])
 		# reference = self._yolo
@@ -127,7 +127,7 @@ class HorseNet(object):
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
-			_, loss, accuracy, ref = fetched
+			_, loss, accuracy = fetched
 
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
