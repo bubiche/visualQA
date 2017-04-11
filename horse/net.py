@@ -51,18 +51,18 @@ class HorseNet(object):
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
-		similar = (similar + 1.) * 5.
+		similar = (similar + 1.) / 2.
 
-		sharped = tf.nn.softmax(similar)
+		sharped = sharpen(similar)
 		#self._fetches += [self._yolo._inp]
 		attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * attention
 
-		conved = conv_pool_leak(focused, 1024, 1)
+		conved = conv_pool_leak(focused, 1024, 512)
 		feat = tf.reduce_sum(conved, [1, 2])
 
-		# feat = tf.matmul(feat, xavier_var('fcw', [2048, 1]))
-		# feat += const_var('fcb', 0.0, [1,])
+		feat = tf.matmul(feat, xavier_var('fcw', [512, 1]))
+		feat += const_var('fcb', 0.0, [1,])
 		self._out = tf.nn.softplus(feat)
 
 		if self._flags.train:
