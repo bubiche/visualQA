@@ -2,6 +2,7 @@ import tensorflow as tf
 from .yolo import YOLO
 from batch_yielder.batch_yielder import BatchYielder
 import cv2
+import numpy as np
 import os
 from .utils import cosine_sim, sharpen, tanh_gate
 from .utils import conv_pool_leak, xavier_var, const_var
@@ -39,7 +40,7 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
-		self._fetches = list()
+		self._fetches = list(self._yolo._inp)
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
 		reference = tf.reshape(self._yolo.out, [1, 1024])
 
@@ -108,14 +109,11 @@ class HorseNet(object):
 		fetches = [self._train_op, self._loss, self._accuracy]
 		fetches = fetches + self._fetches
 
-		once = (None, None)
 		for step, (feature, target) in batches:
-			# if step > 0:
-			# 	feature, target = save
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
-			_, loss, accuracy = fetched
+			_, loss, accuracy, horse = fetched
 
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
@@ -123,9 +121,6 @@ class HorseNet(object):
 			message = '{}. loss {} mva {} acc {}% '.format(
 				step, loss, loss_mva, accuracy)
 
-			# if step == 0:
-			# 	save = (feature, target)
-			# 	continue
 
 			if _mult(step, self._flags.valid_every):
 				valid_accuracy = self._accuracy_data(
@@ -143,6 +138,9 @@ class HorseNet(object):
 			
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
+				cv2.imwrite(
+					'horseref-{}'.format(step),
+					horse.astype(np.uint8))
 
 		self._save_ckpt(step)
 
