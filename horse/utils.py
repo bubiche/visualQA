@@ -59,7 +59,7 @@ def sharpen(x):
 	# 	power - tf.reduce_min(power, -1, keep_dims = True),
 	# 	tf.reduce_max(power, -1, keep_dims = True) - 
 	#    	tf.reduce_min(power, -1, keep_dims = True))
-	#summation = tf.reduce_sum(power, -1, keep_dims = True)
+	summation = tf.reduce_sum(power, -1, keep_dims = True)
 	return power
 
 def tanh_gate(x, feat_in, feat_out):
