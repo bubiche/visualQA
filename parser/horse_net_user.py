@@ -18,7 +18,7 @@ class Visualizer(object):
         i = 0
         head, tail = os.path.split(self.file_path)
         self.file_name = tail
-        for i in range(int(self.name_dset)):
+        for i in range(int(self.name_dset.shape[0])):
             if self.vec_dset[i].decode() == self.file_name:
                 return self.vec_dset[i]
                 
