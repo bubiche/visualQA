@@ -46,7 +46,7 @@ if FLAGS.see != '':
     seer = hns.Visualizer()
     vec = seer.get_vec()
     ret_vec = horse_net.get_attention(vec)
-    seer.seek_attention(ret_vec)
+    seer.visualize(ret_vec)
 
 if FLAGS.train:
     print('Enter training ...')

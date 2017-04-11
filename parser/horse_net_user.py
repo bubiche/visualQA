@@ -23,6 +23,7 @@ class Visualizer(object):
                 return self.vec_dset[i]
                 
         print('Cannot find %s' % (self.file_name))
+        return np.zeros((7, 7, 1024))
         
     def visualize(self, att_vec):
         '''
