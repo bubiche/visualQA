@@ -139,7 +139,7 @@ class HorseNet(object):
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
 				cv2.imwrite(
-					'horseref/horseref-{}'.format(step),
+					'horseref/horseref-{}.jpg'.format(step),
 					horse.astype(np.uint8))
 
 		self._save_ckpt(step)
