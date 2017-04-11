@@ -71,7 +71,7 @@ class HorseNet(object):
 		conv1 = conv_act(focused, 1024, 512, _leak, 'conv1')
 		conv2 = conv_act(conv1, 512, 256, _leak, 'conv2')
 		conv3 = conv_act(conv2, 256, 128, _leak, 'conv3')
-		conv4 = conv_act(conv3, 128, 5, tf.nn.sigmoid, 'conv4')
+		conv4 = conv_act(conv3, 128, 5, tf.nn.sigmoid, 'conv4', 0.0)
 
 		self._out = tf.reduce_sum(conv4, [1,2,3])
 
