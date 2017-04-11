@@ -57,13 +57,12 @@ class HorseNet(object):
 		# similar = cosine_sim(tanh_vol, tanh_ref)
 		# similar = (similar + 1.) / 2.
 
-		convx = conv_flat(self._volume, 1024, 'att')
+		self._attention = conv_flat(self._volume, 1024, 'att')
 		# convx = tf.reshape(convx, [-1, 49])
 		# sharped = sharpen(convx)
 		# sharped = tf.reshape(sharped, [-1, 49])
 		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
-		self._attention = tf.reshape(sharped, [-1, 7, 7, 1])
 		focused = self._volume * self._attention
 
 		conv1 = conv_pool_leak(focused, 1024, 512, 'conv1')
@@ -157,7 +156,7 @@ class HorseNet(object):
 				# cv2.imwrite(img_name, img_uint)
 
 		self._save_ckpt(step)
-		
+
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
 		acc, pred = self._sess.run([self._accuracy, self._out], {
