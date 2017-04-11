@@ -10,9 +10,9 @@ def confusion_table(truth, pred):
 	confuse = dict()
 	for i, t in enumerate(truth):
 		p = pred[i]
-		if t != p:
-			confuse[(t, p)] = \
-				confuse.get((t,p), 0) + 1
+		#if t != p:
+		confuse[(t, p)] = \
+			confuse.get((t,p), 0) + 1
 	title = ' '*6 + ''.join(['{:>6}'.format(x) for x in idx_to])
 	print(title)
 	for i in idx_from:
