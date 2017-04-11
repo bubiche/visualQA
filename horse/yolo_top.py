@@ -23,6 +23,7 @@ class YOLOtop(object):
 		flag  = False
 		for i, layer_cfg in enumerate(cfg_yielder(cfg_path)):
 			if i == 0:
+				self._meta = layer_cfg
 				self._inp = tf.placeholder(
 					tf.float32, [None, 448, 448, 3])
 				current = self._inp
@@ -47,7 +48,7 @@ class YOLOtop(object):
 	def process_box(self, b, threshold):
 		max_indx = np.argmax(b.probs)
 		max_prob = b.probs[max_indx]
-		label = _LABELS[max_indx]
+		label = labels20[max_indx]
 		if max_prob > threshold:
 			return label
 		return None
@@ -56,13 +57,13 @@ class YOLOtop(object):
 		"""
 		Takes net output, draw predictions, save to disk
 		"""
-		meta, FLAGS = self.meta, self.FLAGS
-		threshold = FLAGS.threshold
-		boxes = []
-		boxes = yolo_box_constructor(meta, net_out, threshold)
+		boxes = yolo_box_constructor(self._meta, net_out, 0.2)
 
 		count = 0
 		for b in boxes:
 			if self.process_box(b, threshold) == 'horse':
 				count += 1
 		return count
+
+	def forward(self, vecs):
+		self.
