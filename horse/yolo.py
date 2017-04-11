@@ -22,7 +22,7 @@ class YOLO(object):
 				# im = np.array([im[:, :, ::-1]], dtype = np.float32)
 				# self._inp = tf.Variable(im)
 				self._inp = gaussian_var(
-					'inp', 0.0, 0.2, [1, 64, 64, 3])
+					'inp', 0.5, 0.2, [1, 64, 64, 3])
 				current = self._inp
 				continue
 
