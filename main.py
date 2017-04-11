@@ -31,7 +31,7 @@ def get_dir(dirs):
     for d in dirs:
         this = os.path.abspath(os.path.join(os.path.curdir, d))
         if not os.path.exists(this): os.makedirs(this)
-get_dir([FLAGS.backup])
+get_dir([FLAGS.backup, 'horseref'])
 
 horse_net = HorseNet(FLAGS)
 
