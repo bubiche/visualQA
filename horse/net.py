@@ -4,9 +4,10 @@ from batch_yielder.batch_yielder import BatchYielder
 import cv2
 import numpy as np
 import os
-from .utils import cosine_sim, sharpen, tanh_gate
-from .utils import conv_pool_leak, xavier_var, const_var
+from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
+from .utils import conv_pool_leak, xavier_var, const_var, gaussian_var
 from .ops import op_dict
+import pickle
 
 def _log(*msgs):
 	for msg in list(msgs):
@@ -30,7 +31,9 @@ class HorseNet(object):
 
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
-		self._yolo = YOLO(FLAGS.cfg, FLAGS.weight, 28)
+		#self._yolo = YOLO(FLAGS.cfg, FLAGS.weight, 28)
+		self._yolo = gaussian_var(
+			'ref', 0.00204, 0.0462, [1, 1024])
 		self._batch_yielder = BatchYielder(FLAGS)
 		self._build_placeholder()
 		self._build_net()
@@ -40,9 +43,10 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
-		self._fetches = [self._yolo._inp]
+		self._fetches = [self._yolo]
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
-		reference = tf.reshape(self._yolo.out, [1, 1024])
+		#reference = tf.reshape(self._yolo.out, [1, 1024])
+		reference = self._yolo
 
 		with tf.variable_scope('tanh_gate'):
 			tanh_vol = tanh_gate(volume_flat, 1024, 512)
@@ -108,12 +112,13 @@ class HorseNet(object):
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss, self._accuracy]
 		fetches = fetches + self._fetches
+		refs = list()
 
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
-			_, loss, accuracy, horse = fetched
+			_, loss, accuracy, ref = fetched
 
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
@@ -138,19 +143,26 @@ class HorseNet(object):
 			
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
-				img_name = 'horseref/horseref-{}.jpg'.format(step)
-				img_uint = (horse * 255.).astype(np.uint8)[0]
-				print(img_uint.shape)
-				cv2.imwrite(img_name, img_uint)
+				refs.append(ref)
+				# img_name = 'horseref/horseref-{}.jpg'.format(step)
+				# img_uint = (horse * 255.).astype(np.uint8)[0]
+				# print(img_uint.shape)
+				# cv2.imwrite(img_name, img_uint)
 
 		self._save_ckpt(step)
+		with open('refs', 'wb') as file:
+			print('Saving refs')
+			pickle.dump(refs, file, protocol = -1)
 
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
-		return self._sess.run(self._accuracy, {
+		acc, pred = self._sess.run([self._accuracy, self._out], {
 				self._volume: volume_feed,
 				self._target: target_feed
 			})
+		pred = pred.astype(np.int32)
+		target_feed = target_feed.astype(np.int32)
+		confusion_table(target_feed, pred)
 
 	def predict_img(self):
 		def _preprocess(img_path):

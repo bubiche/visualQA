@@ -4,6 +4,23 @@ from tensorflow.contrib.layers import xavier_initializer_conv2d as xavier_conv
 from tensorflow import random_normal_initializer as gaussian
 from tensorflow import constant_initializer as constant
 
+def confusion_table(truth, pred):
+	idx_from = list(set(truth))
+	idx_to = list(set(pred))
+	confuse = dict()
+	for i, t in enumerate(truth):
+		p = pred[i]
+		if t != p:
+			confuse[(t, p)] = \
+				confuse.get((t,p), 0) + 1
+	title = ' '*4 + ''.join(['{:>4}'.format(x) for x in idx_to])
+	print(title)
+	for i in idx_from:
+		row = '{:>4}'.format(i)
+		for j in idx_to:
+			row += '{:>4}'.format(confuse.get((i, j),''))
+		print(row)
+
 def cosine_sim(mem, ref):
 	mem_norm = tf.norm(mem, axis = -1, keep_dims = True)
 	ref_norm = tf.norm(ref)
