@@ -13,7 +13,7 @@ def confusion_table(truth, pred):
 		if t != p:
 			confuse[(t, p)] = \
 				confuse.get((t,p), 0) + 1
-	title = ' '*4 + ''.join(['{:>6}'.format(x) for x in idx_to])
+	title = ' '*6 + ''.join(['{:>6}'.format(x) for x in idx_to])
 	print(title)
 	for i in idx_from:
 		row = '{:>6}'.format(i)
