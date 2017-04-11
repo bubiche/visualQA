@@ -96,5 +96,5 @@ def conv_flat(x, feat_in, name):
 			[3, 3, feat_in, 1]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
 	temp = tf.nn.bias_add(
-		temp, const_var('{}b'.format(name), 0.0, (feat_out,)))
+		temp, const_var('{}b'.format(name), 0.0, (1,)))
 	return tf.nn.sigmoid(temp)
