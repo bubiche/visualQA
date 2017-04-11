@@ -59,7 +59,7 @@ def sharpen(x):
 	# 	power - tf.reduce_min(power, -1, keep_dims = True),
 	# 	tf.reduce_max(power, -1, keep_dims = True) - 
 	#    	tf.reduce_min(power, -1, keep_dims = True))
-	summation = tf.reduce_sum(power, -1, keep_dims = True)
+	# summation = tf.reduce_sum(power, -1, keep_dims = True)
 	return power
 
 def tanh_gate(x, feat_in, feat_out):
@@ -86,3 +86,15 @@ def conv_pool_leak(x, feat_in, feat_out, name):
 
 	# leaky
 	return tf.maximum(0.1 * pooled, pooled)
+
+def conv_flat(x, feat_in, name):
+	# conv
+	padding = [[1, 1]] * 2
+	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
+	temp = tf.nn.conv2d(temp, 
+		xavier_var_conv('{}w'.format(name), 
+			[3, 3, feat_in, 1]), 
+		padding = 'VALID', strides = [1, 1, 1, 1])
+	temp = tf.nn.bias_add(
+		temp, const_var('{}b'.format(name), 0.0, (feat_out,)))
+	return tf.nn.sigmoid(temp)

@@ -6,6 +6,7 @@ import numpy as np
 import os
 from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
 from .utils import conv_pool_leak, xavier_var, const_var, gaussian_var
+from .utils import conv_flat
 from .ops import op_dict
 import pickle
 
@@ -31,8 +32,8 @@ class HorseNet(object):
 
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
-		self._yolo = gaussian_var(
-			'ref', 0.00204, 0.0462, [1, 1024])
+		# self._yolo = gaussian_var(
+		# 	'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
 		self._batch_yielder = BatchYielder(FLAGS)
@@ -43,20 +44,22 @@ class HorseNet(object):
 
 	def _build_net(self):
 		self._fetches = [self._yolo]
-		volume_flat = tf.reshape(self._volume, [-1, 1024])
+		# volume_flat = tf.reshape(self._volume, [-1, 1024])
 		#reference = tf.reshape(self._yolo.out, [1, 1024])
-		reference = self._yolo
+		# reference = self._yolo
 
-		with tf.variable_scope('tanh_gate'):
-			tanh_vol = tanh_gate(volume_flat, 1024, 512)
+		# with tf.variable_scope('tanh_gate'):
+		# 	tanh_vol = tanh_gate(volume_flat, 1024, 512)
 
-		with tf.variable_scope('tanh_gate', reuse = True):
-			tanh_ref = tanh_gate(reference, 1024, 512)
+		# with tf.variable_scope('tanh_gate', reuse = True):
+		# 	tanh_ref = tanh_gate(reference, 1024, 512)
 
-		similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = (similar + 1.) / 2.
+		# similar = cosine_sim(tanh_vol, tanh_ref)
+		# similar = (similar + 1.) / 2.
 
-		sharped = sharpen(similar)
+		convx = conv_flat(self._volume, 1024, 'att')
+
+		sharped = tf.squeeze(sharpen(convx))
 		# sharped = tf.reshape(sharped, [-1, 49])
 		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
