@@ -44,6 +44,8 @@ class YOLOtop(object):
 			print(index, layer_type, current.get_shape().as_list())
 
 		self.out = current
+		self.sess = tf.Session()
+		self.sess.run(tf.global_variables_initializer())
 
 	def process_box(self, b, threshold):
 		max_indx = np.argmax(b.probs)
@@ -66,4 +68,10 @@ class YOLOtop(object):
 		return count
 
 	def forward(self, vecs):
-		self.
+		outs = self.sess.run(self.out, {
+			self._inp: vecs
+		})
+		res = list()
+		for out in outs:
+			res.append(self.postprocess(out))
+		return np.array(res)
