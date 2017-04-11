@@ -32,7 +32,6 @@ class Visualizer(object):
         i = 0
         print(self.img_list)
         for img in self.img_list:
-            print(img)
             ret[i] = self.get_vec(img)
             i += 1
             
@@ -63,5 +62,6 @@ class Visualizer(object):
     def visualize_multiple(self, att_vec):
         i = 0
         for img in self.img_list:
+            print(img)
             self.visualize(att_vec[i], img, i)
             i += 1
