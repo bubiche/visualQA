@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 import random
-import img_transform as imt
+from batch_yielder.img_transform import Image_Transformer
 
 class BatchYielder(object):
 
@@ -40,7 +40,7 @@ class BatchYielder(object):
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
         
-        self.img_transformer = imt.Image_Transformer(flags)
+        self.img_transformer = Image_Transformer(flags)
 
     def get_data_size(self):
         return self.vec_dset.shape[0]
