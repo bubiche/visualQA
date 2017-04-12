@@ -108,7 +108,7 @@ class Image_Transformer(object):
             transformed = self.transform_img(img)
             ret.append(transformed)
             
-        chunk_size= 512
+        chunk_size= 128
         res = np.array((0, 7, 7, 1024))
         print('Extracting with YOLO')
         for i in range(0, len(ret), chunk_size):
