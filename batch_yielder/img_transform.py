@@ -102,11 +102,20 @@ class Image_Transformer(object):
             img_path.append(os.path.join(self.data_path, self.name_dset[idx].decode()))
             count_list.append(self.count_dset[idx])
             
-        print('Got image list')
+        print('Transforming')
         ret = list()
         for img in img_path:
             transformed = self.transform_img(img)
             ret.append(transformed)
             
-        return self.net.forward_np_array(np.array(ret)), count_list
+        chunk_size= 512
+        res = np.array((0, 7, 7, 1024))
+        print('Extracting with YOLO')
+        for i in range(0, len(ret), chunk_size):
+            chunk = np.array(ret[i:i+chunk_size])
+            processed = self.net.forward_np_array(chunk)
+            res = np.concatenate((res, processed), axis=0)
+        
+            
+        return res, count_list
         
