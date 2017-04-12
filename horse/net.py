@@ -143,12 +143,14 @@ class HorseNet(object):
 
 
 			if _mult(step, self._flags.valid_every):
+				print('valid table:')
 				valid_accuracy = self._accuracy_data(
 					self._batch_yielder.validation_set())
 				valid_accuracy = int(valid_accuracy * 100)
 				message += 'valid acc {}% '.format(valid_accuracy)
 
 			if _mult(step, self._flags.test_every):
+				print('test table:')
 				test_accuracy = self._accuracy_data(
 					self._batch_yielder.test_set())
 				test_accuracy = int(test_accuracy * 100)
@@ -158,6 +160,10 @@ class HorseNet(object):
 			
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
+				print('train table:')
+				self._accuracy_data(
+					self._batch_yielder.next_epoch())
+
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
 				# img_uint = (horse * 255.).astype(np.uint8)[0]
 				# print(img_uint.shape)
