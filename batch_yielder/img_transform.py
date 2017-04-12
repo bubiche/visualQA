@@ -100,6 +100,7 @@ class Image_Transformer(object):
             img_path.append(os.path.join(self.data_path, self.name_dset[idx].decode()))
             count_list.append(self.count_dset[idx])
             
+        print('Got image list')
         ret = list()
         for img in img_path:
             transformed = self.transform_img(img)
