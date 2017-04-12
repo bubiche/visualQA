@@ -28,7 +28,13 @@ class BatchYielder(object):
                
         self.n_val = self.val_count_dset.shape[0]
         self.n_test = self.test_count_dset.shape[0]
-        self.train_size = self.yes_train_dset[0] * 2
+        
+        if flags.equal:
+            self.n_additional_random = self.yes_train_dset[0]
+        else:
+            self.n_additional_random = 141
+            
+        self.train_size = self.yes_train_dset[0] + self.n_additional_random
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
         
@@ -38,7 +44,7 @@ class BatchYielder(object):
 
     def shuffle_data(self):
         self.shuffle_idx = list(range(self.yes_train_dset[0]))
-        no_horse = random.sample(range(self.yes_train_dset[0], self.get_data_size()), self.yes_train_dset[0])
+        no_horse = random.sample(range(self.yes_train_dset[0], self.get_data_size()), self.n_additional_random)
         self.shuffle_idx.extend(no_horse)
         np.random.shuffle(self.shuffle_idx)
 
