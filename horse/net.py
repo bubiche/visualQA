@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import os
 from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
-from .utils import conv_pool_leak, xavier_var, const_var, gaussian_var
+from .utils import conv_pool_act, xavier_var, const_var, gaussian_var
 from .utils import conv_flat, conv_act
 from .ops import op_dict
 import pickle
