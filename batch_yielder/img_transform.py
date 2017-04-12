@@ -67,6 +67,7 @@ class Image_Transformer(object):
     def transform_vec(self, idx):
         img_path = os.path.join(self.data_path, self.name_dset[idx].decode())
         img = cv2.imread(img_path)
+        img = cv2.resize(img, (448, 448))
         img = self.imcv2_affine_trans(img)
         img = self.imcv2_recolor(img)
         
@@ -76,6 +77,7 @@ class Image_Transformer(object):
         
     def transform_img(self, pth):
         img = cv2.imread(pth)
+        img = cv2.resize(img, (448, 448))
         img = self.imcv2_affine_trans(img)
         img = self.imcv2_recolor(img)
         
