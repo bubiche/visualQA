@@ -67,7 +67,24 @@ class BatchYielder(object):
                     y_batch.append(y_instance)
 
                 yield x_batch, y_batch
-                
+
+
+    def next_epoch(self):
+        for i in range(self.epoch):
+            print('epoch number %d' % i)
+            self.shuffle_data()
+            x_batch = list()
+            y_batch = list()
+
+            for j in range(self.train_size):
+                x_instance = self.get_x_at_index(self.shuffle_idx[j])
+                y_instance = self.get_annotation_at_index(self.shuffle_idx[j])
+
+                x_batch.append(x_instance)
+                y_batch.append(y_instance)
+
+            yield x_batch, y_batch
+            
     def validation_set(self):
         ret_x = np.zeros((self.n_val, 7, 7, 1024))
         ret_y = np.zeros((self.n_val,))
