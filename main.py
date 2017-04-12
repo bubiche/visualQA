@@ -30,7 +30,7 @@ flags.DEFINE_string('see', '', 'name of the image')
 flags.DEFINE_string('full_vec_path', 'parser/full_vec.hdf5', 'path to full vec')
 flags.DEFINE_string('full_name_path', 'parser/full_name.hdf5', 'path to full name')
 flags.DEFINE_string('see_path', 'seer_input/', 'path to images to get attention')
-flags.DEFINE_boolean('equal', True, 'make number of images with horse and without horse equal each epoch')
+flags.DEFINE_boolean('equal', False, 'make number of images with horse and without horse equal each epoch')
 
 FLAGS = flags.FLAGS
 
