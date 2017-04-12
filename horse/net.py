@@ -97,10 +97,10 @@ class HorseNet(object):
 	def _build_loss(self):
 		self._target = tf.placeholder(tf.float32, [None])
 		self._loss = tf.nn.l2_loss(self._target - self._out)
-		int_target = tf.cast(self._target, tf.int32)
-		int_out = tf.cast(self._out, tf.int32)
+		int_target = tf.cast(tf.round(self._target), tf.int32)
+		int_out = tf.cast(tf.round(self._out), tf.int32)
 		correct = tf.equal(int_target, int_out)
-		correct = tf.cast(correct, tf.float32)
+		correct = tf.cast(tf.round(correct), tf.float32)
 		self._accuracy = tf.reduce_mean(correct)
 
 	def _build_trainer(self):
@@ -155,15 +155,16 @@ class HorseNet(object):
 					self._batch_yielder.test_set())
 				test_accuracy = int(test_accuracy * 100)
 				message += 'test acc {}%'.format(test_accuracy)
-
-			_log(message)
 			
 			if _mult(step, self._flags.save_every):
 				self._save_ckpt(step)
 				print('train table:')
-				self._accuracy_data(
+				train_accuracy = self._accuracy_data(
 					self._batch_yielder.next_epoch())
+				train_accuracy = int(train_accuracy * 100)
+				message += 'train acc {}%'.format(train_accuracy)
 
+			_log(message)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
 				# img_uint = (horse * 255.).astype(np.uint8)[0]
 				# print(img_uint.shape)
@@ -177,7 +178,7 @@ class HorseNet(object):
 				self._volume: volume_feed,
 				self._target: target_feed
 			})
-		pred = pred.astype(np.int32)
+		pred = np.round(pred).astype(np.int32)
 		target_feed = target_feed.astype(np.int32)
 		confusion_table(target_feed, pred)
 		return acc
