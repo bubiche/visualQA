@@ -100,7 +100,7 @@ class HorseNet(object):
 		int_target = tf.cast(tf.round(self._target), tf.int32)
 		int_out = tf.cast(tf.round(self._out), tf.int32)
 		correct = tf.equal(int_target, int_out)
-		correct = tf.cast(tf.round(correct), tf.float32)
+		correct = tf.cast(correct, tf.float32)
 		self._accuracy = tf.reduce_mean(correct)
 
 	def _build_trainer(self):
