@@ -10,8 +10,8 @@ class Image_Transformer(object):
         self.full_vec_file = h5py.File(flags.full_vec_path, 'r')
         
         self.net = net = yolo.YOLO(
-            'image2vec/yolo-full.cfg', 
-            'image2vec/yolo-full.weights',
+            'parser/image2vec/yolo-full.cfg', 
+            'parser/image2vec/yolo-full.weights',
             up_to = 28)
     
         self.name_dset = self.name_file['name']
