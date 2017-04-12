@@ -39,8 +39,8 @@ class BatchYielder(object):
         self.train_size = self.yes_train_dset[0] + self.n_additional_random
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
-        
-        self.img_transformer = Image_Transformer(flags)
+        if self.noise:
+            self.img_transformer = Image_Transformer(flags)
 
     def get_data_size(self):
         return self.vec_dset.shape[0]

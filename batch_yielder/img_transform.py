@@ -98,7 +98,7 @@ class Image_Transformer(object):
                 idx = random.randint(0, 27428)
                 
             img_path.append(os.path.join(self.data_path, self.name_dset[idx].decode()))
-            count_list.append(count_dset[idx])
+            count_list.append(self.count_dset[idx])
             
         ret = list()
         for img in img_path:
