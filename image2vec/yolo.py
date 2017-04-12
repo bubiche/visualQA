@@ -32,6 +32,10 @@ class YOLO(object):
 		self.sess = tf.Session()
 		self.sess.run(tf.global_variables_initializer())
 
+	def forward_np_array(self, nparr):
+		return self.sess.run(
+			self.out, {self.inp: nparr})
+
 	def forward(self, img_list):
 		def _preprocess(img_path):
 			im = cv2.imread(img_path)
