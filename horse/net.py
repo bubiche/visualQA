@@ -32,6 +32,7 @@ class HorseNet(object):
 
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
+		self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
 		# self._yolo = gaussian_var(
 		# 	'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
@@ -57,23 +58,34 @@ class HorseNet(object):
 		# similar = cosine_sim(tanh_vol, tanh_ref)
 		# similar = (similar + 1.) / 2.
 
-		self._attention = conv_flat(self._volume, 1024, 'att')
+		# self._attention = conv_flat(self._volume, 1024, 'att')
 		# convx = tf.reshape(convx, [-1, 49])
 		# sharped = sharpen(convx)
 		# sharped = tf.reshape(sharped, [-1, 49])
 		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
-		focused = self._volume * self._attention
+		# focused = self._volume * self._attention
 
 		def _leak(tensor):
 			return tf.maximum(0.1 * tensor, tensor)
 
-		conv1 = conv_act(focused, 1024, 512, _leak, 'conv1')
-		conv2 = conv_act(conv1, 512, 256, _leak, 'conv2')
-		conv3 = conv_act(conv2, 256, 128, _leak, 'conv3')
-		conv4 = conv_act(conv3, 128, 5, tf.nn.sigmoid, 'conv4', 0.0)
+		att1 = conv_act(self._volume, 1024, 512, _leak, 'att1')
+		att2 = conv_act(att1, 512, 256, _leak, 'att2')
+		att3 = conv_act(att2, 256, 128, tf.tanh, 'att3')
+		att3 = tf.reshape(att3, [-1, 128])
+		tanh_ref = tf.tanh(self._ref)
 
-		self._out = tf.reduce_sum(conv4, [1,2,3])
+		similar = cosine_sim(att3, tanh_ref)
+		similar = (similar + 1.)/2.
+
+		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
+
+		attended = self._volume * self._attention
+		conv1 = conv_act(attended, 1024, 512, _leak, 'conv1')
+		conv2 = conv_act(conv1, 512, 128, _leak, 'conv2')
+		conv3 = conv_act(conv2, 128, 5, tf.nn.sigmoid, 'conv3')
+
+		self._out = tf.reduce_sum(conv3, [1,2,3])
 
 		if self._flags.train:
 			self._build_loss()
