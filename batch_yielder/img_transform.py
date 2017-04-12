@@ -109,7 +109,7 @@ class Image_Transformer(object):
             ret.append(transformed)
             
         chunk_size= 128
-        res = np.array((0, 7, 7, 1024))
+        res = np.zeros((0, 7, 7, 1024))
         print('Extracting with YOLO')
         for i in range(0, len(ret), chunk_size):
             chunk = np.array(ret[i:i+chunk_size])
