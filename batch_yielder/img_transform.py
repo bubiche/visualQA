@@ -96,7 +96,7 @@ class Image_Transformer(object):
             
         for i in range(self.n_additional_random):
             idx = random.randint(0, 27428)
-            while os.path.join(self.data_path, self.name_dset[idx].decode()) in img_path:
+            while os.path.join(self.data_path, self.name_dset[idx].decode()) in img_path and self.count_dset[idx] > 0:
                 idx = random.randint(0, 27428)
                 
             img_path.append(os.path.join(self.data_path, self.name_dset[idx].decode()))
