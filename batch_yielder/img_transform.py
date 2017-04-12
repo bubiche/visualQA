@@ -2,20 +2,30 @@ import numpy as np
 import cv2
 import h5py
 import os
+import random
 from image2vec import yolo
 
 class Image_Transformer(object):
     def __init__(self, flags):
         self.name_file = h5py.File(flags.full_name_path, 'r')
         self.full_vec_file = h5py.File(flags.full_vec_path, 'r')
+        self.full_count_file = h5py.File(flags.full_count_path, 'r')
+        self.horses_file = h5py.File('parser/all_horse.hdf5', 'r')
         
         self.net = net = yolo.YOLO(
             'parser/image2vec/yolo-full.cfg', 
             'parser/image2vec/yolo-full.weights',
             up_to = 28)
-    
+        if flags.equal:
+            self.n_additional_random = 861
+        else:
+            self.n_additional_random = 141
+            
         self.name_dset = self.name_file['name']
         self.vec_dset = self.full_vec_file['vec']
+        self.horse_name_dset = self.horses_file['name']
+        self.horse_count_dset = self.horses_file['count']
+        self.count_dset = self.full_count_file['count']
         
         self.data_path = flags.data_path
         
@@ -64,12 +74,36 @@ class Image_Transformer(object):
         
         return img
         
-    def get_transformed_vecs(self, vecs):
-        ret = list()
+    def transform_img(self, pth):
+        img = cv2.imread(pth)
+        img = self.imcv2_affine_trans(img)
+        img = self.imcv2_recolor(img)
+        
+        img = np.clip(img, 0, 255)
+        
+        return img
+        
+    def get_transformed_vecs(self):
+        img_path = list()
+        count_list = list()
         print('Adding noise')
-        for vec in vecs:
-            tmp = self.get_transformed_vec(vec)
-            ret.append(tmp)
+        
+        for i in range(861):
+            img_path.append(os.path.join(self.data_path, self.horse_name_dset[i].decode()))
+            count_list.append(self.horse_count_dset[i])
             
-        return self.net.forward_np_array(np.array(ret))
+        for i in range(self.n_additional_random):
+            idx = random.randint(0, 27428)
+            while os.path.join(self.data_path, self.name_dset[idx].decode()) in img_path:
+                idx = random.randint(0, 27428)
+                
+            img_path.append(os.path.join(self.data_path, self.name_dset[idx].decode()))
+            count_list.append(count_dset[idx])
+            
+        ret = list()
+        for img in img_path:
+            transformed = self.transform_img(img)
+            ret.append(transformed)
+            
+        return self.net.forward_np_array(np.array(ret)), count_list
         

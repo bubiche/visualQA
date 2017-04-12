@@ -75,7 +75,7 @@ class BatchYielder(object):
                     y_batch.append(y_instance)
 
                 if self.noise:
-                    x_batch = self.img_transformer.get_transformed_vecs(x_batch)
+                    x_batch, y_batch = self.img_transformer.get_transformed_vecs()
                 yield x_batch, y_batch
 
 
