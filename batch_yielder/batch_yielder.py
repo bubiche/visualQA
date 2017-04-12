@@ -81,7 +81,7 @@ class BatchYielder(object):
             x_batch.append(x_instance)
             y_batch.append(y_instance)
 
-        return x_batch, y_batch
+        return np.array(x_batch), np.array(y_batch)
 
     def validation_set(self):
         ret_x = np.zeros((self.n_val, 7, 7, 1024))
