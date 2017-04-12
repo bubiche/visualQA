@@ -67,7 +67,7 @@ def tanh_gate(x, feat_in, feat_out):
 	linear += xavier_var('tanhb', (feat_out,))
 	return tf.tanh(linear)
 
-def conv_pool_leak(x, feat_in, feat_out, name):
+def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
@@ -85,7 +85,7 @@ def conv_pool_leak(x, feat_in, feat_out, name):
 		strides = [1, 2, 2, 1])
 
 	# leaky
-	return tf.maximum(0.1 * pooled, pooled)
+	return act(pooled)
 
 
 def conv_act(x, feat_in, feat_out, act, name, bias = 1.0):

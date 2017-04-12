@@ -81,11 +81,11 @@ class HorseNet(object):
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
-		conv1 = conv_act(attended, 1024, 512, _leak, 'conv1')
-		conv2 = conv_act(conv1, 512, 128, _leak, 'conv2')
-		conv3 = conv_act(conv2, 128, 5, tf.nn.sigmoid, 'conv3')
+		conv1 = conv_pool_act(attended, 1024, 256, _leak, 'conv1')
+		conv2 = conv_pool_act(conv1, 256, 64, _leak, 'conv2')
+		conv3 = conv_pool_act(conv2, 64, 1, tf.nn.softplus, 'conv3')
 
-		self._out = tf.reduce_sum(conv3, [1,2,3])
+		self._out = tf.squeeze(conv3)
 
 		if self._flags.train:
 			self._build_loss()
