@@ -82,10 +82,9 @@ class HorseNet(object):
 
 		attended = self._volume * self._attention
 		conv1 = conv_pool_act(attended, 1024, 256, _leak, 'conv1')
-		conv2 = conv_pool_act(conv1, 256, 64, _leak, 'conv2')
-		conv3 = conv_pool_act(conv2, 64, 1, tf.nn.softplus, 'conv3')
+		conv2 = conv_pool_act(conv1, 256, 1, tf.nn.softplus, 'conv2')
 
-		self._out = tf.squeeze(conv3)
+		self._out = tf.squeeze(conv2)
 
 		if self._flags.train:
 			self._build_loss()
