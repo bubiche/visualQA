@@ -66,6 +66,7 @@ class Image_Transformer(object):
         
     def get_transformed_vecs(self, vecs):
         ret = list()
+        print('Adding noise')
         for vec in vecs:
             tmp = self.get_transformed_vec(vec)
             ret.append(tmp)

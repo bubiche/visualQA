@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 import random
-import .img_transform as imt
+import img_transform as imt
 
 class BatchYielder(object):
 
