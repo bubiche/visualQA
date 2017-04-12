@@ -32,9 +32,9 @@ class HorseNet(object):
 
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
-		self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
-		# self._yolo = gaussian_var(
-		# 	'ref', 0.00204, 0.0462, [1, 1024])
+		# self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
+		self._yolo = gaussian_var(
+			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
 		self._batch_yielder = BatchYielder(FLAGS)
@@ -45,20 +45,20 @@ class HorseNet(object):
 
 	def _build_net(self):
 		self._fetches = []
-		# volume_flat = tf.reshape(self._volume, [-1, 1024])
-		#reference = tf.reshape(self._yolo.out, [1, 1024])
-		# reference = self._yolo
+		volume_flat = tf.reshape(self._volume, [-1, 1024])
+		# reference = tf.reshape(self._yolo.out, [1, 1024])
+		reference = self._yolo
 
-		# with tf.variable_scope('tanh_gate'):
-		# 	tanh_vol = tanh_gate(volume_flat, 1024, 512)
+		with tf.variable_scope('tanh_gate'):
+			tanh_vol = tanh_gate(volume_flat, 1024, 512)
 
-		# with tf.variable_scope('tanh_gate', reuse = True):
-		# 	tanh_ref = tanh_gate(reference, 1024, 512)
+		with tf.variable_scope('tanh_gate', reuse = True):
+			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		# similar = cosine_sim(tanh_vol, tanh_ref)
-		# similar = (similar + 1.) / 2.
+		similar = cosine_sim(tanh_vol, tanh_ref)
+		similar = (similar + 1.) / 2.
 
-		# self._attention = conv_flat(self._volume, 1024, 'att')
+		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
 		# sharped = sharpen(convx)
 		# sharped = tf.reshape(sharped, [-1, 49])
@@ -69,16 +69,16 @@ class HorseNet(object):
 		def _leak(tensor):
 			return tf.maximum(0.1 * tensor, tensor)
 
-		att1 = conv_act(self._volume, 1024, 512, _leak, 'att1')
-		att2 = conv_act(att1, 512, 256, _leak, 'att2')
-		att3 = conv_act(att2, 256, 128, tf.tanh, 'att3')
-		att3 = tf.reshape(att3, [-1, 128])
-		tanh_ref = tf.tanh(self._ref)
+		# att1 = conv_act(self._volume, 1024, 512, _leak, 'att1')
+		# att2 = conv_act(att1, 512, 256, _leak, 'att2')
+		# att3 = conv_act(att2, 256, 128, tf.tanh, 'att3')
+		# att3 = tf.reshape(att3, [-1, 128])
+		# tanh_ref = tf.tanh(self._ref)
 
-		similar = cosine_sim(att3, tanh_ref)
-		similar = (similar + 1.)/2.
+		# similar = cosine_sim(att3, tanh_ref)
+		# similar = (similar + 1.)/2.
 
-		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
+		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
 		conv1 = conv_pool_act(attended, 1024, 256, _leak, 'conv1')
