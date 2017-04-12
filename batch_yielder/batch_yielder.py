@@ -1,12 +1,14 @@
 import numpy as np
 import h5py
 import random
+import .img_transform as imt
 
 class BatchYielder(object):
 
     def __init__(self, flags):
         self.batch_size = flags.batch_size
         self.epoch = flags.epoch
+        self.noise = flags.noise
         
         self.vec_file = h5py.File(flags.vec_path, 'r')
         self.count_file = h5py.File(flags.count_path, 'r')
@@ -38,6 +40,7 @@ class BatchYielder(object):
         if self.batch_size > self.train_size: self.batch_size = self.train_size
         self.batch_per_epoch = int(np.ceil(self.train_size/self.batch_size))
         
+        self.img_transformer = imt.Image_Transformer(flags)
 
     def get_data_size(self):
         return self.vec_dset.shape[0]
@@ -66,12 +69,13 @@ class BatchYielder(object):
                 for j in range(b*self.batch_size, b*self.batch_size + self.batch_size):
                     if j >= self.train_size: continue
                     x_instance = self.get_x_at_index(self.shuffle_idx[j])
-                    if x_instance is None: continue
                     y_instance = self.get_annotation_at_index(self.shuffle_idx[j])
 
                     x_batch.append(x_instance)
                     y_batch.append(y_instance)
 
+                if self.noise:
+                    x_batch = self.img_transformer.get_transformed_vecs(x_batch)
                 yield x_batch, y_batch
 
 
