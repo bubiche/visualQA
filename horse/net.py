@@ -35,7 +35,7 @@ class HorseNet(object):
 		# self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
 
 		self._yolo = gaussian_var(
-			'ref', 0.1, 0.1, [1, 1024])
+			'ref', 0.0, 1.0, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
 		self._batch_yielder = BatchYielder(FLAGS)
@@ -56,8 +56,7 @@ class HorseNet(object):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = similar * 100.
-		similar = tf.nn.softmax(similar)
+		similar = tf.power(similar, 1./3.)
 		# similar = tf.reshape(similar, [-1, 49])
 		# similar = sharpen(similar)
 
@@ -85,8 +84,9 @@ class HorseNet(object):
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
-		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
-		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
+		conv1 = conv_pool_act(attended, 1024, 256, _leak, 'conv1')
+		conv2 = conv_pool_act(conv1, 256, 64, _leak, 'conv2')
+		conv3 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv3')
 
 		self._out = tf.reduce_sum(conv2,[1,2,3])
 
