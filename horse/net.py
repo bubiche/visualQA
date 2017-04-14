@@ -34,8 +34,8 @@ class HorseNet(object):
 		self._flags = FLAGS
 		# self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
 
-		self._yolo = gaussian_var(
-			'ref', 0.0, 1.0, [1, 1024])
+		self._ref = gaussian_var(
+			'ref', 0.0, 1.0, [1, 512])
 		self._build_placeholder()
 		self._build_net()
 		self._batch_yielder = BatchYielder(FLAGS)
@@ -46,18 +46,14 @@ class HorseNet(object):
 
 	def _build_net(self):
 		self._fetches = []
-		volume_flat = tf.reshape(self._volume, [-1, 1024])
-		reference = self._yolo
+		#volume_flat = tf.reshape(self._volume, [-1, 1024])
 
-		with tf.variable_scope('tanh_gate'):
-			tanh_vol = tanh_gate(volume_flat, 1024, 512)
-
-		with tf.variable_scope('tanh_gate', reuse = True):
-			tanh_ref = tanh_gate(reference, 1024, 512)
+		tanh_vol = tanh_gate(volume_flat, 1024, 1024)
+		tanh_ref = tf.tanh(self._ref)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		sign = tf.sign(similar)
-		warp = sign * tf.pow(sign * similar, .2)
+		warp = sign * tf.pow(sign * similar, .5)
 		attention = (warp + 1.) / 2.
 		# similar = tf.reshape(similar, [-1, 49])
 		# similar = sharpen(similar)

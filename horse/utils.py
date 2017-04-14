@@ -64,13 +64,18 @@ def sharpen(x):
 	return power
 
 def tanh_gate(x, feat_in, feat_out):
-	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
-	linear += xavier_var('tanhb', (feat_out,))
-	return tf.tanh(linear)
+	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
+	temp = tf.nn.conv2d(temp, 
+		xavier_var_conv('tanhgatew', 
+			[3, 3, feat_in, feat_out]), 
+		padding = 'VALID', strides = [1, 1, 1, 1])
+	conved = tf.nn.bias_add(
+		temp, const_var('tanhgateb', 0.0, (feat_out,)))
+	reshaped = tf.reshape(conved, [-1, feat_out])
+	return tf.tanh(reshaped)
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
-	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(temp, 
 		xavier_var_conv('{}w'.format(name), 
