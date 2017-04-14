@@ -24,13 +24,13 @@ while i < n_train:
 print(i)
 
 while i < n_train + n_val:
-    val_dset[i] = shuffle_idx[i]
+    val_dset[i - n_train] = shuffle_idx[i]
     i += 1
 
 print(i)
     
 while i < n_train + n_val + n_test:
-    test_dset[i] = shuffle_idx[i]
+    test_dset[i - n_val - n_train] = shuffle_idx[i]
     i += 1
     
 print(i)
