@@ -56,8 +56,8 @@ for key, value in data.items():
     vec = net.forward([key])
     img_dset[i] = vec[0]
     name_dset[i] = key
-    for key, value in check.items():
-        count_dset[key][i] = value[key]
+    for kk, vv in check.items():
+        count_dset[kk][i] = value[kk]
     i += 1
     if i % 100 == 0:
         print(i)
