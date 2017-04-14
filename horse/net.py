@@ -57,9 +57,8 @@ class HorseNet(object):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
-		scale = 1. + tf.nn.softplus(tf.Variable(0.))
-		similar = tf.reshape(similar * scale, [-1, 49])
-		similar = tf.nn.softmax(similar)
+		similar = tf.reshape(similar, [-1, 49])
+		similar = sharpen(similar)
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
@@ -84,8 +83,7 @@ class HorseNet(object):
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
-		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
-		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
+		conv1 = conv_pool_act(attended, 1024, 5, tf.nn.sigmoid, 'conv1')
 
 		self._out = tf.reduce_sum(conv2,[1,2,3])
 
