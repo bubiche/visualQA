@@ -57,7 +57,7 @@ class HorseNet(object):
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		sign = tf.sign(similar)
-		warp = sign * tf.power(sign * similar, .2)
+		warp = sign * tf.pow(sign * similar, .2)
 		attention = (warp + 1.) / 2.
 		# similar = tf.reshape(similar, [-1, 49])
 		# similar = sharpen(similar)
