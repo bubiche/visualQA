@@ -14,7 +14,7 @@ train_dset = split_file.create_dataset('train', (n_train,), dtype='i')
 val_dset = split_file.create_dataset('val', (n_val,), dtype='i')
 test_dset = split_file.create_dataset('test', (n_test,), dtype='i')
 
-shuffle_idx = np.random.permutation(self.data_size)
+shuffle_idx = np.random.permutation(data_size)
 
 i = 0
 while i < n_train:

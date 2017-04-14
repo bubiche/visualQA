@@ -25,8 +25,8 @@ class BatchYielderBinhYen(object):
         if self.batch_size > self.n_train: self.batch_size = self.n_train
         self.batch_per_epoch = int(np.ceil(self.n_train/self.batch_size))
         
-        def shuffle_data(self):
-            self.shuffle_idx = np.random.permutation(self.n_train)
+    def shuffle_data(self):
+        self.shuffle_idx = np.random.permutation(self.n_train)
             
     def get_x_at_index(self, idx):
         return self.vec_dset[idx]
