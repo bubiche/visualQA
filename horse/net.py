@@ -90,7 +90,7 @@ class HorseNet(object):
 		conv2 = conv_act(conv1, 128, 32, _leak, 'conv2')
 		conv3 = conv_act(conv2, 32, 5, tf.nn.sigmoid, 'conv3')
 
-		self._out = tf.reduce_sum(conv2,[1,2,3])
+		self._out = tf.reduce_sum(conv3,[1,2,3])
 
 		if self._flags.train:
 			self._build_loss()
