@@ -35,7 +35,7 @@ class HorseNet(object):
 		# self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
 
 		self._yolo = gaussian_var(
-			'ref', 0., 0.1, [1, 512])
+			'ref', 0.1, 0.1, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
 		self._batch_yielder = BatchYielder(FLAGS)
