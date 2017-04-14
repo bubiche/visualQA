@@ -56,7 +56,7 @@ class HorseNet(object):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = similar * 5.
+		similar = similar * 100.
 		similar = tf.nn.softmax(similar)
 		# similar = tf.reshape(similar, [-1, 49])
 		# similar = sharpen(similar)
