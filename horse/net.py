@@ -55,7 +55,7 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		similar = cosine_sim(tanh_vol, tanh_ref)
+		similar = cosine_sim(tanh_vol, tanh_ref) * 100
 		similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
