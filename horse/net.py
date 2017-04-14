@@ -88,7 +88,7 @@ class HorseNet(object):
 		attended = self._volume * self._attention
 		conv1 = conv_act(attended, 1024, 128, _leak, 'conv1')
 		conv2 = conv_act(conv1, 128, 32, _leak, 'conv2')
-		conv3 = conv_act(conv1, 32, 5, tf.nn.sigmoid, 'conv3')
+		conv3 = conv_act(conv2, 32, 5, tf.nn.sigmoid, 'conv3')
 
 		self._out = tf.reduce_sum(conv2,[1,2,3])
 
