@@ -54,9 +54,9 @@ def _sharp_gate(x):
 	return tf.nn.softplus(linear)
 
 def sharpen(x):
-	power = tf.pow(x, 1. + _sharp_gate(x))
-	summation = tf.reduce_sum(power, -1, keep_dims = True)
-	power = tf.div(power, summation)
+	# power = tf.pow(x, 1. + _sharp_gate(x))
+	# summation = tf.reduce_sum(power, -1, keep_dims = True)
+	# power = tf.div(power, summation)
 	power = tf.div(
 		power - tf.reduce_min(power, -1, keep_dims = True),
 		tf.reduce_max(power, -1, keep_dims = True) - 
