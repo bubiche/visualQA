@@ -47,7 +47,6 @@ class HorseNet(object):
 	def _build_net(self):
 		self._fetches = []
 		volume_flat = tf.reshape(self._volume, [-1, 1024])
-		reference = tf.reshape(self._yolo.out, [1, 1024])
 		reference = self._yolo
 
 		with tf.variable_scope('tanh_gate'):
