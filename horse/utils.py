@@ -72,7 +72,7 @@ def tanh_gate(x, feat_in, feat_out):
 	conved = tf.nn.bias_add(
 		temp, const_var('tanhgateb', 0.0, (feat_out,)))
 	reshaped = tf.reshape(conved, [-1, feat_out])
-	return tf.tanh(reshape)
+	return tf.tanh(reshaped)
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
