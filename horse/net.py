@@ -52,7 +52,7 @@ class HorseNet(object):
 		tanh_ref = tf.tanh(self._ref)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = tf.sign(similar)
+		sign = tf.sign(similar)
 		similar = sign * tf.pow(sign * similar, 1./3.)
 		attention = (similar + 1.) / 2.
 		# similar = tf.reshape(similar, [-1, 49])
