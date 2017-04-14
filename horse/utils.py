@@ -89,7 +89,7 @@ def conv_pool_act(x, feat_in, feat_out, act, name):
 	return act(pooled)
 
 
-def conv_act(x, feat_in, feat_out, act, name, bias = 1.0):
+def conv_act(x, feat_in, feat_out, act, name, bias = 0.0):
 	# conv
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
