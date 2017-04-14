@@ -52,7 +52,7 @@ net = yolo.YOLO(
     up_to = 28)
     
 i = 0
-for key, value in data.items:
+for key, value in data.items():
     vec = net.forward([key])
     img_dset[i] = vec[0]
     name_dset[i] = key
