@@ -58,6 +58,7 @@ class Visualizer(object):
                 
         output_file = '{}.jpg'.format(idx)
         res = np.clip(res, 0, 255)
+        res = res[:, :, ::-1]
         cv2.imwrite(output_file, res.astype(np.uint8))
         
     def visualize_multiple(self, att_vec):
