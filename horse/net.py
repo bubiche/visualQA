@@ -127,14 +127,15 @@ class HorseNet(object):
 	def train(self):
 		loss_mva = None
 		batches = enumerate(self._batch_yielder.next_batch())
-		fetches = [self._train_op, self._loss, self._accuracy]
+		fetches = [self._train_op, self._loss]
+		fetches += [self._accuracy, self._attention]
 		fetches = fetches + self._fetches
 
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
-			_, loss, accuracy = fetched
+			_, loss, accuracy, attention = fetched
 
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
@@ -158,12 +159,13 @@ class HorseNet(object):
 				message += 'test acc {}%'.format(test_accuracy)
 			
 			if _mult(step, self._flags.save_every):
-				self._save_ckpt(step)
 				print('train table:')
 				train_accuracy = self._accuracy_data(
 					self._batch_yielder.next_epoch())
 				train_accuracy = int(train_accuracy * 100)
 				message += 'train acc {}%'.format(train_accuracy)
+				print('\n', attention)
+				self._save_ckpt(step)
 
 			_log(message)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
