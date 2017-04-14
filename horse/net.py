@@ -33,6 +33,7 @@ class HorseNet(object):
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
 		# self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
+
 		self._yolo = gaussian_var(
 			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
@@ -55,8 +56,10 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		similar = cosine_sim(tanh_vol, tanh_ref) * 100
-		similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
+		similar = cosine_sim(tanh_vol, tanh_ref)
+		scale = 1. + tf.nn.softplus(tf.Variable(100.))
+		similar = tf.reshape(simiar * scale, [-1, 49])
+		similar = tf.nn.softmax(tf.reshape(similar))
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
