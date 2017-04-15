@@ -46,23 +46,18 @@ class HorseNet(object):
 
 	def _build_net(self):
 		self._fetches = []
-		#volume_flat = tf.reshape(self._volume, [-1, 1024])
+		volume_flat = tf.reshape(self._volume, [-1, 1024])
+		# reference = tf.reshape(self._yolo.out, [1, 1024])
+		reference = self._yolo
 
-		def _leak(tensor):
-			return tf.maximum(0.1 * tensor, tensor)
+		with tf.variable_scope('tanh_gate'):
+			tanh_vol = tanh_gate(volume_flat, 1024, 512)
 
-		tanh_vol = conv_act(self._volume, 1024, 1024, tf.tanh, 'att_conv')
-		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
-		tanh_ref = tf.tanh(self._ref)
+		with tf.variable_scope('tanh_gate', reuse = True):
+			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = tf.reshape(similar, [-1, 49])
-		similar = tf.nn.softmax(similar * 100)# * 2. - 1.
-		# sign = tf.sign(similar)
-		# similar = sign * tf.pow(sign * similar, 1./3.)
-		# attention = (similar + 1.) / 2.
-		# similar = tf.reshape(similar, [-1, 49])
-		# similar = sharpen(similar)
+		similar = cosine_sim(tanh_vol, tanh_ref) * 100
+		similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
@@ -72,6 +67,9 @@ class HorseNet(object):
 		#self._fetches += [self._yolo._inp]
 		# focused = self._volume * self._attention
 
+		def _leak(tensor):
+			return tf.maximum(0.1 * tensor, tensor)
+
 		# att1 = conv_act(self._volume, 1024, 512, _leak, 'att1')
 		# att2 = conv_act(att1, 512, 256, _leak, 'att2')
 		# att3 = conv_act(att2, 256, 128, tf.tanh, 'att3')
@@ -79,17 +77,15 @@ class HorseNet(object):
 		# tanh_ref = tf.tanh(self._ref)
 
 		# similar = cosine_sim(att3, tanh_ref)
-		# similar = sharpen(similar)
 		# similar = (similar + 1.)/2.
 
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
-		conv1 = conv_act(attended, 1024, 256, _leak, 'conv1')
-		conv2 = conv_act(conv1, 256, 64, _leak, 'conv2')
-		conv3 = conv_act(conv2, 64, 5, tf.nn.sigmoid, 'conv3')
+		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
+		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
 
-		self._out = tf.reduce_sum(conv3,[1,2,3])
+		self._out = tf.reduce_sum(conv2,[1,2,3])
 
 		if self._flags.train:
 			self._build_loss()
