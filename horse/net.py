@@ -52,6 +52,7 @@ class HorseNet(object):
 			return tf.maximum(0.1 * tensor, tensor)
 
 		tanh_vol = conv_act(self._volume, 1024, 1024, _leak, 'att_conv')
+		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
 		tanh_ref = tf.tanh(self._ref)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
