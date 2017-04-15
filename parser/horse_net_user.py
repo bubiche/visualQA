@@ -54,7 +54,7 @@ class Visualizer(object):
                 y1 = y0 + height
                 x0 = col * width
                 x1 = x0 + width
-                res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * 2 * att_vec[row][col]
+                res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
                 
         output_file = '{}.jpg'.format(idx)
         cv2.imwrite(output_file, res.astype(np.uint8))
