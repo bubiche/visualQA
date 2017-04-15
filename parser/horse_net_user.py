@@ -56,7 +56,7 @@ class Visualizer(object):
                 x0 = col * width
                 x1 = x0 + width
                 if att_vec[row][col] > 0.2:
-                    centers.append((int((y1-y0)/2), int((x1-x0)/2)))
+                    centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
                     print((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
                 #res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
         
