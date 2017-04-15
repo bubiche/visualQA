@@ -59,7 +59,7 @@ class BatchYielderBinhYen(object):
 
         for j in range(self.n_train):
             x_instance = self.get_x_at_index(self.train_dset[self.shuffle_idx[j]])
-            y_instance = self.get_annotation_at_index(self.train_dset[.shuffle_idx[j]])
+            y_instance = self.get_annotation_at_index(self.train_dset[shuffle_idx[j]])
 
             x_batch.append(x_instance)
             y_batch.append(y_instance)
