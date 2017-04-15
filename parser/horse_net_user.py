@@ -55,10 +55,20 @@ class Visualizer(object):
                 y1 = y0 + height
                 x0 = col * width
                 x1 = x0 + width
-                if att_vec[row][col] > 0.4:
+                if att_vec[row][col] > 0.2:
                     centers.append((int((y1-y0)/2), int((x1-x0)/2)))
                     print((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
                 #res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
+        
+        # goes back to old method
+        if len(centers) == 0:
+            for row in range(numrows):
+                for col in range(numcols):
+                    y0 = row * height
+                    y1 = y0 + height
+                    x0 = col * width
+                    x1 = x0 + width
+                    res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
                 
         for c in centers:
             res = self.make_mask(res, 50, c)
