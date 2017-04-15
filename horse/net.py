@@ -57,14 +57,14 @@ class HorseNet(object):
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
-		similar = tf.nn.softmax(similar) * 2. - 1.
-		sign = tf.sign(similar)
-		similar = sign * tf.pow(sign * similar, 1./3.)
-		attention = (similar + 1.) / 2.
+		similar = tf.nn.softmax(similar * 100)# * 2. - 1.
+		# sign = tf.sign(similar)
+		# similar = sign * tf.pow(sign * similar, 1./3.)
+		# attention = (similar + 1.) / 2.
 		# similar = tf.reshape(similar, [-1, 49])
 		# similar = sharpen(similar)
 
-		self._attention = tf.reshape(attention, [-1, 7, 7, 1])
+		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
 		# sharped = sharpen(convx)
 		# sharped = tf.reshape(sharped, [-1, 49])
