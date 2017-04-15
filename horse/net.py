@@ -48,6 +48,9 @@ class HorseNet(object):
 		self._fetches = []
 		#volume_flat = tf.reshape(self._volume, [-1, 1024])
 
+		def _leak(tensor):
+			return tf.maximum(0.1 * tensor, tensor)
+
 		tanh_vol = conv_act(self._volume, 1024, 1024, _leak)
 		tanh_ref = tf.tanh(self._ref)
 
@@ -65,9 +68,6 @@ class HorseNet(object):
 		# self._out = tf.reduce_sum(sharped, -1)
 		#self._fetches += [self._yolo._inp]
 		# focused = self._volume * self._attention
-
-		def _leak(tensor):
-			return tf.maximum(0.1 * tensor, tensor)
 
 		# att1 = conv_act(self._volume, 1024, 512, _leak, 'att1')
 		# att2 = conv_act(att1, 512, 256, _leak, 'att2')
