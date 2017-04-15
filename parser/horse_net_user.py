@@ -48,14 +48,20 @@ class Visualizer(object):
         width = int(resized_image.shape[1] / numcols)
         
         res = np.array(resized_image)
+        centers = list()
         for row in range(numrows):
             for col in range(numcols):
                 y0 = row * height
                 y1 = y0 + height
                 x0 = col * width
                 x1 = x0 + width
-                res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
+                if att_vec[row][col] > 0.6:
+                    centers.append((int((y1-y0)/2), int((x1-x0)/2)))
+                #res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
                 
+        for c in centers:
+            res = self.make_mask(res, 50, c)
+            
         output_file = '{}.jpg'.format(idx)
         cv2.imwrite(output_file, res.astype(np.uint8))
         
@@ -65,3 +71,19 @@ class Visualizer(object):
             print(img)
             self.visualize(att_vec[i], img, i)
             i += 1
+            
+    def make_mask(self, image, radius, center=(0, 0)):
+        r, c, d = image.shape
+        res = np.array(image)
+        for row in range(r):
+            for col in range(c):
+                if r == center[0] and c == center[1]:
+                    weight = 1
+                else:
+                    dist_squared = (center[0] - row)**2 + (center[1] - col)**2
+                    #dist = math.sqrt(dist_squared)
+                    weight = math.exp((-0.5 * dist_squared)/(radius*radius))
+                    if weight < 0.2:
+                        weight = 0.2
+                res[row][col] = res[row][col] * weight
+        return res
