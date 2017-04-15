@@ -55,8 +55,9 @@ class Visualizer(object):
                 y1 = y0 + height
                 x0 = col * width
                 x1 = x0 + width
-                if att_vec[row][col] > 0.6:
+                if att_vec[row][col] > 0.1:
                     centers.append((int((y1-y0)/2), int((x1-x0)/2)))
+                    print((int((y1-y0)/2), int((x1-x0)/2)))
                 #res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
                 
         for c in centers:
