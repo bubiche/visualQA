@@ -54,28 +54,22 @@ def _sharp_gate(x):
 	return tf.nn.softplus(linear)
 
 def sharpen(x):
-	# power = tf.pow(x, 1. + _sharp_gate(x))
+	power = tf.pow(x, 1. + _sharp_gate(x))
+	# power = tf.div(
+	# 	power - tf.reduce_min(power, -1, keep_dims = True),
+	# 	tf.reduce_max(power, -1, keep_dims = True) - 
+	#    	tf.reduce_min(power, -1, keep_dims = True))
 	# summation = tf.reduce_sum(power, -1, keep_dims = True)
-	# power = tf.div(power, summation)
-	power = tf.div(
-		power - tf.reduce_min(power, -1, keep_dims = True),
-		tf.reduce_max(power, -1, keep_dims = True) - 
-	   	tf.reduce_min(power, -1, keep_dims = True))
 	return power
 
 def tanh_gate(x, feat_in, feat_out):
-	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
-	temp = tf.nn.conv2d(temp, 
-		xavier_var_conv('tanhgatew', 
-			[3, 3, feat_in, feat_out]), 
-		padding = 'VALID', strides = [1, 1, 1, 1])
-	conved = tf.nn.bias_add(
-		temp, const_var('tanhgateb', 0.0, (feat_out,)))
-	reshaped = tf.reshape(conved, [-1, feat_out])
-	return tf.tanh(reshaped)
+	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
+	linear += xavier_var('tanhb', (feat_out,))
+	return tf.tanh(linear)
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
+	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
 	temp = tf.nn.conv2d(temp, 
 		xavier_var_conv('{}w'.format(name), 
@@ -94,7 +88,7 @@ def conv_pool_act(x, feat_in, feat_out, act, name):
 	return act(pooled)
 
 
-def conv_act(x, feat_in, feat_out, act, name, bias = 0.0):
+def conv_act(x, feat_in, feat_out, act, name, bias = 1.0):
 	# conv
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
