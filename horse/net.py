@@ -51,12 +51,12 @@ class HorseNet(object):
 		def _leak(tensor):
 			return tf.maximum(0.1 * tensor, tensor)
 
-		tanh_vol = conv_act(self._volume, 1024, 1024, tf.tanh, 'att_conv')
+		tanh_vol = conv_act(self._volume, 1024, 1024, _leak, 'att_conv')
 		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
 		tanh_ref = tf.tanh(self._ref)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
-		# similar = tf.nn.softmax(similar) * 2. - 1.
+		similar = tf.nn.softmax(similar) * 2. - 1.
 		sign = tf.sign(similar)
 		similar = sign * tf.pow(sign * similar, 1./3.)
 		attention = (similar + 1.) / 2.
