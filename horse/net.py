@@ -1,6 +1,7 @@
 import tensorflow as tf
 from .yolo import YOLO
 from batch_yielder.batch_yielder import BatchYielder
+from batch_yielder.batch_yielder_binhyen import BatchYielderBinhYen
 import cv2
 import numpy as np
 import os
@@ -16,6 +17,11 @@ def _log(*msgs):
 
 def _mult(a, b):
 	return (a + 1) % b == 0
+
+labels20 = ["aeroplane", "bicycle", "bird", "boat", "bottle",
+    "bus", "car", "cat", "chair", "cow", "diningtable", "dog",
+    "horse", "motorbike", "person", "pottedplant", "sheep", "sofa",
+    "train", "tvmonitor"]
 
 class HorseNet(object):
 
@@ -38,7 +44,8 @@ class HorseNet(object):
  			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
-		self._batch_yielder = BatchYielder(FLAGS)
+		#self._batch_yielder = BatchYielder(FLAGS)
+		self._batch_yielder = BatchYielderBinhYen(FLAGS)
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
