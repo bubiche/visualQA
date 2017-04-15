@@ -48,7 +48,7 @@ class HorseNet(object):
 		self._fetches = []
 		#volume_flat = tf.reshape(self._volume, [-1, 1024])
 
-		tanh_vol = tanh_gate(self._volume, 1024, 1024)
+		tanh_vol = conv_act(self._volume, 1024, 1024, _leak)
 		tanh_ref = tf.tanh(self._ref)
 
 		similar = cosine_sim(tanh_vol, tanh_ref)
