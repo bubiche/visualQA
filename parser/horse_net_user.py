@@ -15,7 +15,6 @@ class Visualizer(object):
         self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
         
     def get_vec(self, my_img_path):
-        print('Searching for images')
         i = 0
         head, tail = os.path.split(my_img_path)
         file_name = tail
