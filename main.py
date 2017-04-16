@@ -38,6 +38,8 @@ flags.DEFINE_string('cls', 'horse', 'the class to be trained with')
 flags.DEFINE_string('voc_vec_path', 'parser/full_vec_voc.hdf5', 'path to vec file')
 flags.DEFINE_string('voc_count_path', 'parser/full_count_voc.hdf5', 'path to count file')
 flags.DEFINE_string('split_path', 'parser/full_split_voc.hdf5', 'path to split file')
+flags.DEFINE_string('voc_name_path', 'parser/full_name_voc.hdf5', 'path to name file')
+flags.DEFINE_boolean('see_test', False, 'visualize attention in the test set')
 
 FLAGS = flags.FLAGS
 
@@ -53,12 +55,17 @@ if FLAGS.load:
     horse_net.load_from_ckpt()
     
 if FLAGS.see != '':
-    seer = Visualizer(FLAGS)
+    seer = Visualizer(FLAGS, horse_net)
     vecs = seer.get_vecs()
     ret_vec = horse_net.get_attention(vecs)
     seer.visualize_multiple(ret_vec)
     exit()
 
+if FLAGS.see_test:
+    seer = Visualizer(FLAGS, horse_net)
+    seer.visualize_test_set()
+    exit()
+    
 if FLAGS.train:
     print('Enter training ...')
     horse_net.train()

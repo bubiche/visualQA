@@ -5,12 +5,19 @@ import os
 import math
 
 class Visualizer(object):
-    def __init__(self, flags):
+    def __init__(self, flags, net):
+        self.net = net
         self.vec_file = h5py.File(flags.full_vec_path, 'r')
         self.name_file = h5py.File(flags.full_name_path, 'r')
+        self.full_voc_vec_file = h5py.File(flags.voc_vec_path, 'r')
+        self.test_idx_file = h5py.File(flags.split_path, 'r')
+        self.full_voc_name_file = h5py.File(flags.voc_name_path, 'r')
         
         self.vec_dset = self.vec_file['vec']
         self.name_dset = self.name_file['name']
+        self.full_voc_vec = self.full_voc_vec_file['vec']
+        self.test_idx = self.test_idx_file['test']
+        self.full_voc_name = self.full_voc_name_file['name']
         
         self.file_path = flags.see_path
         self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
@@ -98,3 +105,21 @@ class Visualizer(object):
                         weight = 0.2
                 res[row][col] = res[row][col] * weight
         return res
+        
+    def visualize_test_set(self):
+        self.all_img = list()
+        self.all_vecs = np.zeros((self.test_idx.shape[0], 7, 7, 1024))
+
+        i = 0
+        for idx in self.test_idx:
+            self.all_img.append(os.path.join('parser', self.full_voc_name[idx].decode()))
+            self.all_vecs[i] = self.full_voc_vec[idx]
+            i += 1
+            
+        att_vec = self.net.get_attention(self.all_vecs)
+        
+        i = 0
+        for img in self.all_img:
+            print(img)
+            self.visualize(att_vec[i], img, i)
+            i += 1
