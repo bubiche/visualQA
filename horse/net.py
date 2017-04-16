@@ -44,8 +44,8 @@ class HorseNet(object):
  			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
-		#self._batch_yielder = BatchYielder(FLAGS)
 		self._batch_yielder = BatchYielder(FLAGS)
+		# self._batch_yielder = BatchYielderBinhYen(FLAGS)
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
@@ -68,7 +68,7 @@ class HorseNet(object):
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		sign = tf.sign(similar)
 		similar = sign * tf.pow(sign * similar, 1./3.)
-
+		
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
