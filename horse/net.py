@@ -63,8 +63,8 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference)
 
-		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
-		tanh_ref = tf.reshape(tanh_ref, [-1, 1024])
+		# tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
+		# tanh_ref = tf.reshape(tanh_ref, [-1, 1024])
 
 		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
 		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))

@@ -63,6 +63,13 @@ def sharpen(x):
 	return power
 
 def tanh_gate(x):
+	t = tf.reshape(x, [-1, 1024])
+	linear = tf.matmul(x, xavier_var('tanhw', (1024, 1024)))
+	linear += const_var('tanhb', 0.0, (1024,))
+	return tf.tanh(linear)
+
+
+def _tanh_gate(x):
 	def _leak(x):
 		return tf.maximum(0.1 * x, x)
 
