@@ -53,12 +53,12 @@ class HorseNet(object):
 
 	def _build_net(self):
 		self._fetches = []
-		volume_flat = tf.reshape(self._volume, [-1, 1024])
+		# volume_flat = tf.reshape(self._volume, [-1, 1024])
 		# reference = tf.reshape(self._yolo.out, [1, 1024])
-		reference = tf.reshpape(self._yolo, [1, 1, 1, 1024])
+		reference = tf.reshape(self._yolo, [1, 1, 1, 1024])
 
 		with tf.variable_scope('tanh_gate'):
-			tanh_vol = tanh_gate(volume)
+			tanh_vol = tanh_gate(self._volume)
 
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference)
