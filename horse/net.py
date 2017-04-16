@@ -73,7 +73,7 @@ class HorseNet(object):
 		similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
 
 		sign = tf.sign(similar)
-		similar = sign * tf.pow(sign * similar, 1./9.)
+		similar = sign * tf.pow(sign * similar, 1./3.)
 		similar = (similar + 1.) / 2.
 
 
