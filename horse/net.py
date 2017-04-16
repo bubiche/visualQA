@@ -69,8 +69,11 @@ class HorseNet(object):
 		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
 		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
 		similar = cosine_sim(tanh_vol, tanh_ref)
+		similar = tf.reshape(similar, [-1, 49])
+		similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
+
 		sign = tf.sign(similar)
-		similar = sign * tf.pow(sign * similar, 1./7.)
+		similar = sign * tf.pow(sign * similar, 1./9.)
 		similar = (similar + 1.) / 2.
 
 
