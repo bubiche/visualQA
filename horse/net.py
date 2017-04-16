@@ -44,8 +44,8 @@ class HorseNet(object):
  			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
-		# self._batch_yielder = BatchYielder(FLAGS)
-		self._batch_yielder = BatchYielderBinhYen(FLAGS)
+		self._batch_yielder = BatchYielder(FLAGS)
+		# self._batch_yielder = BatchYielderBinhYen(FLAGS)
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
@@ -79,6 +79,8 @@ class HorseNet(object):
 		#self._fetches += [self._yolo._inp]
 		# focused = self._volume * self._attention
 
+
+		self._out  = tf.reduce_sum(self._attention, [1,2,3])
 		def _leak(tensor):
 			return tf.maximum(0.1 * tensor, tensor)
 
@@ -93,11 +95,11 @@ class HorseNet(object):
 
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
-		attended = self._volume * self._attention
-		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
-		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
+		# attended = self._volume * self._attention
+		# conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
+		# conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
 
-		self._out = tf.reduce_sum(conv2,[1,2,3])
+		# self._out = tf.reduce_sum(conv2,[1,2,3])
 
 		if self._flags.train:
 			self._build_loss()
