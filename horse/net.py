@@ -72,9 +72,12 @@ class HorseNet(object):
 		similar = tf.reshape(similar, [-1, 49])
 		similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
 
-		sign = tf.sign(similar)
-		similar = sign * tf.pow(sign * similar, 1./3.)
-		similar = (similar + 1.) / 2.
+		if False:
+			sign = tf.sign(similar)
+			similar = sign * tf.pow(sign * similar, 1./3.)
+			similar = (similar + 1.) / 2.
+		else:
+			similar = tf.nn.sigmoid(similar * 10.)
 
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])

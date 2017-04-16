@@ -62,20 +62,20 @@ def sharpen(x):
 	# summation = tf.reduce_sum(power, -1, keep_dims = True)
 	return power
 
-def tanh_gate(x):
+def _tanh_gate(x):
 	t = tf.reshape(x, [-1, 1024])
 	linear = tf.matmul(t, xavier_var('tanhw', (1024, 1024)))
 	linear += const_var('tanhb', 0.0, (1024,))
 	return tf.tanh(linear)
 
 
-def _tanh_gate(x):
+def tanh_gate(x):
 	def _leak(x):
 		return tf.maximum(0.1 * x, x)
 
 	t = conv_act(x, 1024, 1024, _leak, 'conv1')
 	t = conv_act(t, 1024, 1024, _leak, 'conv2')
-	t = conv_act(t, 1024, 1024, _leak, 'conv3')
+	t = conv_act(t, 1024, 1024, tf.tanh, 'conv3')
 	return t
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
