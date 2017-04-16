@@ -68,7 +68,7 @@ def tanh_gate(x):
 
 	t = conv_act(x, 1024, 1024, _leak, 'conv1')
 	t = conv_act(t, 1024, 1024, _leak, 'conv2')
-	t = conv_act(t, 1024, 1024, tf.tanh, 'conv3')
+	t = conv_act(t, 1024, 1024, _leak, 'conv3')
 	return t
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
