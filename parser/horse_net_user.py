@@ -44,7 +44,7 @@ class Visualizer(object):
             
         return ret
         
-    def visualize(self, att_vec, file_path, idx):
+    def visualize_xinhdep(self, att_vec, file_path, idx):
         '''
         att_vec is (7, 7)
         '''
@@ -79,6 +79,31 @@ class Visualizer(object):
                 
         for c in centers:
             res = self.make_mask(res, 50, c)
+            
+        output_file = '{}.jpg'.format(idx)
+        cv2.imwrite(output_file, res.astype(np.uint8))
+
+    def visualize(self, att_vec, file_path, idx):
+        '''
+        att_vec is (7, 7)
+        '''
+        img = cv2.imread(file_path)
+        resized_image = cv2.resize(img, (448, 448))
+        numrows, numcols = 7, 7
+        height = int(resized_image.shape[0] / numrows)
+        width = int(resized_image.shape[1] / numcols)
+        
+        res = np.array(resized_image)
+        centers = list()
+        for row in range(numrows):
+            for col in range(numcols):
+                y0 = row * height
+                y1 = y0 + height
+                x0 = col * width
+                x1 = x0 + width
+                weight = att_vec[row][col]
+                if weight < 0.3333: weight = 0.3333
+                res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
             
         output_file = '{}.jpg'.format(idx)
         cv2.imwrite(output_file, res.astype(np.uint8))
