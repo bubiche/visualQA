@@ -96,12 +96,18 @@ def conv_act(x, feat_in, feat_out, act, name, bias = 0.0):
 	# conv
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
-	temp = tf.nn.conv2d(temp, 
-		xavier_var_conv('{}w'.format(name), 
-			[3, 3, feat_in, feat_out]), 
+	
+	# w = xavier_var_conv(
+	# 		'{}w'.format(name), 
+	# 		[3, 3, feat_in, feat_out])
+	# b = const_var('{}b'.format(name), bias, (feat_out,))
+
+	w = gaussian_var(name, 0., .05, [3, 3, feat_in, feat_out])
+	b = gaussian_var(name, 0., .05, [feat_out])
+
+	temp = tf.nn.conv2d(temp, w, 
 		padding = 'VALID', strides = [1, 1, 1, 1])
-	conved = tf.nn.bias_add(
-		temp, const_var('{}b'.format(name), bias, (feat_out,)))
+	conved = tf.nn.bias_add(temp, b)
 
 	# leaky
 	return act(conved)
