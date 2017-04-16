@@ -166,10 +166,10 @@ class HorseNet(object):
 			
 			if _mult(step, self._flags.save_every):
 				print('train table:')
-				train_accuracy = self._accuracy_data(
-					self._batch_yielder.next_epoch())
-				train_accuracy = int(train_accuracy * 100)
-				message += 'train acc {}%'.format(train_accuracy)
+				# train_accuracy = self._accuracy_data(
+				# 	self._batch_yielder.next_epoch())
+				# train_accuracy = int(train_accuracy * 100)
+				# message += 'train acc {}%'.format(train_accuracy)
 				print('\n', attention)
 				self._save_ckpt(step)
 
