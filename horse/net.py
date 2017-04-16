@@ -45,7 +45,7 @@ class HorseNet(object):
 		self._build_placeholder()
 		self._build_net()
 		#self._batch_yielder = BatchYielder(FLAGS)
-		self._batch_yielder = BatchYielderBinhYen(FLAGS)
+		self._batch_yielder = BatchYielder(FLAGS)
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
@@ -63,8 +63,12 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate', reuse = True):
 			tanh_ref = tanh_gate(reference, 1024, 512)
 
-		similar = cosine_sim(tanh_vol, tanh_ref) * 100
-		similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
+		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
+		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
+		similar = cosine_sim(tanh_vol, tanh_ref)
+		sign = tf.sign(similar)
+		similar = sign * tf.pow(sign * similar, 1./3.)
+
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 		# convx = tf.reshape(convx, [-1, 49])
@@ -189,6 +193,7 @@ class HorseNet(object):
 			})
 		pred = np.round(pred).astype(np.int32)
 		target_feed = target_feed.astype(np.int32)
+		print('doin table')
 		confusion_table(target_feed, pred)
 		return acc
 
