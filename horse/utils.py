@@ -146,3 +146,9 @@ def conv_flat(x, feat_in, name):
 	temp = tf.nn.bias_add(
 		temp, const_var('{}b'.format(name), 0.0, (1,)))
 	return tf.nn.sigmoid(temp)
+
+def fc(x, inp, out, act, name):
+	linear = tf.matmul(
+		x, xavier_var('{}w'.format(name), (inp, out)))
+	linear += const_var('{}b'.format(name), 0.0, (out,))
+	return act(linear)
