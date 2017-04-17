@@ -44,8 +44,8 @@ class HorseNet(object):
  			'ref', 0.00204, 0.0462, [1, 1024])
 		self._build_placeholder()
 		self._build_net()
-		self._batch_yielder = BatchYielder(FLAGS)
-		# self._batch_yielder = BatchYielderBinhYen(FLAGS)
+		# self._batch_yielder = BatchYielder(FLAGS)
+		self._batch_yielder = BatchYielderBinhYen(FLAGS)
 
 	def _build_placeholder(self):
 		self._volume = tf.placeholder(
