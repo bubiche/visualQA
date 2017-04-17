@@ -60,11 +60,12 @@ class HorseNet(object):
 		with tf.variable_scope('tanh_gate'):
 			tanh_vol = tanh_gate(self._volume)
 
-		with tf.variable_scope('tanh_gate', reuse = True):
-			tanh_ref = tanh_gate(reference)
+		# with tf.variable_scope('tanh_gate', reuse = True):
+		# 	tanh_ref = tanh_gate(reference)
 
 		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
-		tanh_ref = tf.reshape(tanh_ref, [1024, 1])
+		# tanh_ref = tf.reshape(tanh_ref, [1024, 1])
+		tanh_ref = tf.reshape(self._yolo, [1024, 1])
 
 		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
 		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
@@ -117,8 +118,10 @@ class HorseNet(object):
 
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
-		attended = tf.reshape(tanh_vol, [-1, 7, 7, 1024])\
-					 * self._attention
+		with tf.variable_scope('tanh_gate2'):
+			tanh_vol = tanh_gate(self._volume, _leak)
+
+		attended = tanh_vol * self._attention
 		retrieved = tf.reduce_sum(attended, [1, 2])
 
 		fc1 = fc(retrieved, 1024, 128, _leak, 'fc1')
