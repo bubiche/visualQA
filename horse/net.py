@@ -64,16 +64,19 @@ class HorseNet(object):
 			tanh_ref = tanh_gate(reference)
 
 		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
-		tanh_ref = tf.reshape(tanh_ref, [-1, 1024])
+		tanh_ref = tf.reshape(tanh_ref, [1024, 1])
 
 		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
 		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
-		similar = cosine_sim(tanh_vol, tanh_ref)
+		# similar = cosine_sim(tanh_vol, tanh_ref)
+		similar = tf.matmul(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
 		# similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
 
-		choice = 3
-		if choice == 1:
+		choice = 0
+		if choice == 0:
+			similar = tf.nn.softmax(similar)
+		elif choice == 1:
 			sign = tf.sign(similar)
 			similar = sign * tf.pow(sign * similar, 1./3.)
 			similar = (similar + 1.) / 2.
@@ -98,7 +101,8 @@ class HorseNet(object):
 		# focused = self._volume * self._attention
 
 
-		self._out  = tf.reduce_sum(self._attention, [1,2,3])
+
+		# self._out  = tf.reduce_sum(self._attention, [1,2,3])
 		def _leak(tensor):
 			return tf.maximum(0.1 * tensor, tensor)
 
@@ -113,11 +117,11 @@ class HorseNet(object):
 
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
-		# attended = self._volume * self._attention
-		# conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
-		# conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
+		attended = self._volume * self._attention
+		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
+		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
 
-		# self._out = tf.reduce_sum(conv2,[1,2,3])
+		self._out = tf.reduce_sum(conv2,[1,2,3])
 
 		if self._flags.train:
 			self._build_loss()

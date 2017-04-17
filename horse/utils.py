@@ -78,6 +78,14 @@ def tanh_gate(x):
 	t = conv_act(t, 1024, 1024, tf.tanh, 'conv3')
 	return t
 
+def tanh_gate(x):
+	def _leak(x):
+		return tf.maximum(0.1 * x, x)
+	t = conv_act(x, 1024, 1024, _leak, 'conv1')
+	t = conv_act(t, 1024, 1024, _leak, 'conv2')
+	t = conv_act(t, 1024, 1024, tf.tanh, 'conv3')
+	return t
+
 def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
 	padding = [[1, 1]] * 2
