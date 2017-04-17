@@ -70,14 +70,14 @@ class HorseNet(object):
 		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
 		similar = cosine_sim(tanh_vol, tanh_ref)
 		similar = tf.reshape(similar, [-1, 49])
-		similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
+		# similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
 
 		if False:
 			sign = tf.sign(similar)
 			similar = sign * tf.pow(sign * similar, 1./3.)
 			similar = (similar + 1.) / 2.
 		else:
-			similar = tf.nn.sigmoid(similar * 10.)
+			similar = tf.nn.sigmoid(similar * 5.)
 
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
