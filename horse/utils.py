@@ -62,29 +62,10 @@ def sharpen(x):
 	# summation = tf.reduce_sum(power, -1, keep_dims = True)
 	return power
 
-def _tanh_gate(x):
-	t = tf.reshape(x, [-1, 1024])
-	linear = tf.matmul(t, xavier_var('tanhw', (1024, 1024)))
-	linear += const_var('tanhb', 0.0, (1024,))
+def tanh_gate(x, feat_in, feat_out):
+	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
+	linear += xavier_var('tanhb', (feat_out,))
 	return tf.tanh(linear)
-
-
-def tanh_gate(x):
-	def _leak(x):
-		return tf.maximum(0.1 * x, x)
-
-	t = conv_act(x, 1024, 1024, _leak, 'conv1')
-	t = conv_act(t, 1024, 1024, _leak, 'conv2')
-	t = conv_act(t, 1024, 1024, tf.tanh, 'conv3')
-	return t
-
-def tanh_gate(x, act = tf.tanh):
-	def _leak(x):
-		return tf.maximum(0.1 * x, x)
-	t = conv_act(x, 1024, 1024, _leak, 'conv1')
-	t = conv_act(t, 1024, 1024, _leak, 'conv2')
-	t = conv_act(t, 1024, 1024, act, 'conv3')
-	return t
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
@@ -107,24 +88,16 @@ def conv_pool_act(x, feat_in, feat_out, act, name):
 	return act(pooled)
 
 
-def conv_act(x, feat_in, feat_out, act, name, bias = 0.0):
+def conv_act(x, feat_in, feat_out, act, name, bias = 1.0):
 	# conv
 	padding = [[1, 1]] * 2
 	temp = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]])
-	
-	# w = xavier_var_conv(
-	# 		'{}w'.format(name), 
-	# 		[3, 3, feat_in, feat_out])
-	# b = const_var('{}b'.format(name), bias, (feat_out,))
-
-	w = gaussian_var(
-		'{}w'.format(name), 0., .05, [3, 3, feat_in, feat_out])
-	b = gaussian_var(
-		'{}b'.format(name), 0., .05, [feat_out])
-
-	temp = tf.nn.conv2d(temp, w, 
+	temp = tf.nn.conv2d(temp, 
+		xavier_var_conv('{}w'.format(name), 
+			[3, 3, feat_in, feat_out]), 
 		padding = 'VALID', strides = [1, 1, 1, 1])
-	conved = tf.nn.bias_add(temp, b)
+	conved = tf.nn.bias_add(
+		temp, const_var('{}b'.format(name), bias, (feat_out,)))
 
 	# leaky
 	return act(conved)
@@ -146,9 +119,3 @@ def conv_flat(x, feat_in, name):
 	temp = tf.nn.bias_add(
 		temp, const_var('{}b'.format(name), 0.0, (1,)))
 	return tf.nn.sigmoid(temp)
-
-def fc(x, inp, out, act, name):
-	linear = tf.matmul(
-		x, xavier_var('{}w'.format(name), (inp, out)))
-	linear += const_var('{}b'.format(name), 0.0, (out,))
-	return act(linear)

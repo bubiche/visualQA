@@ -7,7 +7,7 @@ import numpy as np
 import os
 from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
 from .utils import conv_pool_act, xavier_var, const_var, gaussian_var
-from .utils import conv_flat, conv_act, fc
+from .utils import conv_flat, conv_act
 from .ops import op_dict
 import pickle
 
@@ -53,44 +53,22 @@ class HorseNet(object):
 
 	def _build_net(self):
 		self._fetches = []
-		# volume_flat = tf.reshape(self._volume, [-1, 1024])
+		volume_flat = tf.reshape(self._volume, [-1, 1024])
 		# reference = tf.reshape(self._yolo.out, [1, 1024])
-		reference = tf.reshape(self._yolo, [1, 1, 1, 1024])
+		reference = self._yolo
 
 		with tf.variable_scope('tanh_gate'):
-			tanh_vol = tanh_gate(self._volume)
+			tanh_vol = tanh_gate(volume_flat, 1024, 512)
 
-		# with tf.variable_scope('tanh_gate', reuse = True):
-		# 	tanh_ref = tanh_gate(reference)
-
-		tanh_vol = tf.reshape(tanh_vol, [-1, 1024])
-		# tanh_ref = tf.reshape(tanh_ref, [1024, 1])
-		tanh_ref = tf.reshape(self._yolo, [1024, 1])
+		with tf.variable_scope('tanh_gate', reuse = True):
+			tanh_ref = tanh_gate(reference, 1024, 512)
 
 		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
 		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
-		# similar = cosine_sim(tanh_vol, tanh_ref)
-		similar = tf.matmul(tanh_vol, tanh_ref)
-		similar = tf.reshape(similar, [-1, 49])
-		# similar = similar - tf.reduce_mean(similar, -1, keep_dims = True)
-
-		choice = 0
-		if choice == 0:
-			similar = tf.nn.softmax(similar)
-		elif choice == 1:
-			sign = tf.sign(similar)
-			similar = sign * tf.pow(sign * similar, 1./3.)
-			similar = (similar + 1.) / 2.
-		elif choice == 2:
-			similar = tf.nn.sigmoid(similar * 5.)
-		elif choice == 3:
-			# sign = tf.sign(similar)
-			# similar = sign * tf.pow(sign * similar, 1./3.)
-			similar = tf.div(
-				similar - tf.reduce_min(similar, -1, keep_dims = True),
-				tf.reduce_max(similar, -1, keep_dims = True) - 
-			   	tf.reduce_min(similar, -1, keep_dims = True))
-
+		similar = cosine_sim(tanh_vol, tanh_ref)
+		sign = tf.sign(similar)
+		similar = sign * tf.pow(sign * similar, 1./3.)
+		similar = (similar + 1.) / 2.
 
 
 		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
@@ -101,9 +79,6 @@ class HorseNet(object):
 		#self._fetches += [self._yolo._inp]
 		# focused = self._volume * self._attention
 
-
-
-		# self._out  = tf.reduce_sum(self._attention, [1,2,3])
 		def _leak(tensor):
 			return tf.maximum(0.1 * tensor, tensor)
 
@@ -118,19 +93,11 @@ class HorseNet(object):
 
 		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
 
-		with tf.variable_scope('tanh_gate2'):
-			tanh_vol = tanh_gate(self._volume, _leak)
+		attended = self._volume * self._attention
+		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
+		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
 
-		attended = tanh_vol * self._attention
-		retrieved = tf.reduce_sum(attended, [1, 2])
-
-		fc1 = fc(retrieved, 1024, 128, _leak, 'fc1')
-		fc2 = fc(fc1, 128, 1, tf.nn.softplus, 'fc2')
-		self._out = tf.squeeze(fc2)
-		# conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
-		# conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
-
-		# self._out = tf.reduce_sum(conv2,[1,2,3])
+		self._out = tf.reduce_sum(conv2,[1,2,3])
 
 		if self._flags.train:
 			self._build_loss()
