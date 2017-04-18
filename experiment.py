@@ -15,7 +15,7 @@ elif sys.argv[1] == 'may2':
     
 print(cls_list)
 
-for conf in conf_list:
+for conf in conf_list[::-1]:
     conf_idx = conf[0]
     conf_name = conf[1]
     
@@ -29,14 +29,17 @@ for conf in conf_list:
         num = int(num[:-2])
         train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=1 --lr=1e-4 --config={} --cls={} --load={}'.format(conf_idx, cls, num)
         os.system(train_cmd)
+        f.close()
     
         os.system('rm *.jpg')
         f = open('backup/checkpoint', 'r')
         line = f.readlines()[0]
         num = line.split('-')[1]
         num = int(num[:-2])
+        print('Visualizing')
         see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_wrong --config={} --cls={}'.format(num, conf_idx, cls)
         os.system(see_cmd)
+        f.close()
         
         if conf_idx != 0:
             zip_cmd = 'zip {}_{}_A.zip *.jpg'.format(conf_name, cls)
