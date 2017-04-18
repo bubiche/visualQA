@@ -199,11 +199,13 @@ class HorseNet(object):
 		return acc
 
 	def get_attention(self, vec):
-		att = self._sess.run(self._attention, {
+		att, pred = self._sess.run(
+			[self._attention, self._out], {
 			self._volume: vec
 			}).reshape([-1, 7, 7])
 		print(att,'\n')
-		return att
+		pred = np.round(pred).astype(np.int32)
+		return att, pred
 
 	def predict_img(self):
 		def _preprocess(img_path):
