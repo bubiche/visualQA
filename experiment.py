@@ -35,10 +35,11 @@ for conf in conf_list:
         line = f.readlines()[0]
         num = line.split('-')[1]
         num = int(num[:-2])
-        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_wrong'.format(num)
+        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_wrong --config={}'.format(num, conf_idx)
         os.system(see_cmd)
-    
-        zip_cmd = 'zip {}_{}_A.zip *.jpg'.format(conf_name, cls)
-        os.system(zip_cmd)
+        
+        if conf_idx != 0:
+            zip_cmd = 'zip {}_{}_A.zip *.jpg'.format(conf_name, cls)
+            os.system(zip_cmd)
 
     
