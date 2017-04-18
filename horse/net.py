@@ -95,6 +95,8 @@ class HorseNet(object):
 		correct = tf.equal(int_target, int_out)
 		correct = tf.cast(correct, tf.float32)
 		self._accuracy = tf.reduce_mean(correct)
+		deviation = tf.abs(int_target - int_out)
+		self._deviation = tf.reduce_mean(deviation)
 
 	def _build_trainer(self):
 		optimizer = self._TRAINER[self._flags.trainer](self._flags.lr)
@@ -109,44 +111,45 @@ class HorseNet(object):
 		print('Loading from {}'.format(load_path))
 		self._saver.restore(self._sess, load_path)
 
-	def _save_ckpt(self, step, log = None):
-		file_name = '{}-{}'.format(self._name)
+	def _save_ckpt(self, step, log):
+		file_name = '{}-{}'.format(self._name, step)
 		path = os.path.join(self._flags.backup, file_name)
 		if os.path.isfile(path): return
+
 		print('Saving ckpt at step {}'.format(step))
 		self._saver.save(self._sess, path)
-		if log is not None:
-			msg = '{} {}'.format(self._name, log)
-			print('loging {}'.format(msg))
-			with open('accuracy_log', 'a') as f:
-				f.write(msg + '\n')
+
+		msg = '{} {}'.format(self._name, log)
+		print('loging {}'.format(msg))
+		with open('accuracy_log', 'a') as f:
+			f.write(msg + '\n')
 
 
 	def train(self):
 		loss_mva = None
 		batches = enumerate(self._batch_yielder.next_batch())
 		fetches = [self._train_op, self._loss]
-		fetches += [self._accuracy, self._attention]
-		fetches = fetches + self._fetches
+		fetches += [self._accuracy, self._deviation]
 
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
 				self._target: target})
-			_, loss, accuracy, attention = fetched
+			_, loss, accuracy, deviation = fetched
 
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
-			message = '{} {}. loss {} mva {} acc {}% '.format(
-				self._name, step, loss, loss_mva, accuracy)
+			message = '{} {}. loss {} mva {} acc {}%, dev {} '.format(
+				self._name, step, loss, loss_mva, accuracy, deviation)
 
 			if _mult(step, self._flags.test_every):
 				print('test table:')
-				test_accuracy = self._accuracy_data(
+				test_accuracy, test_dev = self._accuracy_data(
 					self._batch_yielder.test_set())
 				test_acc = int(test_accuracy * 100)
-				message += 'test acc {}%'.format(test_acc)
+				message += 'test acc {}%, dev {}'.format(
+					test_acc, test_dev)
 
 			_log(message)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
@@ -154,11 +157,13 @@ class HorseNet(object):
 				# print(img_uint.shape)
 				# cv2.imwrite(img_name, img_uint)
 
-		self._save_ckpt(step, log = test_accuracy)
+		self._save_ckpt(step, log = 'acc {} dev {}'.format(
+			test_acc, test_dev))
 
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
-		acc, pred = self._sess.run([self._accuracy, self._out], {
+		dev, acc, pred = self._sess.run(
+			[self._deviation, self._accuracy, self._out], {
 				self._volume: volume_feed,
 				self._target: target_feed
 			})
@@ -166,7 +171,7 @@ class HorseNet(object):
 		target_feed = target_feed.astype(np.int32)
 		print('doin table')
 		confusion_table(target_feed, pred)
-		return acc
+		return acc, dev
 
 	def get_attention(self, vec):
 		att, pred = self._sess.run(
