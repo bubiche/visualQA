@@ -3,7 +3,7 @@ from tensorflow import flags
 from parser.horse_net_user import Visualizer
 import os
 
-flags.DEFINE_integer('batch_size', 128, 'size of each batch')
+flags.DEFINE_integer('batch_size', 1024, 'size of each batch')
 flags.DEFINE_integer('epoch', 1000, 'number of epoch')
 flags.DEFINE_string('vec_path', 'parser/train_vec.hdf5', 'path of train vec file')
 flags.DEFINE_string('count_path', 'parser/train_count.hdf5', 'path of train count file')
