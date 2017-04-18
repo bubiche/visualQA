@@ -31,7 +31,7 @@ for conf in conf_list:
         os.system(train_cmd)
     
         os.system('rm *.jpg')
-        f = open('backup/checkpoint'. 'r')
+        f = open('backup/checkpoint', 'r')
         line = f.readlines()[0]
         num = line.split('-')[1]
         num = int(num[:-2])
