@@ -8,6 +8,7 @@ import os
 from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
 from .utils import conv_pool_act, xavier_var, const_var, gaussian_var
 from .utils import conv_flat, conv_act
+from .utils_khung import ref, no_ref, no_sharp, softmax, power, count
 from .ops import op_dict
 import pickle
 
@@ -17,6 +18,19 @@ def _log(*msgs):
 
 def _mult(a, b):
 	return (a + 1) % b == 0
+
+ref_list = [no_ref, ref]
+sharp_list = [no_sharp, softmax, power]
+
+config_dict = dict({
+	0: (None, 'no_attention')
+	1: (0, 0, 'noref_nosharp')
+	2: (1, 0, 'ref_nosharp')
+	3: (0, 1, 'noref_softmax')
+	4: (1, 1, 'ref_softmax')
+	5: (0, 2, 'noref_power')
+	6: (1, 2, 'ref_power')
+})
 
 labels20 = ["aeroplane", "bicycle", "bird", "boat", "bottle",
     "bus", "car", "cat", "chair", "cow", "diningtable", "dog",
@@ -38,13 +52,12 @@ class HorseNet(object):
 
 	def __init__(self, FLAGS):
 		self._flags = FLAGS
-		# self._ref = gaussian_var('ref', 0.0, 0.2, [1, 128])
 
-		self._yolo = gaussian_var(
- 			'ref', 0.00204, 0.0462, [1, 1024])
+		self._name = '{}_{}'.format(
+			config_dict[FLAGS.cfg][-1],	FLAGS.cls)
+
 		self._build_placeholder()
 		self._build_net()
-		# self._batch_yielder = BatchYielder(FLAGS)
 		self._batch_yielder = BatchYielderBinhYen(FLAGS)
 
 	def _build_placeholder(self):
@@ -52,52 +65,20 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
-		self._fetches = []
-		volume_flat = tf.reshape(self._volume, [-1, 1024])
-		# reference = tf.reshape(self._yolo.out, [1, 1024])
-		reference = self._yolo
-
-		with tf.variable_scope('tanh_gate'):
-			tanh_vol = tanh_gate(volume_flat, 1024, 512)
-
-		with tf.variable_scope('tanh_gate', reuse = True):
-			tanh_ref = tanh_gate(reference, 1024, 512)
-
-		# similar = cosine_sim(tanh_vol, tanh_ref) * 100
-		# similar = tf.nn.softmax(tf.reshape(similar, [-1, 49]))
-		similar = cosine_sim(tanh_vol, tanh_ref)
-		sign = tf.sign(similar)
-		similar = sign * tf.pow(sign * similar, 1./3.)
-		similar = (similar + 1.) / 2.
-
-
-		self._attention = tf.reshape(similar, [-1, 7, 7, 1])
-		# convx = tf.reshape(convx, [-1, 49])
-		# sharped = sharpen(convx)
-		# sharped = tf.reshape(sharped, [-1, 49])
-		# self._out = tf.reduce_sum(sharped, -1)
-		#self._fetches += [self._yolo._inp]
-		# focused = self._volume * self._attention
-
-		def _leak(tensor):
-			return tf.maximum(0.1 * tensor, tensor)
-
-		# att1 = conv_act(self._volume, 1024, 512, _leak, 'att1')
-		# att2 = conv_act(att1, 512, 256, _leak, 'att2')
-		# att3 = conv_act(att2, 256, 128, tf.tanh, 'att3')
-		# att3 = tf.reshape(att3, [-1, 128])
-		# tanh_ref = tf.tanh(self._ref)
-
-		# similar = cosine_sim(att3, tanh_ref)
-		# similar = (similar + 1.)/2.
-
-		# self._attention = tf.reshape(similar, [-1, 7, 7, 1])
+		config = config_dict[self._flags.cfg]
+		if config[0] is None:
+			self._attention = tf.constant(
+				np.ones([self._flags.batch_size, 7, 7, 1]))
+		else:
+			ref_fun = ref_list[config[0]]
+			attention = ref_fun(self._volume)
+			sharp_fun = sharp_list[config[1]]
+			attention = sharp_fun(attention)
+			self._attention = tf.reshape(
+				attention, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
-		conv1 = conv_pool_act(attended, 1024, 64, _leak, 'conv1')
-		conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
-
-		self._out = tf.reduce_sum(conv2,[1,2,3])
+		self._out = count(attended)
 
 		if self._flags.train:
 			self._build_loss()
@@ -123,17 +104,21 @@ class HorseNet(object):
 			max_to_keep = self._flags.keep)
 
 	def load_from_ckpt(self):
-		load_name = 'horse-{}'.format(self._flags.load)
+		load_name = '{}-{}'.format(self._name, self._flags.load)
 		load_path = os.path.join(self._flags.backup, load_name)
 		print('Loading from {}'.format(load_path))
 		self._saver.restore(self._sess, load_path)
 
-	def _save_ckpt(self, step):
-		file_name = 'horse-{}'.format(step)
+	def _save_ckpt(self, step, log = None):
+		file_name = '{}-{}'.format(self._name)
 		path = os.path.join(self._flags.backup, file_name)
 		if os.path.isfile(path): return
 		print('Saving ckpt at step {}'.format(step))
 		self._saver.save(self._sess, path)
+		if log is not None:
+			with open('accuracy_log', 'a') as f:
+				f.write('{} {}'.format(self._name, log))
+
 
 	def train(self):
 		loss_mva = None
@@ -159,18 +144,18 @@ class HorseNet(object):
 				print('valid table:')
 				valid_accuracy = self._accuracy_data(
 					self._batch_yielder.validation_set())
-				valid_accuracy = int(valid_accuracy * 100)
-				message += 'valid acc {}% '.format(valid_accuracy)
+				valid_acc = int(valid_accuracy * 100)
+				message += 'valid acc {}% '.format(valid_acc)
 
 			if _mult(step, self._flags.test_every):
 				print('test table:')
 				test_accuracy = self._accuracy_data(
 					self._batch_yielder.test_set())
-				test_accuracy = int(test_accuracy * 100)
-				message += 'test acc {}%'.format(test_accuracy)
+				test_acc = int(test_accuracy * 100)
+				message += 'test acc {}%'.format(test_acc)
 			
 			if _mult(step, self._flags.save_every):
-				print('train table:')
+				# print('train table:')
 				# train_accuracy = self._accuracy_data(
 				# 	self._batch_yielder.next_epoch())
 				# train_accuracy = int(train_accuracy * 100)
@@ -184,7 +169,7 @@ class HorseNet(object):
 				# print(img_uint.shape)
 				# cv2.imwrite(img_name, img_uint)
 
-		self._save_ckpt(step)
+		self._save_ckpt(step, log = test_acc)
 
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
@@ -206,22 +191,3 @@ class HorseNet(object):
 		print(att,'\n')
 		pred = np.round(pred).astype(np.int32)
 		return att, pred
-
-	def predict_img(self):
-		def _preprocess(img_path):
-			im = cv2.imread(img_path)
-			h, w, c = self.meta['inp_size']
-			imsz = cv2.resize(im, (w, h))
-			imsz = imsz / 255.
-			imsz = imsz[:,:,::-1]
-			return imsz
-
-		preprocessed = list()
-		for img_path in os.listdir(self._flags.test_imgs):
-			if not os.path.isfile(img_path):
-				continue
-			img_tensor = _preprocess(img_path)
-			preprocessed.append(img_tensor)
-
-		return self._sess.run(
-			self._out, {self._volume : preprocessed})

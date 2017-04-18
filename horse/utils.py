@@ -62,10 +62,10 @@ def sharpen(x):
 	# summation = tf.reduce_sum(power, -1, keep_dims = True)
 	return power
 
-def tanh_gate(x, feat_in, feat_out):
-	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
+def gate(x, feat_in, feat_out, act):
+	linear = tf.matmul(t, xavier_var('tanhw', (feat_in, feat_out)))
 	linear += xavier_var('tanhb', (feat_out,))
-	return tf.tanh(linear)
+	return act(linear)
 
 def conv_pool_act(x, feat_in, feat_out, act, name):
 	# conv
