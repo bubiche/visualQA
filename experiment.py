@@ -35,7 +35,7 @@ for conf in conf_list:
         line = f.readlines()[0]
         num = line.split('-')[1]
         num = int(num[:-2])
-        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_wrong --config={}'.format(num, conf_idx)
+        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_wrong --config={} --cls={}'.format(num, conf_idx, cls)
         os.system(see_cmd)
         
         if conf_idx != 0:
