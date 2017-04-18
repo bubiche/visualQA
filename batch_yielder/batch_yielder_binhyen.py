@@ -15,7 +15,7 @@ class BatchYielderBinhYen(object):
         self.vec_dset = self.vec_file['vec']
         self.count_dset = self.count_file[flags.cls]
         self.train_dset = self.split_file['train']
-        self.val_dset = self.split_file['val']
+        self.val_dset = self.split_file['test']
         self.test_dset = self.split_file['test']
         
         self.n_train = self.train_dset.shape[0]
