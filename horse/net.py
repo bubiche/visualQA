@@ -148,7 +148,7 @@ class HorseNet(object):
 				message += 'test acc {:.3f}%, dev {:.3f} '.format(
 					test_accuracy * 100, test_dev)
 
-			fps = (time.time()-start) / step
+			fps = (time.time()-start) / (step+1)
 			message += '{}fps'.format(fps)
 			_log(message)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
