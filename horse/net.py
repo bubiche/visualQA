@@ -138,14 +138,14 @@ class HorseNet(object):
 
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
-			message = '{} {}. loss {0:.3f} mva {0:.3f} acc {0:.3f}%, dev {0:.3f} '.format(
+			message = '{} {}. loss {:.3f} mva {:.3f} acc {:.3f}%, dev {:.3f} '.format(
 				self._name, step, loss, loss_mva, accuracy * 100, deviation)
 
 			if _mult(step, self._flags.test_every):
 				print('test table:')
 				test_accuracy, test_dev = self._accuracy_data(
 					self._batch_yielder.test_set())
-				message += 'test acc {0:.3f}%, dev {0:.3f} '.format(
+				message += 'test acc {:.3f}%, dev {:.3f} '.format(
 					test_accuracy * 100, test_dev)
 
 			fps = (time.time()-start) / step
