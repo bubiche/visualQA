@@ -131,6 +131,7 @@ class HorseNet(object):
 		fetches += [self._accuracy, self._deviation]
 
 		start = time.time()
+		test_accuracy, test_dev = None, None
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
