@@ -65,8 +65,7 @@ class HorseNet(object):
 	def _build_net(self):
 		config = config_dict[self._flags.config]
 		if config[0] is None:
-			self._attention = tf.constant(
-				np.ones([self._flags.batch_size, 7, 7, 1]), dtype = np.float32)
+			self._attention = tf.constant(1.0, dtype = np.float32)
 		else:
 			ref_fun = ref_list[config[0]]
 			attention = ref_fun(self._volume)
