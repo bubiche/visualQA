@@ -19,7 +19,7 @@ class Visualizer(object):
         self.full_voc_vec = self.full_voc_vec_file['vec']
         self.test_idx = self.test_idx_file['test']
         self.full_voc_name = self.full_voc_name_file['name']
-        self.full_voc_count = self.full_voc_count_file['count']
+        self.full_voc_count = self.full_voc_count_file[flags.cls]
         
         self.file_path = flags.see_path
         self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
