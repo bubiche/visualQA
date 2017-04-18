@@ -14,20 +14,20 @@ elif sys.argv[1] == 'may2':
     cls_list = cls_list_2
     
 print(cls_list)
+for cls in cls_list:
 
-for conf in conf_list[::-1]:
-    conf_idx = conf[0]
-    conf_name = conf[1]
     
-    for cls in cls_list:
-        train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=1 --lr=1e-3 --config={} --cls={}'.format(conf_idx, cls)
+    for conf in conf_list:
+        conf_idx = conf[0]
+        conf_name = conf[1]
+        train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=9 --lr=1e-3 --config={} --cls={}'.format(conf_idx, cls)
         os.system(train_cmd)
         
         f = open('backup/checkpoint', 'r')
         line = f.readlines()[0]
         num = line.split('-')[1]
         num = int(num[:-2])
-        train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=1 --lr=1e-4 --config={} --cls={} --load={}'.format(conf_idx, cls, num)
+        train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=9 --lr=1e-4 --config={} --cls={} --load={}'.format(conf_idx, cls, num)
         os.system(train_cmd)
         f.close()
     
@@ -45,5 +45,6 @@ for conf in conf_list[::-1]:
         if conf_idx != 0:
             zip_cmd = 'zip {}_{}_A.zip *.jpg'.format(conf_name, cls)
             os.system(zip_cmd)
-
+        
+        os.system('rm *.jpg')
     
