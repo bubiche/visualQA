@@ -5,6 +5,7 @@ from batch_yielder.batch_yielder_binhyen import BatchYielderBinhYen
 import cv2
 import numpy as np
 import os
+from .utils import confusion_table
 from .utils_khung import ref, no_ref, no_sharp, softmax, power, count
 from .ops import op_dict
 import pickle
