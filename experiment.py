@@ -37,6 +37,7 @@ for conf in conf_list[::-1]:
         num = line.split('-')[1]
         num = int(num[:-2])
         print('Visualizing')
+        print(num, conf_idx, cls)
         see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_wrong --config={} --cls={}'.format(num, conf_idx, cls)
         os.system(see_cmd)
         f.close()

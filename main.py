@@ -69,8 +69,10 @@ if FLAGS.see_test:
     exit()
     
 if FLAGS.see_wrong:
-    if FLAGS.config == 0: exit()
     print('see wrong')
+    print(FLAGS.config)
+    if FLAGS.config == 0: exit()
+    print('vuot qua')
     seer = Visualizer(FLAGS, horse_net)
     seer.visualize_wrong_test()
     exit()
