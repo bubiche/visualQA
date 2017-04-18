@@ -40,6 +40,7 @@ flags.DEFINE_string('voc_count_path', 'parser/full_count_voc.hdf5', 'path to cou
 flags.DEFINE_string('split_path', 'parser/full_split_voc.hdf5', 'path to split file')
 flags.DEFINE_string('voc_name_path', 'parser/full_name_voc.hdf5', 'path to name file')
 flags.DEFINE_boolean('see_test', False, 'visualize attention in the test set')
+flags.DEFINE_boolean('see_wrong', False, 'visualize attention in wrong images of the test set')
 
 FLAGS = flags.FLAGS
 
@@ -64,6 +65,11 @@ if FLAGS.see != '':
 if FLAGS.see_test:
     seer = Visualizer(FLAGS, horse_net)
     seer.visualize_test_set()
+    exit()
+    
+if FLAGS.see_wrong:
+    seer = Visualizer(FLAGS, horse_net)
+    seer.visualize_wrong_test()
     exit()
     
 if FLAGS.train:

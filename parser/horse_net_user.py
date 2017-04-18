@@ -12,12 +12,14 @@ class Visualizer(object):
         self.full_voc_vec_file = h5py.File(flags.voc_vec_path, 'r')
         self.test_idx_file = h5py.File(flags.split_path, 'r')
         self.full_voc_name_file = h5py.File(flags.voc_name_path, 'r')
+        self.full_voc_count_file = h5py.File(flags.voc_count_path, 'r')
         
         self.vec_dset = self.vec_file['vec']
         self.name_dset = self.name_file['name']
         self.full_voc_vec = self.full_voc_vec_file['vec']
         self.test_idx = self.test_idx_file['test']
         self.full_voc_name = self.full_voc_name_file['name']
+        self.full_voc_count = self.full_voc_count_file['count']
         
         self.file_path = flags.see_path
         self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
@@ -83,7 +85,7 @@ class Visualizer(object):
         output_file = '{}.jpg'.format(idx)
         cv2.imwrite(output_file, res.astype(np.uint8))
 
-    def visualize(self, att_vec, file_path, idx):
+    def visualize(self, att_vec, file_path, idx, pred, truth):
         '''
         att_vec is (7, 7)
         '''
@@ -105,7 +107,8 @@ class Visualizer(object):
                 if weight < 0.3333: weight = 0.3333
                 res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
             
-        output_file = '{}.jpg'.format(idx)
+        output_file = '{}-{}_{}.jpg'.format(idx, pred, truth)
+        print(output_file)
         cv2.imwrite(output_file, res.astype(np.uint8))
         
     def visualize_multiple(self, att_vec):
@@ -147,4 +150,24 @@ class Visualizer(object):
         for img in self.all_img:
             print(img)
             self.visualize(att_vec[i], img, i)
+            i += 1
+            
+    def visualize_wrong_test(self):
+        self.all_img = list()
+        self.all_vecs = np.zeros((self.test_idx.shape[0], 7, 7, 1024))
+        self.all_count = np.zeros((self.test_idx.shape[0],), dtype=np.dtype(int))
+
+        i = 0
+        for idx in self.test_idx:
+            self.all_img.append(os.path.join('parser', self.full_voc_name[idx].decode()))
+            self.all_vecs[i] = self.full_voc_vec[idx]
+            self.all_count[i] = self.full_voc_count[idx]
+            i += 1
+            
+        att_vec, predict_count = self.net.get_attention(self.all_vecs)
+        
+        i = 0
+        for img in self.all_img:
+            if predict_count[i] != self.all_count[i]:
+                self.visualize(att_vec[i], img, i, predict_count[i], self.all_count[i])
             i += 1
