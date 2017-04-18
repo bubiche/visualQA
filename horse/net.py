@@ -8,6 +8,7 @@ import os
 from .utils_khung import ref, no_ref, no_sharp, softmax, power, count
 from .ops import op_dict
 import pickle
+import time
 
 def _log(*msgs):
 	for msg in list(msgs):
@@ -128,6 +129,7 @@ class HorseNet(object):
 		fetches = [self._train_op, self._loss]
 		fetches += [self._accuracy, self._deviation]
 
+		start = time.time()
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
@@ -145,9 +147,11 @@ class HorseNet(object):
 				test_accuracy, test_dev = self._accuracy_data(
 					self._batch_yielder.test_set())
 				test_acc = int(test_accuracy * 100)
-				message += 'test acc {}%, dev {}'.format(
+				message += 'test acc {}%, dev {} '.format(
 					test_acc, test_dev)
 
+			fps = (time.time()-start) / step
+			message += '{}fps'.format(fps)
 			_log(message)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
 				# img_uint = (horse * 255.).astype(np.uint8)[0]
