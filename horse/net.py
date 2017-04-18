@@ -5,9 +5,6 @@ from batch_yielder.batch_yielder_binhyen import BatchYielderBinhYen
 import cv2
 import numpy as np
 import os
-from .utils import cosine_sim, sharpen, tanh_gate, confusion_table
-from .utils import conv_pool_act, xavier_var, const_var, gaussian_var
-from .utils import conv_flat, conv_act
 from .utils_khung import ref, no_ref, no_sharp, softmax, power, count
 from .ops import op_dict
 import pickle
@@ -23,12 +20,12 @@ ref_list = [no_ref, ref]
 sharp_list = [no_sharp, softmax, power]
 
 config_dict = dict({
-	0: (None, 'no_attention')
-	1: (0, 0, 'noref_nosharp')
-	2: (1, 0, 'ref_nosharp')
-	3: (0, 1, 'noref_softmax')
-	4: (1, 1, 'ref_softmax')
-	5: (0, 2, 'noref_power')
+	0: (None, 'no_attention'),
+	1: (0, 0, 'noref_nosharp'),
+	2: (1, 0, 'ref_nosharp'),
+	3: (0, 1, 'noref_softmax'),
+	4: (1, 1, 'ref_softmax'),
+	5: (0, 2, 'noref_power'),
 	6: (1, 2, 'ref_power')
 })
 
@@ -54,7 +51,7 @@ class HorseNet(object):
 		self._flags = FLAGS
 
 		self._name = '{}_{}'.format(
-			config_dict[FLAGS.cfg][-1],	FLAGS.cls)
+			config_dict[FLAGS.config][-1],	FLAGS.cls)
 
 		self._build_placeholder()
 		self._build_net()
@@ -65,10 +62,10 @@ class HorseNet(object):
 			tf.float32, [None, 7, 7, 1024])
 
 	def _build_net(self):
-		config = config_dict[self._flags.cfg]
+		config = config_dict[self._flags.config]
 		if config[0] is None:
 			self._attention = tf.constant(
-				np.ones([self._flags.batch_size, 7, 7, 1]))
+				np.ones([self._flags.batch_size, 7, 7, 1]), dtype = np.float32)
 		else:
 			ref_fun = ref_list[config[0]]
 			attention = ref_fun(self._volume)

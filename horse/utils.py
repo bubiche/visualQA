@@ -63,7 +63,7 @@ def sharpen(x):
 	return power
 
 def gate(x, feat_in, feat_out, act):
-	linear = tf.matmul(t, xavier_var('tanhw', (feat_in, feat_out)))
+	linear = tf.matmul(x, xavier_var('tanhw', (feat_in, feat_out)))
 	linear += xavier_var('tanhb', (feat_out,))
 	return act(linear)
 
