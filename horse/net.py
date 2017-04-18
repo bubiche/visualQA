@@ -116,8 +116,10 @@ class HorseNet(object):
 		print('Saving ckpt at step {}'.format(step))
 		self._saver.save(self._sess, path)
 		if log is not None:
+			msg = '{} {}'.format(self._name, log)
+			print('loging {}'.format(msg))
 			with open('accuracy_log', 'a') as f:
-				f.write('{} {}'.format(self._name, log))
+				f.write(msg + '\n')
 
 
 	def train(self):
@@ -136,16 +138,8 @@ class HorseNet(object):
 			accuracy = int(accuracy * 100)
 			loss_mva = loss if loss_mva is None else \
 				loss_mva * .9 + loss * .1
-			message = '{}. loss {} mva {} acc {}% '.format(
-				step, loss, loss_mva, accuracy)
-
-
-			if _mult(step, self._flags.valid_every):
-				print('valid table:')
-				valid_accuracy = self._accuracy_data(
-					self._batch_yielder.validation_set())
-				valid_acc = int(valid_accuracy * 100)
-				message += 'valid acc {}% '.format(valid_acc)
+			message = '{} {}. loss {} mva {} acc {}% '.format(
+				self._name, step, loss, loss_mva, accuracy)
 
 			if _mult(step, self._flags.test_every):
 				print('test table:')
@@ -153,15 +147,6 @@ class HorseNet(object):
 					self._batch_yielder.test_set())
 				test_acc = int(test_accuracy * 100)
 				message += 'test acc {}%'.format(test_acc)
-			
-			if _mult(step, self._flags.save_every):
-				# print('train table:')
-				# train_accuracy = self._accuracy_data(
-				# 	self._batch_yielder.next_epoch())
-				# train_accuracy = int(train_accuracy * 100)
-				# message += 'train acc {}%'.format(train_accuracy)
-				print('\n', attention)
-				self._save_ckpt(step)
 
 			_log(message)
 				# img_name = 'horseref/horseref-{}.jpg'.format(step)
@@ -169,7 +154,7 @@ class HorseNet(object):
 				# print(img_uint.shape)
 				# cv2.imwrite(img_name, img_uint)
 
-		self._save_ckpt(step, log = test_acc)
+		self._save_ckpt(step, log = test_accuracy)
 
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
