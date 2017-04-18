@@ -94,6 +94,7 @@ class HorseNet(object):
 		correct = tf.cast(correct, tf.float32)
 		self._accuracy = tf.reduce_mean(correct)
 		deviation = tf.abs(int_target - int_out)
+		deviation = tf.cast(deviation, tf.float32)
 		self._deviation = tf.reduce_mean(deviation)
 
 	def _build_trainer(self):
