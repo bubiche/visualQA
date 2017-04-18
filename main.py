@@ -68,6 +68,7 @@ if FLAGS.see_test:
     seer.visualize_test_set()
     exit()
     
+print(FLAGS.see_wrong)
 if FLAGS.see_wrong:
     print('see wrong')
     print(FLAGS.config)
