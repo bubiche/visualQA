@@ -178,7 +178,8 @@ class HorseNet(object):
 		att, pred = self._sess.run(
 			[self._attention, self._out], {
 			self._volume: vec
-			}).reshape([-1, 7, 7])
+			})
+		att = att.reshape([-1, 7, 7])
 		print(att,'\n')
 		pred = np.round(pred).astype(np.int32)
 		return att, pred
