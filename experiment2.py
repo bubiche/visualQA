@@ -25,7 +25,7 @@ for cls in cls_list:
         line = f.readlines()[0]
         num = line.split('-')[1]
         num = int(num[:-2])
-        train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=9 --lr=1e-4 --config={} --cls={} --load={}'.format(conf_idx, cls, num)
+        train_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --epoch=27 --lr=1e-4 --config={} --cls={} --load={}'.format(conf_idx, cls, num)
         os.system(train_cmd)
         f.close()
     
