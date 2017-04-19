@@ -137,19 +137,20 @@ class Visualizer(object):
     def visualize_test_set(self):
         self.all_img = list()
         self.all_vecs = np.zeros((self.test_idx.shape[0], 7, 7, 1024))
+        self.all_count = np.zeros((self.test_idx.shape[0],), dtype=np.dtype(int))
 
         i = 0
         for idx in self.test_idx:
             self.all_img.append(os.path.join('parser', self.full_voc_name[idx].decode()))
             self.all_vecs[i] = self.full_voc_vec[idx]
+            self.all_count[i] = self.full_voc_count[idx]
             i += 1
             
-        att_vec = self.net.get_attention(self.all_vecs)
+        att_vec, predict_count = self.net.get_attention(self.all_vecs)
         
         i = 0
         for img in self.all_img:
-            print(img)
-            self.visualize(att_vec[i], img, i)
+            self.visualize(att_vec[i], img, i, predict_count[i], self.all_count[i])
             i += 1
             
     def visualize_wrong_test(self):
