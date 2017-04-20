@@ -20,7 +20,7 @@ test_idx_dset = split_idx_file['test']
 img_id = 0
 for idx in test_idx_dset:
     file_name = name_dset[idx].decode()
-    true_count = count_dset[idx]
+    true_count = int(count_dset[idx])
     
     count_list = [0] * 8
     for i in range(7):
