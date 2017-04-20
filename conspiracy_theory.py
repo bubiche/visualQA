@@ -28,7 +28,7 @@ for idx in test_idx_dset:
     count_list[7] = true_count
     
     src_file = 'parser/{}'.format(file_name)
-    dst_file = '{}-{}_{}_{}_{}_{}_{}_{}_{}'.format(img_id, count_list[0], count_list[1], count_list[2], count_list[3]
+    dst_file = '{}-{}_{}_{}_{}_{}_{}_{}_{}.jpg'.format(img_id, count_list[0], count_list[1], count_list[2], count_list[3]
                                                     , count_list[4], count_list[5], count_list[6], count_list[7])
     shutil.copy(src_file, dst_file)
     img_id += 1
