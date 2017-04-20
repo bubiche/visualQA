@@ -193,7 +193,7 @@ class Visualizer(object):
         out_dict = {}
         i = 0
         for pred in predict_count:
-            out_dict[self.all_img[i]] = predict_count[i]
+            out_dict[self.all_img[i]] = int(predict_count[i])
             
         with open(self.json_name, 'w') as fp:
             json.dump(out_dict, fp)
