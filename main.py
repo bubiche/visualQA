@@ -42,6 +42,7 @@ flags.DEFINE_string('voc_name_path', 'parser/full_name_voc.hdf5', 'path to name 
 flags.DEFINE_boolean('see_test', False, 'visualize attention in the test set')
 flags.DEFINE_boolean('see_wrong', False, 'visualize attention in wrong images of the test set')
 flags.DEFINE_integer('config', 0, 'configuration to be used')
+flags.DEFINE_boolean('get_count_test', False, 'get the predition on test set')
 
 FLAGS = flags.FLAGS
 
@@ -63,6 +64,11 @@ if FLAGS.see != '':
     seer.visualize_multiple(ret_vec)
     exit()
 
+if FLAGS.get_count_test:
+    seer = Visualizer(FLAGS, horse_net)
+    seer.get_all_counts_test()
+    exit()
+    
 if FLAGS.see_test:
     seer = Visualizer(FLAGS, horse_net)
     seer.visualize_test_set()
