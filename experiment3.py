@@ -4,6 +4,8 @@ import sys
 conf_list = [(0, 'no_attention'), (1, 'noref_nosharp'), (2, 'ref_nosharp'),
              (3, 'noref_softmax'), (4, 'ref_softmax'), (5, 'noref_power'),
              (6, 'ref_power')]
+
+conf_list = [(1, 'noref_nosharp'), (2, 'ref_nosharp')]
              
 cls_list_1 = ['sofa', 'bus', 'cat']
 cls_list_2 = ['motorbike', 'bird', 'person']
