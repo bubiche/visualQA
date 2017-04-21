@@ -76,6 +76,7 @@ class HorseNet(object):
 				attention, [-1, 7, 7, 1])
 
 		attended = self._volume * self._attention
+		attended = tf.reduce_sum(attended, [1, 2])
 		self._out = count(attended)
 
 		if self._flags.train:

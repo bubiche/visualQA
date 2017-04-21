@@ -47,8 +47,12 @@ def power(x):
 	t = (t + 1.) / 2.
 	return tf.reshape(t, [-1, 7, 7, 1])
 
+#def gate(x, feat_in, feat_out, act):
+
 def count(x):
 	print('count')
-	conv1 = conv_pool_act(x, 1024, 64, _leak, 'conv1')
-	conv2 = conv_pool_act(conv1, 64, 5, tf.nn.sigmoid, 'conv2')
-	return tf.reduce_sum(conv2, [1, 2, 3])
+	with tf.variable_scope('count1'):	
+		x1 = gate(x, 1024, 256, _leak)
+	with tf.variable_scope('count2'):
+		x2 = gate(x, 256, 1, tf.nn.softplus)
+	return x2
