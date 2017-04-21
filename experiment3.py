@@ -13,7 +13,7 @@ if sys.argv[1] == 'may1':
 elif sys.argv[1] == 'may2':
     cls_list = cls_list_2
 elif sys.argv[1] == 'all':
-    cls_list == cls_list_1 + cls_list_2
+    cls_list = cls_list_1 + cls_list_2
 
 print(cls_list)
 for cls in cls_list:
