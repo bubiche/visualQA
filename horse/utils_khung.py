@@ -54,5 +54,5 @@ def count(x):
 	with tf.variable_scope('count1'):	
 		x1 = gate(x, 1024, 256, _leak)
 	with tf.variable_scope('count2'):
-		x2 = gate(x, 256, 1, tf.nn.softplus)
+		x2 = gate(x1, 256, 1, tf.nn.softplus)
 	return x2
