@@ -33,7 +33,7 @@ def no_ref(x):
 
 def no_sharp(x):
 	print('nosharp')
-	return _identity(x)
+	return (x+1.)/2.
 
 def softmax(x):
 	print('softmax')
