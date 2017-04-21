@@ -5,7 +5,6 @@ from tensorflow import random_normal_initializer as gaussian
 from tensorflow import constant_initializer as constant
 
 def confusion_table(truth, pred):
-	print(pred.shape)
 	idx_from = list(set(truth))
 	idx_to = list(set(pred))
 	confuse = dict()
