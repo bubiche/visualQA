@@ -68,23 +68,17 @@ class Visualizer(object):
                 y1 = y0 + height
                 x0 = col * width
                 x1 = x0 + width
-                if att_vec[row][col] > 0.2:
-                    centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
-                    print((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
-                #res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
-        
-        # goes back to old method
-        if len(centers) == 0:
-            for row in range(numrows):
-                for col in range(numcols):
-                    y0 = row * height
-                    y1 = y0 + height
-                    x0 = col * width
-                    x1 = x0 + width
-                    res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * att_vec[row][col]
+                weight = att_vec[row][col]
+                if weight < 0.6:
+                    if weight < 0.2: weight = 0.2
+                    res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
+                else:
+                    res[y0:y1, x0:x1] = self.add_circle(res[y0:y1, x0:x1])
+                    #centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
+                    #print((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
                 
-        for c in centers:
-            res = self.make_mask(res, 50, c)
+        #for c in centers:
+            #res = self.make_mask(res, 50, c)
             
         cv2.imwrite(save_name, res.astype(np.uint8))
 
@@ -131,6 +125,24 @@ class Visualizer(object):
                 else:
                     dist_squared = (center[0] - row)**2 + (center[1] - col)**2
                     #dist = math.sqrt(dist_squared)
+                    weight = math.exp((-0.5 * dist_squared)/(radius*radius))
+                    if weight < 0.2:
+                        weight = 0.2
+                res[row][col] = res[row][col] * weight
+        return res
+        
+    def add_circle(self, tile):
+        res = np.array(tile)
+        r, c, d = res.shape
+        center_y = int(r/2)
+        center_x = int(c/2)
+        
+        for row in range(r):
+            for col in range(c):
+                if r == center_y and c == center_x:
+                    weight = 1
+                else:
+                    dist_squared = (center[0] - row)**2 + (center[1] - col)**2
                     weight = math.exp((-0.5 * dist_squared)/(radius*radius))
                     if weight < 0.2:
                         weight = 0.2
