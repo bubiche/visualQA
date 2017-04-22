@@ -133,6 +133,7 @@ class HorseNet(object):
 
 		start = time.time()
 		test_accuracy, test_dev = None, None
+		max_test_acc = 0.0
 		for step, (feature, target) in batches:
 			fetched = self._sess.run(fetches, {
 				self._volume: feature,
@@ -150,6 +151,8 @@ class HorseNet(object):
 					self._batch_yielder.test_set())
 				message += 'test acc {:.3f}%, dev {:.3f} '.format(
 					test_accuracy * 100, test_dev)
+				if test_accuracy > max_test_acc:
+					max_test_acc = test_accuracy
 
 			fps = (time.time()-start) / (step+1)
 			message += '{}fps'.format(fps)
@@ -160,7 +163,7 @@ class HorseNet(object):
 				# cv2.imwrite(img_name, img_uint)
 
 		self._save_ckpt(step, log = 'acc {} dev {}'.format(
-			test_accuracy, test_dev))
+			max_test_acc, test_dev))
 
 	def _accuracy_data(self, data):
 		volume_feed, target_feed = data
