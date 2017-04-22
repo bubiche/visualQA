@@ -206,12 +206,13 @@ class Visualizer(object):
         img_path = os.path.join('parser', self.full_voc_name[real_idx].decode())
         
         att_vec, predict_count = self.net.get_attention(np.array(vec))
-        img_att = att_vec[0]
-        img_pred = predict_count[0]
+        print(att_vec, predict_count)
+        #img_att = att_vec[0]
+        #img_pred = predict_count[0]
         
-        save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.all_count[real_idx])
+        #save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.all_count[real_idx])
         
-        self.visualize_xinhdep(img_att, img_path, save_name)
+        #self.visualize_xinhdep(img_att, img_path, save_name)
         
         
 
