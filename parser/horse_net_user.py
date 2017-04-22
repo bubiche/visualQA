@@ -61,7 +61,12 @@ class Visualizer(object):
         width = int(resized_image.shape[1] / numcols)
         
         res = np.array(resized_image)
-        centers = list()
+        #centers = list()
+        if att_vec.max() > 0.5:
+            thres = min(0.7, att_vec.max() - 0.1)
+        else:
+            thres = 0.7
+            
         for row in range(numrows):
             for col in range(numcols):
                 y0 = row * height
@@ -142,7 +147,7 @@ class Visualizer(object):
                 if r == center_y and c == center_x:
                     weight = 1
                 else:
-                    dist_squared = (center[0] - row)**2 + (center[1] - col)**2
+                    dist_squared = (center_y - row)**2 + (center_x - col)**2
                     weight = math.exp((-0.5 * dist_squared)/(radius*radius))
                     if weight < 0.2:
                         weight = 0.2
