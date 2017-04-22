@@ -209,7 +209,7 @@ class Visualizer(object):
         img_att = att_vec[0]
         img_pred = predict_count
         
-        save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.all_count[real_idx])
+        save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.full_voc_count[real_idx])
         
         self.visualize_xinhdep(img_att, img_path, save_name)
         
