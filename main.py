@@ -43,6 +43,7 @@ flags.DEFINE_boolean('see_test', False, 'visualize attention in the test set')
 flags.DEFINE_boolean('see_wrong', False, 'visualize attention in wrong images of the test set')
 flags.DEFINE_integer('config', 0, 'configuration to be used')
 flags.DEFINE_boolean('get_count_test', False, 'get the predition on test set')
+flags.DEFINE_integer('see_test_idx', -1, 'visualize attetion of image with test idx')
 
 FLAGS = flags.FLAGS
 
@@ -62,6 +63,11 @@ if FLAGS.see != '':
     vecs = seer.get_vecs()
     ret_vec = horse_net.get_attention(vecs)
     seer.visualize_multiple(ret_vec)
+    exit()
+
+if FLAGS.see_test_idx > -1:
+    seer = Visualizer(FLAGS, horse_net)
+    seer.get_attention_from_test_set_idx(FLAGS.see_test_idx)
     exit()
 
 if FLAGS.get_count_test:

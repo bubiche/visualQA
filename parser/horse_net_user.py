@@ -26,6 +26,7 @@ class Visualizer(object):
         self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
         
         self.json_name = '{}.json'.format(flags.config)
+        self.conf_id = flags.config
         
     def get_vec(self, my_img_path):
         i = 0
@@ -49,7 +50,7 @@ class Visualizer(object):
             
         return ret
         
-    def visualize_xinhdep(self, att_vec, file_path, idx):
+    def visualize_xinhdep(self, att_vec, file_path, save_name):
         '''
         att_vec is (7, 7)
         '''
@@ -85,8 +86,7 @@ class Visualizer(object):
         for c in centers:
             res = self.make_mask(res, 50, c)
             
-        output_file = '{}.jpg'.format(idx)
-        cv2.imwrite(output_file, res.astype(np.uint8))
+        cv2.imwrite(save_name, res.astype(np.uint8))
 
     def visualize(self, att_vec, file_path, idx, pred, truth):
         '''
@@ -198,5 +198,21 @@ class Visualizer(object):
             
         with open(self.json_name, 'w') as fp:
             json.dump(out_dict, fp)
+            
+    def get_attention_from_test_set_idx(self, test_set_idx):
+        real_idx = self.test_idx[test_set_idx]
+        
+        vec = [self.full_voc_vec[real_idx]]
+        img_path = os.path.join('parser', self.full_voc_name[real_idx].decode())
+        
+        att_vec, predict_count = self.net.get_attention(np.array(vec))
+        img_att = att_vec[0]
+        img_pred = predict_count[0]
+        
+        save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.all_count[real_idx])
+        
+        self.visualize_xinhdep(img_att, img_path, save_name)
+        
+        
 
         
