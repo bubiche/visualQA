@@ -62,8 +62,10 @@ class Visualizer(object):
         
         res = np.array(resized_image)
         #centers = list()
+        to_be_added = list()
+        tmp_w = list()
         if att_vec.max() > 0.5:
-            thres = min(0.7, att_vec.max() - 0.1)
+            thres = min(0.8, att_vec.max() - 0.05)
         else:
             thres = 0.7
             
@@ -78,12 +80,16 @@ class Visualizer(object):
                     if weight < 0.2: weight = 0.2
                     res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
                 else:
-                    res[y0:y1, x0:x1] = self.add_circle(res[y0:y1, x0:x1])
+                    to_be_added.append(res[y0:y1, x0:x1])
+                    tmp_w.append(weight)
+                    #res[y0:y1, x0:x1] = self.add_circle(res[y0:y1, x0:x1])
                     #centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
                     #print((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
                 
         #for c in centers:
             #res = self.make_mask(res, 50, c)
+        for tile in to_be_added:
+            tile = self.add_circle(tile)
             
         cv2.imwrite(save_name, res.astype(np.uint8))
 
@@ -148,7 +154,7 @@ class Visualizer(object):
                     weight = 1
                 else:
                     dist_squared = (center_y - row)**2 + (center_x - col)**2
-                    weight = math.exp((-0.5 * dist_squared)/(1024))
+                    weight = math.exp((-0.5 * dist_squared)/(2025))
                     if weight < 0.2:
                         weight = 0.2
                 res[row][col] = res[row][col] * weight
