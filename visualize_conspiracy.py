@@ -9,7 +9,7 @@ bird_list = [3215,669,665,22,3978,3111,3441,3682,219,1397,428,2936]
 person_list = [3464,2941,3845,3030,3823,3359,3694,4034,2579,3390,2705,814]
 
 may1_dict = {'sofa':sofa_list, 'bus':bus_list, 'cat':cat_list}
-may2_dict = ['motorbike': motorbike_list, 'bird':bird_list, 'person':person_list]
+may2_dict = {'motorbike': motorbike_list, 'bird':bird_list, 'person':person_list}
 
 if sys.argv[1] == 'may1':
     cls_dict = may1_dict
