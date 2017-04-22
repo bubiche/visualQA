@@ -148,7 +148,7 @@ class Visualizer(object):
                     weight = 1
                 else:
                     dist_squared = (center_y - row)**2 + (center_x - col)**2
-                    weight = math.exp((-0.5 * dist_squared)/(radius*radius))
+                    weight = math.exp((-0.5 * dist_squared)/(1024))
                     if weight < 0.2:
                         weight = 0.2
                 res[row][col] = res[row][col] * weight
