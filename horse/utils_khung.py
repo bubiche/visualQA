@@ -1,5 +1,6 @@
 from .utils import cosine_sim, gate, conv_pool_act, gaussian_var
 import tensorflow as tf
+import numpy as np
 
 def _identity(x):
 	return x
