@@ -72,6 +72,6 @@ def _sharp(z):
 
 def interpolate(z, size):
 	x = _create_ranges(size)
-	curve = Spline(x, x, _sharp(z), kx = 1, ky = 1)
+	curve = Spline(x, x, z, kx = 1, ky = 1)
 	x_ = np.arange(size) + 1
 	return curve(x_, x_)
