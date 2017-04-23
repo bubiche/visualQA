@@ -40,9 +40,11 @@ for i in range(27088):
         elif value == 2:
             count_vehicle += count_file[key][i]
             
-        animal_count_dset[i] = count_animal
-        furniture_count_dset[i] =  count_furniture
-        vehicle_count_dset[i] = count_vehicle
+    animal_count_dset[i] = count_animal
+    furniture_count_dset[i] =  count_furniture
+    vehicle_count_dset[i] = count_vehicle
+    
+    if i%100 == 0: print(i)
         
 count_file.close()
 
