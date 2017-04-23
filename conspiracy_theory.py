@@ -1,39 +1,32 @@
-import json
-import h5py
-import shutil
+import os
+import sys
 
-data = [None] * 7
+conf_list = [(0, 'no_attention'), (1, 'noref_nosharp'), (2, 'ref_nosharp'),
+             (3, 'noref_softmax'), (4, 'ref_softmax'), (5, 'noref_power'),
+             (6, 'ref_power')]
+             
+cls_list_1 = ['sofa', 'bus', 'cat']
+cls_list_2 = ['motorbike', 'bird', 'person']
 
-for i in range(7):
-    file_name = '{}.json'.format(i)
-    with open(file_name, 'r') as fp:
-        data[i] = json.load(fp)
+if sys.argv[1] == 'may1':
+    cls_list = cls_list_1
+elif sys.argv[1] == 'may2':
+    cls_list = cls_list_2
+    
+print(cls_list)
+for cls in cls_list:
+
+    
+    for conf in conf_list:
+        conf_idx = conf[0]
+        conf_name = conf[1]
+
+        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_test --config={} --cls={}'.format(num, conf_idx, cls)
+        os.system(see_cmd)
         
-count_file = h5py.File('parser/full_count_voc.hdf5', 'r')
-name_file = h5py.File('parser/full_name_voc.hdf5', 'r')
-split_idx_file = h5py.File('parser/full_split_voc.hdf5', 'r')
-
-count_dset = count_file['person']
-name_dset = name_file['name']
-test_idx_dset = split_idx_file['test']
-
-img_id = 0
-for idx in test_idx_dset:
-    file_name = name_dset[idx].decode()
-    true_count = int(count_dset[idx])
+        if conf_idx != 0:
+            zip_cmd = 'zip {}_{}_A_full.zip *.jpg'.format(conf_name, cls)
+            os.system(zip_cmd)
+        
+        os.system('rm *.jpg')
     
-    count_list = [0] * 8
-    for i in range(7):
-        count_list[i] = data[i][file_name]    
-    count_list[7] = true_count
-    
-    src_file = 'parser/{}'.format(file_name)
-    dst_file = '{}-{}_{}_{}_{}_{}_{}_{}_{}.jpg'.format(img_id, count_list[0], count_list[1], count_list[2], count_list[3]
-                                                    , count_list[4], count_list[5], count_list[6], count_list[7])
-    shutil.copy(src_file, dst_file)
-    img_id += 1
-
-count_file.close()
-name_file.close()
-split_idx_file.close()
-
