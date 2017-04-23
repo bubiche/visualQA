@@ -60,7 +60,7 @@ def count(x):
 
 from scipy.interpolate import RectBivariateSpline as Spline
 
-def _create_ranges(size, z):
+def _create_ranges(size):
 	x = np.arange(7) * int(size/7) + int(size/14)
 	return x
 
