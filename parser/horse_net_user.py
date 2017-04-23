@@ -51,11 +51,6 @@ class Visualizer(object):
         return ret
         
     def visualize_xinhdep(self, att_vec, file_path, save_name):
-        '''
-        att_vec is (7, 7)
-        '''
-        att_vec = self.scale_matrix(att_vec)
-        
         img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
         numrows, numcols = 7, 7
@@ -63,27 +58,37 @@ class Visualizer(object):
         width = int(resized_image.shape[1] / numcols)
         
         res = np.array(resized_image)
-        #centers = list()
+        res = np.multiply(att_vec, res)
+            
+        cv2.imwrite(save_name, res.astype(np.uint8))
 
+    def visualize_xinhdep2(self, att_vec, file_path, save_name):
+        img = cv2.imread(file_path)
+        resized_image = cv2.resize(img, (448, 448))
+        numrows, numcols = 7, 7
+        height = int(resized_image.shape[0] / numrows)
+        width = int(resized_image.shape[1] / numcols)
+        
+        res = np.array(resized_image)
+        centers = list()
         for row in range(numrows):
             for col in range(numcols):
                 y0 = row * height
                 y1 = y0 + height
                 x0 = col * width
                 x1 = x0 + width
-                weight = att_vec[row][col]
+                if att_vec[row][col] > 0.8:
+                    centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
 
-                if weight < 0.2: weight = 0.2
-                res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
-
+        for c in centers:
+            res = self.make_mask(res, 50, c)
             
         cv2.imwrite(save_name, res.astype(np.uint8))
-
+        
     def visualize(self, att_vec, file_path, idx, pred, truth):
         '''
         att_vec is (7, 7)
         '''
-        att_vec = self.scale_matrix(att_vec)
         
         img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
@@ -216,13 +221,20 @@ class Visualizer(object):
         vec = [self.full_voc_vec[real_idx]]
         img_path = os.path.join('parser', self.full_voc_name[real_idx].decode())
         
-        att_vec, predict_count = self.net.get_attention(np.array(vec))
+        if self.conf_id == 3 or self.conf_id == 4:
+            att_vec, predict_count = self.net.get_attention(np.array(vec))
+        else:
+            att_vec, predict_count = self.net.get_interpolated_attention(np.array(vec), 448)
+            
         img_att = att_vec[0]
         img_pred = predict_count
+        print(img_pred)
         
         save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.full_voc_count[real_idx])
-        
-        self.visualize_xinhdep(img_att, img_path, save_name)
+        if self.conf_id == 3 or self.conf_id == 4:
+            self.visualize_xinhdep2(img_att, img_path, save_name)
+        else:
+            self.visualize_xinhdep(img_att, img_path, save_name)
         
     def scale_matrix(self, a, low=0.2, high=1.0):
         min_a = a.min()
