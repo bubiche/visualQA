@@ -76,6 +76,7 @@ if FLAGS.get_count_test:
     exit()
     
 if FLAGS.see_test:
+    if FLAGS.config == 0: exit()
     seer = Visualizer(FLAGS, horse_net)
     seer.visualize_test_set()
     exit()

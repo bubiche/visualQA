@@ -51,6 +51,9 @@ class Visualizer(object):
         return ret
         
     def visualize_xinhdep(self, att_vec, file_path, save_name):
+        if self.conf_id == 1 or self.conf_id == 2:
+            att_vec = att_vec ** (1/3.0)
+        
         img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
         numrows, numcols = 7, 7
@@ -80,8 +83,7 @@ class Visualizer(object):
                 if att_vec[row][col] > 0.2:
                     centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
 
-        for c in centers:
-            res = self.make_mask(res, 50, c)
+        res = self.make_mask(res, 50, centers[0])
             
         cv2.imwrite(save_name, res.astype(np.uint8))
         
@@ -164,12 +166,20 @@ class Visualizer(object):
             self.all_vecs[i] = self.full_voc_vec[idx]
             self.all_count[i] = self.full_voc_count[idx]
             i += 1
-            
-        att_vec, predict_count = self.net.get_attention(self.all_vecs)
+        
+        if self.conf_id == 3 or self.conf_id == 4:
+            att_vec, predict_count = self.net.get_attention(self.all_vecs)
+        else:
+            att_vec, predict_count = self.net.get_interpolated_attention(self.all_vecs, 448)
         
         i = 0
         for img in self.all_img:
-            self.visualize(att_vec[i], img, i, predict_count[i], self.all_count[i])
+            save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, i, predict_count[i], self.all_count[i])
+            #self.visualize(att_vec[i], img, i, predict_count[i], self.all_count[i])
+            if self.conf_id == 3 or self.conf_id == 4:
+                self.visualize_xinhdep2(att_vec[i], img, save_name)
+            else:
+                self.visualize_xinhdep(att_vec[i], img, save_name)
             i += 1
             
     def visualize_wrong_test(self):
