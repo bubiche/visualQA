@@ -21,7 +21,7 @@ for cls in cls_list:
         conf_idx = conf[0]
         conf_name = conf[1]
 
-        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load={} --see_test --config={} --cls={}'.format(num, conf_idx, cls)
+        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load=620 --see_test --config={} --cls={}'.format(num, conf_idx, cls)
         os.system(see_cmd)
         
         if conf_idx != 0:
