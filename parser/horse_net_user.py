@@ -62,13 +62,7 @@ class Visualizer(object):
         
         res = np.array(resized_image)
         #centers = list()
-        to_be_added = list()
-        tmp_w = list()
-        if att_vec.max() > 0.5:
-            thres = min(0.8, att_vec.max() - 0.05)
-        else:
-            thres = 0.7
-            
+
         for row in range(numrows):
             for col in range(numcols):
                 y0 = row * height
@@ -76,20 +70,10 @@ class Visualizer(object):
                 x0 = col * width
                 x1 = x0 + width
                 weight = att_vec[row][col]
-                if weight < 0.6:
-                    if weight < 0.2: weight = 0.2
-                    res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
-                else:
-                    to_be_added.append(res[y0:y1, x0:x1])
-                    tmp_w.append(weight)
-                    #res[y0:y1, x0:x1] = self.add_circle(res[y0:y1, x0:x1])
-                    #centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
-                    #print((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
-                
-        #for c in centers:
-            #res = self.make_mask(res, 50, c)
-        for tile in to_be_added:
-            tile = self.add_circle(tile)
+
+                if weight < 0.2: weight = 0.2
+                res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
+
             
         cv2.imwrite(save_name, res.astype(np.uint8))
 
