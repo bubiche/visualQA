@@ -37,9 +37,9 @@ check['sofa'] = 17
 check['train'] = 18
 check['tvmonitor'] = 19
 '''
-check['furniture'] = 0
-check['animal'] = 0
-check['vehicle'] = 0
+check['animal_A'] = 0
+check['vehicle_A'] = 0
+check['indoor_A'] = 0
 count_dset = {}
 for key, value in check.items():
     count_dset[key] = count_file[key]
@@ -67,9 +67,9 @@ zero_count['sofa'] = 0
 zero_count['train'] = 0
 zero_count['tvmonitor'] = 0
 '''
-zero_count['furniture'] = 0
-zero_count['animal'] = 0
-zero_count['vehicle'] = 0
+zero_count['animal_A'] = 0
+zero_count['vehicle_A'] = 0
+zero_count['indoor_A'] = 0
 
 for idx in test_idx_dset:
     for key, value in zero_count.items():
