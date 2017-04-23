@@ -15,6 +15,7 @@ split_file = h5py.File('full_split_voc.hdf5', 'r')
 
 test_idx_dset = split_file['test']
 check = {}
+'''
 check['aeroplane'] = 0
 check['bicycle'] = 1
 check['bird'] = 2
@@ -35,7 +36,10 @@ check['sheep'] = 16
 check['sofa'] = 17
 check['train'] = 18
 check['tvmonitor'] = 19
-
+'''
+check['furniture'] = 0
+check['animal'] = 0
+check['vehicle'] = 0
 count_dset = {}
 for key, value in check.items():
     count_dset[key] = count_file[key]
