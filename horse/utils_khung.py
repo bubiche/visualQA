@@ -65,6 +65,6 @@ def interpolate(z, size):
 	z = z * (1.0 - thres) / (z.max() - z.min())
 	z = z - z.min() + thres
 	x = np.arange(7) * size + int(size/2)
-	curve = Spline(x, x, z, kx = 2, ky = 2)
+	curve = Spline(x, x, z * 10, kx = 1, ky = 1)
 	x_ = np.arange(size) + 1
-	return curve(x_, x_)
+	return curve(x_, x_) / 10.
