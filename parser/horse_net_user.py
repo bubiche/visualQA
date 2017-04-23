@@ -54,6 +54,8 @@ class Visualizer(object):
         '''
         att_vec is (7, 7)
         '''
+        att_vec = self.scale_matrix(att_vec)
+        
         img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
         numrows, numcols = 7, 7
@@ -81,6 +83,8 @@ class Visualizer(object):
         '''
         att_vec is (7, 7)
         '''
+        att_vec = self.scale_matrix(att_vec)
+        
         img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
         numrows, numcols = 7, 7
@@ -96,7 +100,7 @@ class Visualizer(object):
                 x0 = col * width
                 x1 = x0 + width
                 weight = att_vec[row][col]
-                if weight < 0.3333: weight = 0.3333
+                if weight < 0.2: weight = 0.2
                 res[y0:y1, x0:x1] = res[y0:y1, x0:x1] * weight
             
         output_file = '{}-{}_{}.jpg'.format(idx, pred, truth)
@@ -220,6 +224,11 @@ class Visualizer(object):
         
         self.visualize_xinhdep(img_att, img_path, save_name)
         
+    def scale_matrix(self, a, low=0.2, high=1.0):
+        min_a = a.min()
+        low = min(min_a, low)
         
+        a = a * (high - low) / (a.max() - a.min())
+        a = (a - a.min()) + low
 
         
