@@ -41,6 +41,7 @@ for key, value in check.items():
     count_dset[key] = count_file[key]
     
 zero_count = {}
+'''
 zero_count['aeroplane'] = 0
 zero_count['bicycle'] = 0
 zero_count['bird'] = 0
@@ -61,6 +62,11 @@ zero_count['sheep'] = 0
 zero_count['sofa'] = 0
 zero_count['train'] = 0
 zero_count['tvmonitor'] = 0
+'''
+zero_count['furniture'] = 0
+zero_count['animal'] = 0
+zero_count['vehicle'] = 0
+
 for idx in test_idx_dset:
     for key, value in zero_count.items():
         if count_dset[key][idx] == 0: zero_count[key] += 1
