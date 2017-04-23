@@ -230,5 +230,6 @@ class Visualizer(object):
         
         a = a * (high - low) / (a.max() - a.min())
         a = (a - a.min()) + low
+        return a
 
         
