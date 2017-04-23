@@ -225,6 +225,7 @@ class Visualizer(object):
             att_vec, predict_count = self.net.get_attention(np.array(vec))
         else:
             att_vec, predict_count = self.net.get_interpolated_attention(np.array(vec), 448)
+            print(att_vec[0])
             
         img_att = att_vec[0]
         img_pred = predict_count
