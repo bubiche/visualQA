@@ -66,7 +66,7 @@ for idx in test_idx_dset:
         if count_dset[key][idx] == 0: zero_count[key] += 1
 
 for key, value in zero_count.items():
-    print(key, value/27088.0)
+    print(key, value/float(test_idx_dset.shape[0]))
         
 count_file.close()
 split_file.close()
