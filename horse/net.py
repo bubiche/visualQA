@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import os
 from .utils import confusion_table
-from .utils_khung import ref, no_ref, no_sharp, softmax, power, count
+from .utils_khung import ref, no_ref, no_sharp, softmax, power, count, interpolate
 from .ops import op_dict
 import pickle
 import time
@@ -187,3 +187,12 @@ class HorseNet(object):
 		print(att,'\n')
 		pred = np.round(pred).astype(np.int32)
 		return att, pred
+
+	def get_interpolated_attention(self, vec, size):
+		att, pred = self.get_attention(vec)
+		att_interpolated = list()
+		for img_att in att:
+			att_interpolated.append(
+				interpolate(img_att, size))
+
+		return att_interpolated, pred

@@ -56,3 +56,11 @@ def count(x):
 	with tf.variable_scope('count2'):
 		x2 = gate(x1, 256, 1, tf.nn.softplus)
 	return tf.squeeze(x2)
+
+from scipy.interpolate import RectBivariateSpline as Spline
+
+def interpolate(z, size):
+	x = np.arange(7) * size + int(size/2)
+	curve = Spline(x, x, z, kx = 2, ky = 2)
+	x_ = np.arange(size) + 1
+	return curve(x_, x_)
