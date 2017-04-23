@@ -60,11 +60,18 @@ def count(x):
 
 from scipy.interpolate import RectBivariateSpline as Spline
 
-def interpolate(z, size):
+def _create_ranges(size, z):
+	x = np.arange(7) * int(size/7) + int(size/14)
+	return x
+
+def _sharp(z):
 	thres = min(z.min(), 0.2)
 	z = z * (1.0 - thres) / (z.max() - z.min())
 	z = z - z.min() + thres
-	x = np.arange(7) * size + int(size/2)
-	curve = Spline(x, x, z * 10, kx = 1, ky = 1)
+	return z
+
+def interpolate(z, size):
+	x, z = _create_ranges(size, z)
+	curve = Spline(x, x, _sharp(z), kx = 1, ky = 1)
 	x_ = np.arange(size) + 1
 	return curve(x_, x_) / 10.
