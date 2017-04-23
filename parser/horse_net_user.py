@@ -58,7 +58,7 @@ class Visualizer(object):
         width = int(resized_image.shape[1] / numcols)
         
         res = np.array(resized_image)
-        res = np.multiply(att_vec, res)
+        res = res * att_vec[:,:, None]
             
         cv2.imwrite(save_name, res.astype(np.uint8))
 
