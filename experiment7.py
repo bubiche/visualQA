@@ -4,7 +4,7 @@ import sys
 cls_list = ['animal_A', 'vehicle_A', 'indoor_A']
 
 conf_list_1 = [(0, 'no_attention'), (1, 'noref_nosharp'), (2, 'ref_nosharp'), (3, 'noref_softmax')]
-conf_list_2 = [(4, 'ref_softmax'), (5, 'noref_power'), (6, 'ref_power')]]
+conf_list_2 = [(4, 'ref_softmax'), (5, 'noref_power'), (6, 'ref_power')]
 if sys.argv[1] == 'may1':
     conf_list = conf_list_1
 elif sys.argv[1] == 'may2':
