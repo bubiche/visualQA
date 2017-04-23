@@ -167,6 +167,7 @@ class Visualizer(object):
             self.all_count[i] = self.full_voc_count[idx]
             i += 1
         
+        '''
         if self.conf_id == 3 or self.conf_id == 4:
             att_vec, predict_count = self.net.get_attention(self.all_vecs)
         else:
@@ -180,6 +181,13 @@ class Visualizer(object):
                 self.visualize_xinhdep2(att_vec[i], img, save_name)
             else:
                 self.visualize_xinhdep(att_vec[i], img, save_name)
+            i += 1
+        '''
+        att_vec, predict_count = self.net.get_attention(self.all_vecs)
+        
+        i = 0
+        for img in self.all_img:
+            self.visualize(att_vec[i], img, i, predict_count[i], self.all_count[i])
             i += 1
             
     def visualize_wrong_test(self):
