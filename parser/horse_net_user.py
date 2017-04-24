@@ -24,7 +24,8 @@ class Visualizer(object):
         self.full_voc_count = self.full_voc_count_file[flags.cls]
         
         self.file_path = flags.see_path
-        self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
+        if self.file_path != '':
+            self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
         
         self.json_name = '{}.json'.format(flags.config)
         self.conf_id = flags.config
