@@ -64,14 +64,25 @@ def _create_ranges(size):
 	x = np.arange(7) * int(size/7) + int(size/14)
 	return x
 
-def _sharp(z):
+def _sharp_scale(z):
 	thres = min(z.min(), 0.2)
 	z = z * (1.0 - thres) / (z.max() - z.min())
 	z = z - z.min() + thres
 	return z
 
-def interpolate(z, size):
+def _sharp_power(z):
+	z = z * 2. - 1.
+	s = np.sign(z)
+	z = s * np.power(s * z, 1./3.)
+	z = (z + 1.) / 2.
+	return z
+
+def interpolate(z, size, config):
 	x = _create_ranges(size)
+	if config < 3:
+		z = _sharp_power(z)
+	else:
+		z = _sharp_scale(z)
 	curve = Spline(x, x, z, kx = 1, ky = 1)
 	x_ = np.arange(size) + 1
 	return curve(x_, x_)
