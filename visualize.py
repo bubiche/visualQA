@@ -22,7 +22,7 @@ for cls_name, cls_list in cls_dict.items():
         img_id_list = [cls_list[(conf_idx-1)]]
     
         for img_id in img_id_list:
-            vi_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load=206 --see_test_idx={} --config={} --cls={}'.format(img_id, conf_idx, cls_name)
+            vi_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load=620 --see_test_idx={} --config={} --cls={}'.format(img_id, conf_idx, cls_name)
             os.system(vi_cmd)
             
         conf_idx += 1
