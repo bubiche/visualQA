@@ -193,6 +193,6 @@ class HorseNet(object):
 		att_interpolated = list()
 		for img_att in att:
 			att_interpolated.append(
-				interpolate(img_att, size))
+				interpolate(img_att, size, self._flags.config))
 
 		return att_interpolated, pred
