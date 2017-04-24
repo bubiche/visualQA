@@ -59,11 +59,9 @@ horse_net = HorseNet(FLAGS)
 if FLAGS.load:
     horse_net.load_from_ckpt()
     
-if FLAGS.see != '':
+if FLAGS.see_path != '':
     seer = Visualizer(FLAGS, horse_net)
-    vecs = seer.get_vecs()
-    ret_vec = horse_net.get_attention(vecs)
-    seer.visualize_multiple(ret_vec)
+    seer.visualize_img_from_folder(FLAGS.see_path)
     exit()
 
 if FLAGS.see_img != '':
