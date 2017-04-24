@@ -284,11 +284,20 @@ class Visualizer(object):
         img_path = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
         vecs = net.forward(img_path)
         
-        att_vec, predict_count = self.net.get_attention(np.array(vecs))
+        #att_vec, predict_count = self.net.get_attention(np.array(vecs))
+        if self.conf_id == 3 or self.conf_id == 4:
+            att_vec, predict_count = self.net.get_attention(np.array(vecs))
+        else:
+            att_vec, predict_count = self.net.get_interpolated_attention(np.array(vecs), 448)
         
         print('Visualizing')
         i = 0
         for pred in predict_count:
-            self.visualize(att_vec[i], img_path[i], i, pred, 999)
+            #self.visualize(att_vec[i], img_path[i], i, pred, 999)
+            save_name = "{}-{}_{}.jpg".format(i, pred, 999)
+            if self.conf_id == 3 or self.conf_id == 4:
+                self.visualize_xinhdep2(att_vec[i], img_path[i], save_name)
+            else:
+                self.visualize_xinhdep(att_vec[i], img_path[i], save_name)
             i += 1
         
