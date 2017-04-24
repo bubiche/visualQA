@@ -45,6 +45,7 @@ flags.DEFINE_integer('config', 0, 'configuration to be used')
 flags.DEFINE_boolean('get_count_test', False, 'get the predition on test set')
 flags.DEFINE_integer('see_test_idx', -1, 'visualize attetion of image with test idx')
 flags.DEFINE_string('see_img', '', 'see image at path')
+flags.DEFINE_integer('save_idx', -1, 'save index')
 
 FLAGS = flags.FLAGS
 
