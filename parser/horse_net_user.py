@@ -4,6 +4,7 @@ import cv2
 import os
 import math
 import json
+from image2vec import yolo
 
 class Visualizer(object):
     def __init__(self, flags, net):
@@ -51,9 +52,6 @@ class Visualizer(object):
         return ret
         
     def visualize_xinhdep(self, att_vec, file_path, save_name):
-        if self.conf_id == 1 or self.conf_id == 2:
-            att_vec = att_vec ** (1/3.0)
-        
         img = cv2.imread(file_path)
         resized_image = cv2.resize(img, (448, 448))
         numrows, numcols = 7, 7
@@ -263,4 +261,14 @@ class Visualizer(object):
         a = (a - a.min()) + low
         return a
 
+    def visualize_img_from_path(self, img_path):
+        net = yolo.YOLO(
+            'parser/image2vec/yolo-full.cfg', 
+            'parser/image2vec/yolo-full.weights',
+            up_to = 28)
+            
+        vecs = net.forward([img_path])
+        vec = vecs[0]
         
+        att_vec, predict_count = self.net.get_attention(np.array(vec))
+        self.visualize(att_vec[i], img, 1, predict_count, 999)
