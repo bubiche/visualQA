@@ -289,6 +289,6 @@ class Visualizer(object):
         print('Visualizing')
         i = 0
         for pred in predict_count:
-            self.visualize(att_vec[i], img, i, pred, 999)
+            self.visualize(att_vec[i], img_path[i], i, pred, 999)
             i += 1
         
