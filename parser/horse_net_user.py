@@ -29,6 +29,7 @@ class Visualizer(object):
         
         self.json_name = '{}.json'.format(flags.config)
         self.conf_id = flags.config
+        self.cls = flags.cls
         
     def get_vec(self, my_img_path):
         i = 0
@@ -248,7 +249,7 @@ class Visualizer(object):
         img_pred = predict_count
         print(img_pred)
         
-        save_name = "{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.full_voc_count[real_idx])
+        save_name = "{}_{}_{}_{}_{}.jpg".format(self.conf_id, test_set_idx, img_pred, self.full_voc_count[real_idx], self.cls)
         if self.conf_id == 3 or self.conf_id == 4:
             self.visualize_xinhdep2(img_att, img_path, save_name)
         else:
