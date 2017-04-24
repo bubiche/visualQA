@@ -274,16 +274,19 @@ class Visualizer(object):
         self.visualize(att_vec[0], img, 1, predict_count, 999)
         
     def visualize_img_from_folder(self, img_path):
+        print('Load YOLO')
         net = yolo.YOLO(
             'parser/image2vec/yolo-full.cfg', 
             'parser/image2vec/yolo-full.weights',
             up_to = 28)
-            
+        
+        print('get vecs')
         img_path = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
         vecs = net.forward(img_path)
         
         att_vec, predict_count = self.net.get_attention(np.array(vecs))
         
+        print('Visualizing')
         i = 0
         for pred in predict_count:
             self.visualize(att_vec[i], img, i, pred, 999)
