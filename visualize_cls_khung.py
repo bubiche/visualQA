@@ -22,7 +22,9 @@ for cls in cls_list:
         conf_idx = conf[0]
         img_id_list = [img_idx_list[(conf_idx-1)*2], img_idx_list[(conf_idx-1)*2+1]]
         
+        print(len(img_id_list))
         for img_id in img_id_list:
+            print(i)
             vi_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load=206 --see_test_idx={} --config={} --cls={} --save_idx={}'.format(img_id, conf_idx, cls, i)
             os.system(vi_cmd)
             i += 1
