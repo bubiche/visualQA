@@ -12,6 +12,7 @@ class YOLO(object):
         weight_path = FLAGS.wgt
         cfg_path = FLAGS.cfg
         up_to = FLAGS.up_to
+        print('Doing {}'.format(FLAGS.target))
 
         self._flags = FLAGS
         self._weight_yielder = weights_parser(weight_path)
@@ -36,7 +37,7 @@ class YOLO(object):
             layer.build(self._weight_yielder, *layer_cfg[2:])
             self.layers.append(layer)
             current = layer.out
-            print(index, layer_type, current.get_shape().as_list())
+            #print(index, layer_type, current.get_shape().as_list())
 
         self._out = tf.reshape(current, [1,1024])
         self._build_loss()
@@ -69,7 +70,7 @@ class YOLO(object):
             print('step {} loss {}'.format(step+1, loss))
 
         img_ref = self._sess.run(self._inp)
-        img_ref = img_ref.reshape([64,64,3])
+        img_ref = img_ref.reshape([64,64,3]) * 255.
         img_ref = img_ref.astype(np.uint8)
         cv2.imwrite('{}.jpg'.format(
             self._flags.target), img_ref)
