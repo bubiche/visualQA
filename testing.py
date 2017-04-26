@@ -91,14 +91,16 @@ for collect in collected:
 
     tf.reset_default_graph()
     horse_net = HorseNet(FLAGS)
+    all_vars = tf.global_variables()
     try:
         horse_net.load_from_ckpt()
     except:
         print('Failed, move on!!!!!!!!!!!!!!!!!!!')
-    all_vars = tf.global_variables()
+        continue
     for var in all_vars:
         if var.name == 'ref:0':
             var_val = horse_net._sess.run(var)
+            print(var_val.shape)
             break
     file_name = 'ref_{}_{}'.format(FLAGS.cls, FLAGS.config)
 
