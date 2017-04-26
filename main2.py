@@ -1,4 +1,5 @@
 from tensorflow import flags
+import tensorflow as tf
 from image2vec.yolo import YOLO
 import os
 
@@ -18,4 +19,3 @@ for target in all_targets:
 	FLAGS.target = target
 	tf.reset_default_graph()
 	net = YOLO(FLAGS)
-	
