@@ -1,6 +1,7 @@
 from horse.net import HorseNet
 from tensorflow import flags
 import tensorflow as tf
+import pickle
 from parser.horse_net_user import Visualizer
 import os
 
@@ -55,13 +56,37 @@ def get_dir(dirs):
         if not os.path.exists(this): os.makedirs(this)
 get_dir([FLAGS.backup, 'horseref'])
 
-horse_net = HorseNet(FLAGS)
 
-if FLAGS.load:
+def parser():
+    path = '/backup/'
+    all_ckpts = os.listdir(path)
+    ref_ckpts = [f for f in all_ckpts if f[:4] == 'ref_']
+
+    def _extract(file):
+        file = file.split('.')[0]
+        file, num = file.split('-')
+        num = int(num)
+        file = file.split('_')
+        if file[1] == 'nosharp':
+            cfg = 2
+        elif file[1] == 'softmax':
+            cfg = 4
+        elif file[1] == 'power':
+            cfg = 6
+        clas = '_'.join(file[2:])
+        print(cfg, clas, num)
+        return (cfg, clas, num)
+
+parser()
+
+if False:
+    horse_net = HorseNet(FLAGS)
     horse_net.load_from_ckpt()
-    
-all_vars = tf.all_variables()
-for var in all_vars:
-	print(var.name, var.get_shape())
-    
-#horse_net.predict()
+    all_vars = tf.all_variables()
+    for var in all_vars:
+        if var.name == 'ref:0':
+            var_val = horse_net._sess.run(var)
+            break
+    file_name = 'ref_{}_{}'.format(FLAGS.cls, FLAGS.cfg)
+    with open(file_name,'wb') as file:
+        pickle.dump(var_val, file, protocol = -1)
