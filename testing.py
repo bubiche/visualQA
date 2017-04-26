@@ -60,6 +60,8 @@ horse_net = HorseNet(FLAGS)
 if FLAGS.load:
     horse_net.load_from_ckpt()
     
-print(tf.all_variables())
+all_vars = tf.all_variables()
+for var in all_vars:
+	print(var.name, var.get_shape())
     
 #horse_net.predict()
