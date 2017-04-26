@@ -84,7 +84,7 @@ def parser():
     return collected
 
 collected = parser()
-print collected
+print(collected)
 
 if False:
     horse_net = HorseNet(FLAGS)
