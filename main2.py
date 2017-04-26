@@ -16,6 +16,6 @@ FLAGS = flags.FLAGS
 
 all_targets = os.listdir('trained_refs')
 for target in all_targets:
-	FLAGS.target = target
+	FLAGS.target = './trained_refs/' + target
 	tf.reset_default_graph()
 	net = YOLO(FLAGS)
