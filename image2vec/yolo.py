@@ -26,7 +26,7 @@ class YOLO(object):
             if i == 0:
                 self.meta = layer_cfg
                 self._inp = gaussian_var('inp', 
-                    0.5, 0.05, [1, 64, 64, 3])
+                    0.5, 0.005, [1, 64, 64, 3])
                 current = self._inp
                 continue
 
