@@ -96,8 +96,8 @@ for collect in collected:
         if var.name == 'ref:0':
             var_val = horse_net._sess.run(var)
             break
-    file_name = 'ref_{}_{}'.format(FLAGS.cls, FLAGS.cfg)
+    file_name = 'ref_{}_{}'.format(FLAGS.cls, FLAGS.config)
 
     print(file_name, FLAGS.load)
-    with open(file_name,'wb') as file:
+    with open(file_name, 'wb') as file:
         pickle.dump(var_val, file, protocol = -1)
