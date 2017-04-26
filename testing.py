@@ -77,7 +77,7 @@ def parser():
         print(cfg, clas, num)
         return (cfg, clas, num)
 
-    return ckpts = [_extract(f) for f in ref_ckpts]
+    return [_extract(f) for f in ref_ckpts]
 
 parser()
 
