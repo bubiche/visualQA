@@ -74,12 +74,17 @@ def parser():
         elif file[1] == 'power':
             cfg = 6
         clas = '_'.join(file[2:])
-        print(cfg, clas, num)
         return (cfg, clas, num)
 
-    return [_extract(f) for f in ref_ckpts]
+    collected = dict()
+    for f in ref_ckpts:
+        cfg, clas, num = _extract(f)
+        collected[(cfg, clas)] = max(
+            collected.get((cfg, clas), 0), num)
+    return collected
 
-parser()
+collected = parser()
+print collected
 
 if False:
     horse_net = HorseNet(FLAGS)
