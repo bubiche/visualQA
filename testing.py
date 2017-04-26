@@ -89,9 +89,10 @@ for collect in collected:
     FLAGS.config, FLAGS.cls = collect
     FLAGS.load = collected[collect]
 
+    tf.reset_default_graph()
     horse_net = HorseNet(FLAGS)
     horse_net.load_from_ckpt()
-    all_vars = tf.all_variables()
+    all_vars = tf.global_variables()
     for var in all_vars:
         if var.name == 'ref:0':
             var_val = horse_net._sess.run(var)
