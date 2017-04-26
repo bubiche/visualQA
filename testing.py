@@ -1,5 +1,6 @@
 from horse.net import HorseNet
 from tensorflow import flags
+import tensorflow as tf
 from parser.horse_net_user import Visualizer
 import os
 
