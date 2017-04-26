@@ -84,9 +84,11 @@ def parser():
     return collected
 
 collected = parser()
-print(collected)
 
-if False:
+for collect in collected:
+    FLAGS.config, FLAGS.cls = collect
+    FLAGS.load = collected[collect]
+
     horse_net = HorseNet(FLAGS)
     horse_net.load_from_ckpt()
     all_vars = tf.all_variables()
@@ -95,5 +97,7 @@ if False:
             var_val = horse_net._sess.run(var)
             break
     file_name = 'ref_{}_{}'.format(FLAGS.cls, FLAGS.cfg)
+
+    print(file_name, FLAGS.load)
     with open(file_name,'wb') as file:
         pickle.dump(var_val, file, protocol = -1)
