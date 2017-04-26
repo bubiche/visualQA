@@ -9,7 +9,7 @@ flags.DEFINE_string('cfg',
 flags.DEFINE_string('wgt', 
 	'./parser/image2vec/yolo-full.weights', 'where is the weights')
 flags.DEFINE_integer('up_to', 28, 'up to layer')
-flags.DEFINE_float('lr', 1e-2, 'learning rate')
+flags.DEFINE_float('lr', 1, 'learning rate')
 flags.DEFINE_string('target', 'whatever', 'just a placeholder')
 FLAGS = flags.FLAGS
 
