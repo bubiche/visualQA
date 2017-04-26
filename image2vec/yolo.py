@@ -37,7 +37,7 @@ class YOLO(object):
             current = layer.out
             print(index, layer_type, current.get_shape().as_list())
 
-        self._out = tf.squeeze(current)
+        self._out = tf.reshape(current, [1,1024])
         self._build_loss()
         self._build_trainer()
 
