@@ -58,7 +58,7 @@ get_dir([FLAGS.backup, 'horseref'])
 
 
 def parser():
-    path = '/backup/'
+    path = './backup/'
     all_ckpts = os.listdir(path)
     ref_ckpts = [f for f in all_ckpts if f[:4] == 'ref_']
 
