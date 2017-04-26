@@ -3,6 +3,7 @@ from .weight_parser import weights_parser
 from .ops import op_dict
 from horse.utils import gaussian_var
 import tensorflow as tf
+import numpy as np
 import pickle
 import cv2
 
