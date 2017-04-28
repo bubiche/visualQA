@@ -325,8 +325,8 @@ class Visualizer(object):
         out_dict = {}
         i = 0
         for pred in predict_count:
-            if predict_count[i] == self.all_count[i]: out_dict[self.all_img[i]] = True
-            else: out_dict[self.all_img[i]] = False
+            if predict_count[i] == self.all_count[i]: out_dict[i] = [1, predict_count[i], self.all_count[i]]
+            else: out_dict[i] = [0, predict_count[i], self.all_count[i]]
             i += 1
             
         with open(self.json_name, 'w') as fp:
