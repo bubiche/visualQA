@@ -19,5 +19,5 @@ for cls in cls_list:
         conf_idx = conf[0]
         conf_name = conf[1]
 
-        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load=413 --get_tf_test --config={} --cls={}'.format(conf_idx, cls)
+        see_cmd = '/home/tmbao_1995/miniconda3/bin/python main.py --load=620 --get_tf_test --config={} --cls={}'.format(conf_idx, cls)
         os.system(see_cmd)
