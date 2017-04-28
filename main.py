@@ -46,6 +46,7 @@ flags.DEFINE_boolean('get_count_test', False, 'get the predition on test set')
 flags.DEFINE_integer('see_test_idx', -1, 'visualize attetion of image with test idx')
 flags.DEFINE_string('see_img', '', 'see image at path')
 flags.DEFINE_integer('save_idx', -1, 'save index')
+flags.DEFINE_boolean('get_tf_test', False, 'get the predition on test set as true/false')
 
 FLAGS = flags.FLAGS
 
@@ -78,6 +79,11 @@ if FLAGS.see_test_idx > -1:
 if FLAGS.get_count_test:
     seer = Visualizer(FLAGS, horse_net)
     seer.get_all_counts_test()
+    exit()
+    
+if FLAGS.get_tf_test:
+    seer = Visualizer(FLAGS, horse_net)
+    seer.get_test_true_false()
     exit()
     
 if FLAGS.see_test:

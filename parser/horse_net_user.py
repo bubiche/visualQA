@@ -4,7 +4,7 @@ import cv2
 import os
 import math
 import json
-from image2vec import yolo
+from .image2vec import yolo
 
 class Visualizer(object):
     def __init__(self, flags, net):
@@ -27,7 +27,7 @@ class Visualizer(object):
         if self.file_path != '':
             self.img_list = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
         
-        self.json_name = '{}.json'.format(flags.config)
+        self.json_name = '{}_{}.json'.format(flags.config, flags.cls)
         self.conf_id = flags.config
         self.cls = flags.cls
         self.save_idx = flags.save_idx
@@ -307,4 +307,27 @@ class Visualizer(object):
             else:
                 self.visualize_xinhdep(att_vec[i], img_path[i], save_name)
             i += 1
+            
+    def get_test_true_false(self):
+        self.all_img = list()
+        self.all_vecs = np.zeros((self.test_idx.shape[0], 7, 7, 1024))
+        self.all_count = np.zeros((self.test_idx.shape[0],), dtype=np.dtype(int))
         
+        i = 0
+        for idx in self.test_idx:
+            self.all_img.append(self.full_voc_name[idx].decode())
+            self.all_vecs[i] = self.full_voc_vec[idx]
+            self.all_count[i] = self.full_voc_count[idx]
+            i += 1
+            
+        att_vec, predict_count = self.net.get_attention(self.all_vecs)
+        
+        out_dict = {}
+        i = 0
+        for pred in predict_count:
+            if predict_count[i] == self.all_count[i]: out_dict[self.all_img[i]] = True
+            else: out_dict[self.all_img[i]] = False
+            i += 1
+            
+        with open(self.json_name, 'w') as fp:
+            json.dump(out_dict, fp)
