@@ -1,3 +1,6 @@
+import sys
+import os
+
 conf_list = [(1, 'noref_nosharp'), (2, 'ref_nosharp'), (6, 'ref_power')]
              
 cls_list_1 = ['dog', 'horse', 'vehicle']
