@@ -6,7 +6,7 @@ conf_list = [(1, 'noref_nosharp'), (2, 'ref_nosharp'), (6, 'ref_power')]
 cls_list_1 = ['dog', 'horse', 'vehicle']
 cls_list_2 = ['pottedplant', 'aeroplane', 'furniture']
 
-img_idx = {'vehicle':2620, 'aeroplane':1463, 'dog':1999, 'pottedplant':3128, 'horse': 3092, 'furniture':12}
+img_idx = {'vehicle':310, 'aeroplane':2139, 'dog':1483, 'pottedplant':187, 'horse': 607, 'furniture':29}
 
 if sys.argv[1] == 'may1':
     cls_list = cls_list_1
