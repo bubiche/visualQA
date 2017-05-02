@@ -68,7 +68,7 @@ if FLAGS.see_path != '':
 
 if FLAGS.see_img != '':
     seer = Visualizer(FLAGS, horse_net)
-    seer.isualize_img_from_path(FLAGS.see_img)
+    seer.visualize_img_from_path(FLAGS.see_img)
     exit()
     
 if FLAGS.see_test_idx > -1:

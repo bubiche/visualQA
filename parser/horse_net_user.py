@@ -82,6 +82,7 @@ class Visualizer(object):
                 x0 = col * width
                 x1 = x0 + width
                 if att_vec[row][col] > 0.2:
+                    print('test')
                     centers.append((y0 + int((y1-y0)/2), x0 + int((x1-x0)/2)))
 
         res = self.make_mask(res, 50, centers[0])
