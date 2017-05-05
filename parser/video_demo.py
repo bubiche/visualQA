@@ -21,8 +21,9 @@ class VideoDemo(object):
         resized_image = cv2.resize(frame, (448, 448))
         res = np.array(resized_image)
         res = res * att_vec[:,:, None]
-        cv2.putText(res, '{} {}(s)'.format(predict_count, self.cls), (10,10), cv2.FONT_HERSHEY_SIMPLEX, 1, 255)
-        return res
+        cv2.putText(res, '{} {}(s)'.format(predict_count, self.cls), (10,50), \
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (200,255,155), 5, cv2.LINE_AA)
+        return res.astype(np.uint8)
         
     def seek_vid(self):
         assert os.path.isfile(self.vid_path), 'file {} does not exist'.format(self.vid_path)
