@@ -1,6 +1,7 @@
 from horse.net import HorseNet
 from tensorflow import flags
 from parser.horse_net_user import Visualizer
+from parser.video_demo import VideoDemo
 import os
 
 flags.DEFINE_integer('batch_size', 1024, 'size of each batch')
@@ -47,6 +48,8 @@ flags.DEFINE_integer('see_test_idx', -1, 'visualize attetion of image with test 
 flags.DEFINE_string('see_img', '', 'see image at path')
 flags.DEFINE_integer('save_idx', -1, 'save index')
 flags.DEFINE_boolean('get_tf_test', False, 'get the predition on test set as true/false')
+flags.DEFINE_string('see_vid', '', 'demo on video')
+flags.DEFINE_string('output_file_vid', 'out.avi', 'output file of video demo')
 
 FLAGS = flags.FLAGS
 
@@ -60,6 +63,11 @@ horse_net = HorseNet(FLAGS)
 
 if FLAGS.load:
     horse_net.load_from_ckpt()
+    
+if FLAGS.see_vid != '':
+    seer = VideoDemo(FLAGS, horse_net)
+    seer.seek_vid()
+    exit()
     
 if FLAGS.see_path != '':
     seer = Visualizer(FLAGS, horse_net)
