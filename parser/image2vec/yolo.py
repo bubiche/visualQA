@@ -53,7 +53,7 @@ class YOLO(object):
             h, w, c = self.meta['inp_size']
             imsz = cv2.resize(frame, (w, h))
             imsz = imsz / 255.
-            imsz = imsz[:,:,::-1]
+            #imsz = imsz[:,:,::-1]
             return imsz
         preprocessed = list()
         img_tensor = _preprocess(frame)
