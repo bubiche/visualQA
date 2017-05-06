@@ -4,6 +4,7 @@ import cv2
 import os
 import math
 import json
+import time
 from .image2vec import yolo
 
 class Visualizer(object):
@@ -342,8 +343,11 @@ class Visualizer(object):
         
         print('get vecs')
         img_path = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
+        start = time.time()
         vecs = net.forward(img_path)
         
         att_vec, predict_count = self.net.get_attention(vecs)
+        end = time.time()
+        print(end - start)
         print(len(img_path))
 
