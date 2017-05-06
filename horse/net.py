@@ -184,7 +184,7 @@ class HorseNet(object):
 			self._volume: vec
 			})
 		att = att.reshape([-1, 7, 7])
-		print(att,'\n')
+		#print(att,'\n')
 		pred = np.round(pred).astype(np.int32)
 		return att, pred
 
