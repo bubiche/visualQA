@@ -40,3 +40,14 @@ class VideoDemo(object):
             writer.writeFrame(frame)
             
         writer.close()
+        
+    def seek_vid_test(self):
+        assert os.path.isfile(self.vid_path), 'file {} does not exist'.format(self.vid_path)
+        videogen = skvideo.io.vreader(self.vid_path)
+        metadata = skvideo.io.ffprobe(self.vid_path)
+        frame_count = metadata['video']['@nb_frames']
+        for frame in videogen:
+            vec = self.feature_extractor.forward_frame(frame)
+            att_vec, predict_count = self.net.get_attention(vec)
+            
+        print(frame_count)

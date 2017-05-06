@@ -66,7 +66,7 @@ if FLAGS.load:
     
 if FLAGS.see_vid != '':
     seer = VideoDemo(FLAGS, horse_net)
-    seer.seek_vid()
+    seer.seek_vid_test()
     exit()
     
 if FLAGS.see_path != '':
