@@ -2,6 +2,7 @@ from horse.net import HorseNet
 from tensorflow import flags
 from parser.horse_net_user import Visualizer
 from parser.video_demo import VideoDemo
+import time
 import os
 
 flags.DEFINE_integer('batch_size', 1024, 'size of each batch')
@@ -65,8 +66,11 @@ if FLAGS.load:
     horse_net.load_from_ckpt()
     
 if FLAGS.see_vid != '':
+    start = time.time()
     seer = VideoDemo(FLAGS, horse_net)
     seer.seek_vid_test()
+    end = time.time()
+    print(end - start)
     exit()
     
 if FLAGS.see_path != '':
