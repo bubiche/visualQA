@@ -66,8 +66,8 @@ if FLAGS.load:
     horse_net.load_from_ckpt()
     
 if FLAGS.see_vid != '':
-    start = time.time()
     seer = VideoDemo(FLAGS, horse_net)
+    start = time.time()
     seer.seek_vid_test()
     end = time.time()
     print(end - start)
