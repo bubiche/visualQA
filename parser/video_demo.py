@@ -28,7 +28,11 @@ class VideoDemo(object):
     def seek_vid(self):
         assert os.path.isfile(self.vid_path), 'file {} does not exist'.format(self.vid_path)
         videogen = skvideo.io.vreader(self.vid_path)
-        writer = skvideo.io.FFmpegWriter(self.output_file)
+        metadata = skvideo.io.ffprobe(self.vid_path)
+        frame_rate = metadata['video']['@avg_frame_rate'].split('/')[0]
+        writer = skvideo.io.FFmpegWriter(self.output_file, outputdict={
+                                         '-b': '300000000', '-r': frame_rate
+                                        })
         for frame in videogen:
             vec = self.feature_extractor.forward_frame(frame)
             att_vec, predict_count = self.net.get_interpolated_attention(vec, 448)
