@@ -332,3 +332,18 @@ class Visualizer(object):
             
         with open(self.json_name, 'w') as fp:
             json.dump(out_dict, fp)
+            
+    def visualize_img_from_folder_test(self, img_path):
+        print('Load YOLO')
+        net = yolo.YOLO(
+            'parser/image2vec/yolo-full.cfg', 
+            'parser/image2vec/yolo-full.weights',
+            up_to = 28)
+        
+        print('get vecs')
+        img_path = [os.path.join(self.file_path, f) for f in os.listdir(self.file_path) if f.endswith('.jpg')]
+        vecs = net.forward(img_path)
+        
+        att_vec, predict_count = self.net.get_attention(vecs)
+        print(len(img_path))
+

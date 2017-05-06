@@ -75,7 +75,10 @@ if FLAGS.see_vid != '':
     
 if FLAGS.see_path != '':
     seer = Visualizer(FLAGS, horse_net)
-    seer.visualize_img_from_folder(FLAGS.see_path)
+    start = time.time()
+    seer.visualize_img_from_folder_test(FLAGS.see_path)
+    end = time.time()
+    print(end - start)
     exit()
 
 if FLAGS.see_img != '':
