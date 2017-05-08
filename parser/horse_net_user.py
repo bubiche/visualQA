@@ -351,3 +351,28 @@ class Visualizer(object):
         print(end - start)
         print(len(img_path))
 
+    def get_hist_diff_test(self):
+        self.all_img = list()
+        self.all_vecs = np.zeros((self.test_idx.shape[0], 7, 7, 1024))
+        self.all_count = np.zeros((self.test_idx.shape[0],), dtype=np.dtype(int))
+
+        i = 0
+        for idx in self.test_idx:
+            self.all_img.append(os.path.join('parser', self.full_voc_name[idx].decode()))
+            self.all_vecs[i] = self.full_voc_vec[idx]
+            self.all_count[i] = self.full_voc_count[idx]
+            i += 1
+
+        att_vec, predict_count = self.net.get_attention(self.all_vecs)
+        
+        i = 0
+        hist = [0] * 20
+        for img in self.all_img:
+            diff = abs(predict_count[i] - self.all_count[i])
+            if diff < 20:
+                hist[diff] += 1
+            i += 1
+            
+        with open(self.json_name, 'w') as fp:
+            json.dump(hist, fp)
+        

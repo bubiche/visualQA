@@ -51,6 +51,7 @@ flags.DEFINE_integer('save_idx', -1, 'save index')
 flags.DEFINE_boolean('get_tf_test', False, 'get the predition on test set as true/false')
 flags.DEFINE_string('see_vid', '', 'demo on video')
 flags.DEFINE_string('output_file_vid', 'out.avi', 'output file of video demo')
+flags.DEFINE_boolean('get_hist', False, 'get difference histogram')
 
 FLAGS = flags.FLAGS
 
@@ -65,6 +66,10 @@ horse_net = HorseNet(FLAGS)
 if FLAGS.load:
     horse_net.load_from_ckpt()
     
+if FLAGS.get_hist:
+    seer = Visualizer(FLAGS, horse_net)
+    seer.get_hist_diff_test()
+
 if FLAGS.see_vid != '':
     seer = VideoDemo(FLAGS, horse_net)
     start = time.time()
