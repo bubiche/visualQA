@@ -69,6 +69,7 @@ if FLAGS.load:
 if FLAGS.get_hist:
     seer = Visualizer(FLAGS, horse_net)
     seer.get_hist_diff_test()
+    exit()
 
 if FLAGS.see_vid != '':
     seer = VideoDemo(FLAGS, horse_net)
@@ -80,7 +81,7 @@ if FLAGS.see_vid != '':
     
 if FLAGS.see_path != '':
     seer = Visualizer(FLAGS, horse_net)
-    seer.visualize_img_from_folder_test(FLAGS.see_path)
+    seer.visualize_img_from_folder(FLAGS.see_path)
     exit()
 
 if FLAGS.see_img != '':
