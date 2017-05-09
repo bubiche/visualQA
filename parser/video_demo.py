@@ -33,13 +33,18 @@ class VideoDemo(object):
         writer = skvideo.io.FFmpegWriter(self.output_file, outputdict={
                                          '-b': '300000000', '-r': frame_rate
                                         })
+        i = 0
+        count_out = 0
         for frame in videogen:
             vec = self.feature_extractor.forward_frame(frame)
             att_vec, predict_count = self.net.get_interpolated_attention(vec, 448)
             inp_frame = cv2.resize(frame, (448, 448))
-            frame = self.process_frame(frame, att_vec[0], predict_count)
+            if i % 5 == 0:
+                count_out = predict_count
+            frame = self.process_frame(frame, att_vec[0], count_out)
             out_frame = np.concatenate((inp_frame, frame), 1)
-            writer.writeFrame(frame)
+            writer.writeFrame(out_frame)
+            i += 1
             
         writer.close()
         
