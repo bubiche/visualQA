@@ -373,6 +373,7 @@ class Visualizer(object):
                 hist[diff] += 1
             i += 1
             
+        print(hist)
         with open(self.json_name, 'w') as fp:
             json.dump(hist, fp)
         

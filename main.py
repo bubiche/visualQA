@@ -73,10 +73,7 @@ if FLAGS.get_hist:
 
 if FLAGS.see_vid != '':
     seer = VideoDemo(FLAGS, horse_net)
-    start = time.time()
-    seer.seek_vid_test()
-    end = time.time()
-    print(end - start)
+    seer.seek_vid()
     exit()
     
 if FLAGS.see_path != '':
