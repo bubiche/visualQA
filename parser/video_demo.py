@@ -30,6 +30,7 @@ class VideoDemo(object):
         videogen = skvideo.io.vreader(self.vid_path)
         metadata = skvideo.io.ffprobe(self.vid_path)
         frame_rate = metadata['video']['@avg_frame_rate'].split('/')[0]
+        frame_count = metadata['video']['@nb_frames']
         writer = skvideo.io.FFmpegWriter(self.output_file, outputdict={
                                          '-b': '300000000', '-r': frame_rate
                                         })
@@ -44,6 +45,7 @@ class VideoDemo(object):
             frame = self.process_frame(frame, att_vec[0], count_out)
             out_frame = np.concatenate((inp_frame, frame), 1)
             writer.writeFrame(out_frame)
+            print('{}/{} frames'.format(i+1, frame_count))
             i += 1
             
         writer.close()
