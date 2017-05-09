@@ -36,7 +36,9 @@ class VideoDemo(object):
         for frame in videogen:
             vec = self.feature_extractor.forward_frame(frame)
             att_vec, predict_count = self.net.get_interpolated_attention(vec, 448)
+            inp_frame = cv2.resize(frame, (448, 448))
             frame = self.process_frame(frame, att_vec[0], predict_count)
+            out_frame = np.concatenate((inp_frame, frame), 1)
             writer.writeFrame(frame)
             
         writer.close()
