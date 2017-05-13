@@ -21,10 +21,10 @@ class VideoDemo(object):
         resized_image = cv2.resize(frame, (448, 448))
         res = np.array(resized_image)
         res = res * att_vec[:,:, None]
-        #cv2.putText(res, '{} {}(s)'.format(predict_count, self.cls), (10,50), \
-                    #cv2.FONT_HERSHEY_SIMPLEX, 1, (200,255,155), 5, cv2.LINE_AA)
-        cv2.putText(res, '{} (cat, bird)'.format(predict_count), (10,50), \
+        cv2.putText(res, '{} {}(s)'.format(predict_count, self.cls), (10,50), \
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (200,255,155), 5, cv2.LINE_AA)
+        #cv2.putText(res, '{} (cat, bird)'.format(predict_count), (10,50), \
+                    #cv2.FONT_HERSHEY_SIMPLEX, 1, (200,255,155), 5, cv2.LINE_AA)
         return res.astype(np.uint8)
         
     def seek_vid(self):
@@ -62,3 +62,13 @@ class VideoDemo(object):
             att_vec, predict_count = self.net.get_attention(vec)
             
         print(frame_count)
+        
+    def seek_seq_to_vid(self, seq_path):
+        img_list = [os.path.join(seq_path, x) for x in os.listdir(seq_path) if x.endswith('jpg')]
+        img_list.sort()
+        print(img_list)
+        
+        vecs = self.feature_extractor.forward(img_path)
+        att_vec, predict_count = self.net.get_interpolated_attention(np.array(vecs), 448)
+        #for img in img_list:
+        
