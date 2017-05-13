@@ -68,7 +68,7 @@ class VideoDemo(object):
         img_list.sort()
         print(img_list)
         
-        vecs = self.feature_extractor.forward(img_path)
+        vecs = self.feature_extractor.forward(img_list)
         att_vec, predict_count = self.net.get_interpolated_attention(np.array(vecs), 448)
         writer = skvideo.io.FFmpegWriter('out.avi', outputdict={
                                          '-b': '300000000'})
