@@ -76,9 +76,8 @@ class VideoDemo(object):
         for pred in predict_count:
             frame = cv2.imread(img_list[i])
             frame = frame[:,:,::-1]
-            inp_frame = cv2.resize(frame, (448, 448))
             frame = self.process_frame(frame, att_vec[i], pred)
-            out_frame = np.concatenate((inp_frame, frame), 1)
+            out_frame = frame
             writer.writeFrame(out_frame)
             i += 1
         
