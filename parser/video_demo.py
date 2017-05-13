@@ -45,7 +45,8 @@ class VideoDemo(object):
             if i % 5 == 0:
                 count_out = predict_count
             frame = self.process_frame(frame, att_vec[0], count_out)
-            out_frame = np.concatenate((inp_frame, frame), 1)
+            #out_frame = np.concatenate((inp_frame, frame), 1)
+            out_frame = frame
             writer.writeFrame(out_frame)
             print('{}/{} frames'.format(i+1, frame_count))
             i += 1
