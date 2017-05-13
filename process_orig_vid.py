@@ -7,7 +7,7 @@ import skvideo.io
 vid_path = 'catbirdvid'
 
 vid_list = [os.path.join(vid_path, x) for x in os.listdir(vid_path) if x.endswith('mp4')]
-vid_name_list = [x for x in os.listdir(vid_path) if x.endswith('mp4')]
+vid_name_list = [x.replace('.mp4', '.avi') for x in os.listdir(vid_path) if x.endswith('mp4')]
 
 vid_list.sort()
 vid_name_list.sort()
@@ -19,7 +19,7 @@ i = 0
 for vid in vid_list:
     videogen = skvideo.io.vreader(vid)
     metadata = skvideo.io.ffprobe(vid)
-    frame_count = metadata['video']['@nb_frames']
+    frame_rate = metadata['video']['@avg_frame_rate'].split('/')[0]
     writer = skvideo.io.FFmpegWriter(vid_name_list[i], outputdict={
                                      '-b': '300000000', '-r': frame_rate})
                                      
