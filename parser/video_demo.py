@@ -70,5 +70,15 @@ class VideoDemo(object):
         
         vecs = self.feature_extractor.forward(img_path)
         att_vec, predict_count = self.net.get_interpolated_attention(np.array(vecs), 448)
-        #for img in img_list:
+        writer = skvideo.io.FFmpegWriter('out.avi', outputdict={
+                                         '-b': '300000000'})
+        i = 0
+        for pred in predict_count:
+            frame = cv2.imread(img_list[i])
+            frame = frame[:,:,::-1]
+            inp_frame = cv2.resize(frame, (448, 448))
+            frame = self.process_frame(frame, att_vec[i], pred)
+            out_frame = np.concatenate((inp_frame, frame), 1)
+            writer.writeFrame(out_frame)
+            i += 1
         
